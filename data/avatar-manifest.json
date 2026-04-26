@@ -1,0 +1,58 @@
+{
+  "project": "Minotaur Grand Mentor",
+  "version": "0.1.0",
+  "mode": "pngtuber-mvp",
+  "required_assets": [
+    {
+      "id": "idle_closed",
+      "path": "assets/avatar/pngtuber/idle_closed.png",
+      "required": true,
+      "description": "Neutral idle pose, mouth closed"
+    },
+    {
+      "id": "talk_open",
+      "path": "assets/avatar/pngtuber/talk_open.png",
+      "required": true,
+      "description": "Talking pose, mouth open"
+    },
+    {
+      "id": "blink_closed",
+      "path": "assets/avatar/pngtuber/blink_closed.png",
+      "required": true,
+      "description": "Blinking pose, eyes closed"
+    },
+    {
+      "id": "happy",
+      "path": "assets/avatar/pngtuber/happy.png",
+      "required": true,
+      "description": "Happy confident expression"
+    }
+  ],
+  "optional_assets": [
+    {
+      "id": "angry",
+      "path": "assets/avatar/pngtuber/angry.png",
+      "required": false,
+      "description": "Comedic angry expression"
+    },
+    {
+      "id": "thinking",
+      "path": "assets/avatar/pngtuber/thinking.png",
+      "required": false,
+      "description": "Thinking expression"
+    },
+    {
+      "id": "gesture_point",
+      "path": "assets/avatar/pngtuber/gesture_point.png",
+      "required": false,
+      "description": "Pointing mentor pose"
+    },
+    {
+      "id": "shock",
+      "path": "assets/avatar/pngtuber/shock.png",
+      "required": false,
+      "description": "Shocked reaction"
+    }
+  ]
+}
+

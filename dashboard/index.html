@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minotaur Grand Mentor Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Cyber Trading Mentor Dashboard</p>
+          <h1>Minotaur Grand Mentor</h1>
+          <p class="disclaimer">For research, education, and entertainment only. Not investment advice.</p>
+        </div>
+        <nav class="quick-links" aria-label="Project links">
+          <a href="../overlay/index.html?debug=1">Overlay</a>
+          <a href="../docs/PROJECT_BRIEF.md">Brief</a>
+          <a href="../docs/NEXT_ACTIONS.md">Next</a>
+        </nav>
+      </header>
+
+      <section class="summary-grid">
+        <article class="panel">
+          <h2>Project State</h2>
+          <dl id="stateList"></dl>
+        </article>
+        <article class="panel">
+          <h2>Missing Assets</h2>
+          <ul id="missingAssets"></ul>
+        </article>
+      </section>
+
+      <section class="summary-grid">
+        <article class="panel">
+          <h2>Completed Tasks</h2>
+          <ul id="completedTasks"></ul>
+        </article>
+        <article class="panel">
+          <h2>Pending Tasks</h2>
+          <ul id="pendingTasks"></ul>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h2>Asset Checklist</h2>
+        <div id="assetChecklist" class="asset-checklist"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Recent Run Logs</h2>
+        <ol id="runLogs" class="run-logs"></ol>
+      </section>
+
+      <section class="panel">
+        <h2>Docs</h2>
+        <div class="doc-links">
+          <a href="../docs/CHARACTER_BIBLE.md">Character Bible</a>
+          <a href="../docs/STYLE_GUIDE.md">Style Guide</a>
+          <a href="../docs/ASSET_SPEC.md">Asset Spec</a>
+          <a href="../docs/IMAGE_PROMPTS.md">Image Prompts</a>
+          <a href="../docs/BLUEPRINT.md">Blueprint</a>
+          <a href="../docs/OBS_SETUP.md">OBS Setup</a>
+          <a href="../docs/LIVE2D_UPGRADE.md">Live2D Upgrade</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="../data/run-log.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
+</html>
+

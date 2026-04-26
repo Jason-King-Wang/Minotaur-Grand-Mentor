@@ -1,0 +1,83 @@
+window.__MINOTAUR_RUN_LOG__ = [
+  {
+    "timestamp": "2026-04-27T00:56:33+08:00",
+    "phase": "Phase 1",
+    "status": "done",
+    "summary": "Created project scaffold",
+    "details": "Verified the Minotaur Grand Mentor vault structure with docs, assets, overlay, dashboard, data, records, tools, and tests folders.",
+    "next": "Proceed to documentation and data system setup.",
+    "record": "records/2026-04-27/005633-phase-1.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:56:33+08:00",
+    "phase": "Phase 2",
+    "status": "done",
+    "summary": "Wrote project documentation",
+    "details": "Filled README, CODEX, project brief, character bible, style guide, asset spec, image prompts, OBS setup, Live2D upgrade notes, and next actions with the PNGTuber MVP direction.",
+    "next": "Create structured project data and manifests.",
+    "record": "records/2026-04-27/005633-phase-2.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:56:33+08:00",
+    "phase": "Phase 3",
+    "status": "done",
+    "summary": "Created data formats",
+    "details": "Defined avatar-manifest.json, project-state.json, run-log.json, and run-log.js for static dashboard and file-based workflows.",
+    "next": "Use the logging and validation tools to maintain records.",
+    "record": "records/2026-04-27/005633-phase-3.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:56:33+08:00",
+    "phase": "Phase 4",
+    "status": "done",
+    "summary": "Implemented project tools",
+    "details": "Built standard-library Python tools for logging events, validating assets, and generating public run-log data.",
+    "next": "Validate missing assets and keep static data synchronized.",
+    "record": "records/2026-04-27/005633-phase-4.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:56:33+08:00",
+    "phase": "Phase 5",
+    "status": "done",
+    "summary": "Built PNGTuber overlay MVP",
+    "details": "Implemented transparent OBS overlay with manifest loading, placeholder fallback, microphone volume detection, talk state switching, random blink, idle breathing, hotkeys, and debug URL parameters.",
+    "next": "Open overlay/index.html in OBS Browser Source and test microphone permissions.",
+    "record": "records/2026-04-27/005633-phase-5.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:56:33+08:00",
+    "phase": "Phase 6",
+    "status": "done",
+    "summary": "Built static dashboard",
+    "details": "Implemented dashboard/index.html, dashboard.js, and dashboard.css with project status, missing assets, tasks, run logs, docs links, overlay link, asset checklist, and disclaimer.",
+    "next": "Run validation and tests, then hand off asset creation tasks.",
+    "record": "records/2026-04-27/005633-phase-6.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:56:54+08:00",
+    "phase": "Phase 7",
+    "status": "done",
+    "summary": "Ran project file tests",
+    "details": "Executed tests/test_project_files.py with Python unittest. Required files and JSON data checks passed.",
+    "next": "User should perform the OBS Browser Source microphone and visual test after adding or previewing assets.",
+    "record": "records/2026-04-27/005654-phase-7.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:56:54+08:00",
+    "phase": "Phase 8",
+    "status": "done",
+    "summary": "Completed PNGTuber MVP initialization",
+    "details": "Finished static docs, data files, records workflow, overlay, dashboard, tools, and tests for the Minotaur Grand Mentor PNGTuber MVP.",
+    "next": "Generate the four required PNGTuber assets, place them in assets/avatar/pngtuber, run validate_assets.py, and test overlay in OBS.",
+    "record": "records/2026-04-27/005654-phase-8.md"
+  },
+  {
+    "timestamp": "2026-04-27T00:59:53+08:00",
+    "phase": "GitHub Upload",
+    "status": "done",
+    "summary": "Prepared repository content for GitHub upload",
+    "details": "Prepared Minotaur Grand Mentor docs, data, records, overlay, dashboard, tools, and tests for upload to Jason-King-Wang/Minotaur-Grand-Mentor.",
+    "next": "Push the static PNGTuber MVP project content to GitHub main branch.",
+    "record": "records/2026-04-27/005953-github-upload.md"
+  }
+];

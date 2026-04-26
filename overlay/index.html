@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minotaur Grand Mentor Overlay</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="overlay" aria-label="Minotaur Grand Mentor PNGTuber overlay">
+      <section id="stage" class="stage">
+        <div id="avatarWrap" class="avatar-wrap">
+          <img id="avatarImage" class="avatar-image" alt="Minotaur Grand Mentor avatar">
+          <div id="placeholder" class="placeholder" role="img" aria-label="Minotaur Mentor placeholder">
+            <div class="horns" aria-hidden="true"></div>
+            <div class="placeholder-face">
+              <span class="eye"></span>
+              <span class="eye"></span>
+            </div>
+            <strong>Minotaur Mentor</strong>
+            <small>PNG assets pending</small>
+          </div>
+        </div>
+      </section>
+
+      <aside id="debugPanel" class="debug-panel" hidden>
+        <h1>Debug</h1>
+        <dl>
+          <dt>Mic</dt>
+          <dd id="debugMic">initializing</dd>
+          <dt>Expression</dt>
+          <dd id="debugExpression">idle_closed</dd>
+          <dt>Volume</dt>
+          <dd id="debugVolume">0.000</dd>
+          <dt>Threshold</dt>
+          <dd id="debugThreshold">0.050</dd>
+          <dt>Loaded</dt>
+          <dd id="debugLoaded">none</dd>
+          <dt>Missing</dt>
+          <dd id="debugMissing">none</dd>
+        </dl>
+      </aside>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
+
