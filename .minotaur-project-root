@@ -1,0 +1,3 @@
+This marker identifies the allowed project root for Minotaur Grand Mentor.
+Codex must not modify files outside this root.
+

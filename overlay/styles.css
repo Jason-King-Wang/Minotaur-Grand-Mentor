@@ -40,7 +40,7 @@ body {
   width: min(48vw, 680px);
   min-width: 320px;
   aspect-ratio: 1;
-  transform: scale(var(--avatar-scale, 1));
+  transform: translate(var(--avatar-x, 0), var(--avatar-y, 0)) scale(var(--avatar-scale, 1));
   transform-origin: bottom center;
   animation: breathe 4.8s ease-in-out infinite;
 }
@@ -171,4 +171,3 @@ body {
     scale: 1.012 1.018;
   }
 }
-

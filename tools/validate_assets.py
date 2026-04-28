@@ -8,7 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-MANIFEST = DATA_DIR / "avatar-manifest.json"
+AVATAR_MANIFEST = DATA_DIR / "avatar-manifest.json"
+LIVE2D_MANIFEST = DATA_DIR / "live2d-sourcekit-manifest.json"
 PROJECT_STATE = DATA_DIR / "project-state.json"
 TAIPEI = timezone(timedelta(hours=8))
 
@@ -32,80 +33,85 @@ def png_size(path: Path) -> tuple[int, int] | None:
             header = file.read(24)
         if len(header) < 24 or not header.startswith(b"\x89PNG\r\n\x1a\n"):
             return None
-        width, height = struct.unpack(">II", header[16:24])
-        return width, height
+        return struct.unpack(">II", header[16:24])
     except OSError:
         return None
 
 
-def asset_rows(manifest: dict) -> list[dict]:
-    return list(manifest.get("required_assets", [])) + list(manifest.get("optional_assets", []))
-
-
-def update_project_state(missing_required: list[str]) -> None:
+def update_project_state(missing_assets: list[str], blocked_by_art: list[str]) -> None:
     state = read_json(PROJECT_STATE, {})
     state.setdefault("project", "Minotaur Grand Mentor")
-    state.setdefault("version", "0.1.0")
+    state.setdefault("version", "0.2.0")
     state.setdefault("completed_tasks", [])
     state.setdefault("pending_tasks", [])
-    state["missing_assets"] = missing_required
+    state.setdefault("blocked_by_rigging", [
+        "Live2D Cubism rigging",
+        ".moc3 export",
+        "VTube Studio test",
+    ])
+    state["missing_assets"] = missing_assets
+    state["blocked_by_art"] = blocked_by_art
     state["last_updated"] = datetime.now(TAIPEI).isoformat(timespec="seconds")
-    if missing_required:
-        state["overall_status"] = f"Assets pending: {len(missing_required)} required PNGTuber files missing"
+    if missing_assets:
+        state["overall_status"] = "ready_waiting_for_art_assets"
+        state["current_phase"] = "waiting_for_art"
     else:
-        state["overall_status"] = "Required PNGTuber assets present"
+        state["overall_status"] = "required_art_assets_present"
     write_json(PROJECT_STATE, state)
 
 
 def main() -> int:
-    manifest = read_json(MANIFEST, {})
-    if not manifest:
-        print("Missing or invalid data/avatar-manifest.json")
-        update_project_state([])
-        return 0
-
-    missing_required: list[str] = []
-    missing_optional: list[str] = []
+    avatar_manifest = read_json(AVATAR_MANIFEST, {})
+    live2d_manifest = read_json(LIVE2D_MANIFEST, {})
+    missing_assets: list[str] = []
+    blocked_by_art: list[str] = []
     size_notes: list[str] = []
 
-    for asset in asset_rows(manifest):
-        rel_path = asset.get("path", "")
-        file_path = ROOT / rel_path
-        exists = file_path.exists()
-        if not exists and asset.get("required"):
-            missing_required.append(rel_path)
-        elif not exists:
-            missing_optional.append(rel_path)
-        elif file_path.suffix.lower() == ".png":
-            size = png_size(file_path)
-            if size is None:
-                size_notes.append(f"{rel_path}: PNG dimensions unreadable")
-            else:
-                width, height = size
-                if (width, height) not in {(2048, 2048), (3000, 3000)}:
-                    size_notes.append(f"{rel_path}: {width}x{height}, expected 2048x2048 or 3000x3000")
+    print("PNGTuber required assets:")
+    for asset in avatar_manifest.get("required_assets", []):
+        path = asset.get("path", "")
+        full_path = ROOT / path
+        if full_path.exists():
+            print(f"[OK] {asset.get('id')} -> {path}")
+            if full_path.suffix.lower() == ".png":
+                size = png_size(full_path)
+                if size and size not in {(2048, 2048), (3000, 3000)}:
+                    size_notes.append(f"{path}: {size[0]}x{size[1]}")
+        else:
+            print(f"[MISSING] {asset.get('id')} -> {path}")
+            missing_assets.append(path)
 
-    update_project_state(missing_required)
+    print("\nPNGTuber optional assets:")
+    for asset in avatar_manifest.get("optional_assets", []):
+        path = asset.get("path", "")
+        full_path = ROOT / path
+        status = "OK" if full_path.exists() else "MISSING"
+        print(f"[{status}] {asset.get('id')} -> {path}")
 
-    print("Asset validation report")
-    print("=======================")
-    if missing_required:
-        print("Missing required assets:")
-        for item in missing_required:
-            print(f"- {item}")
-    else:
-        print("All required assets are present.")
+    print("\nLive2D required final files:")
+    for asset in live2d_manifest.get("required_final_files", []):
+        path = asset.get("path", "")
+        full_path = ROOT / path
+        if full_path.exists():
+            print(f"[OK] {asset.get('id')} -> {path}")
+        else:
+            print(f"[MISSING] {asset.get('id')} -> {path}")
+            missing_assets.append(path)
 
-    if missing_optional:
-        print("\nMissing optional assets:")
-        for item in missing_optional:
-            print(f"- {item}")
+    if any("pngtuber" in item for item in missing_assets):
+        blocked_by_art.append("PNGTuber expression PNG files")
+    if any("final_front_master" in item for item in missing_assets):
+        blocked_by_art.append("Live2D final front master image")
+    if any("final_layered_model" in item for item in missing_assets):
+        blocked_by_art.append("Live2D final layered PSD")
 
     if size_notes:
         print("\nSize notes:")
-        for item in size_notes:
-            print(f"- {item}")
+        for note in size_notes:
+            print(f"- {note}")
 
+    update_project_state(missing_assets, blocked_by_art)
+    print("\nStatus: waiting_for_art_assets" if missing_assets else "\nStatus: ready")
     return 0
 
 

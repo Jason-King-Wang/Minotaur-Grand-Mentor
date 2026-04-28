@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="2048" viewBox="0 0 2048 2048">
+  <rect width="2048" height="2048" fill="#08111f"/>
+  <path d="M520 520 C250 260 220 740 650 690" fill="none" stroke="#d7a84b" stroke-width="52" stroke-linecap="round"/>
+  <path d="M1528 520 C1798 260 1828 740 1398 690" fill="none" stroke="#d7a84b" stroke-width="52" stroke-linecap="round"/>
+  <circle cx="1024" cy="900" r="420" fill="#7a4a2a" stroke="#d7a84b" stroke-width="18"/>
+  <circle cx="860" cy="820" r="42" fill="#ffd66b"/>
+  <circle cx="1188" cy="820" r="42" fill="#ffd66b"/>
+  <path d="M840 1120 Q1024 1235 1208 1120" fill="none" stroke="#111" stroke-width="34" stroke-linecap="round"/>
+  <path d="M620 1340 L1428 1340 L1600 1900 L448 1900 Z" fill="#111317" stroke="#d7a84b" stroke-width="14"/>
+  <path d="M760 1370 L1024 1830 L1288 1370" fill="none" stroke="#1f8bd1" stroke-width="18"/>
+  <text x="1024" y="1540" text-anchor="middle" fill="#f6ead3" font-family="Arial, sans-serif" font-size="92" font-weight="700">Minotaur Mentor</text>
+  <text x="1024" y="1650" text-anchor="middle" fill="#d7a84b" font-family="Arial, sans-serif" font-size="64">Happy</text>
+  <text x="1024" y="1750" text-anchor="middle" fill="#f6ead3" font-family="Arial, sans-serif" font-size="44">Placeholder only, not final art</text>
+</svg>

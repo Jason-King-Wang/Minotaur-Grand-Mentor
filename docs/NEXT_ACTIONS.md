@@ -11,6 +11,9 @@ This file is meant to be updated continuously by Codex and by the project owner.
 - Put the files into `assets/avatar/pngtuber/`.
 - Run `python tools\validate_assets.py`.
 - Test `overlay/index.html` in OBS Browser Source.
+- Create Live2D final front master artwork.
+- Create Live2D layered PSD using `docs/LIVE2D_LAYER_SPEC.md`.
+- Send `docs/LIVE2D_RIGGER_CHECKLIST.md` to the rigger.
 
 ## Recommended Production Order
 
@@ -28,4 +31,3 @@ This file is meant to be updated continuously by Codex and by the project owner.
 - Create a model sheet for Live2D planning.
 - Define a layered PSD production checklist with the artist.
 - Decide whether the future Live2D runtime should be local viewer or web viewer.
-

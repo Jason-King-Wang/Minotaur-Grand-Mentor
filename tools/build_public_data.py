@@ -1,34 +1,57 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-RUN_LOG_JSON = DATA_DIR / "run-log.json"
-RUN_LOG_JS = DATA_DIR / "run-log.js"
+TAIPEI = timezone(timedelta(hours=8))
 
 
-def read_run_log() -> list[dict]:
-    if not RUN_LOG_JSON.exists():
-        return []
-    data = json.loads(RUN_LOG_JSON.read_text(encoding="utf-8"))
-    if not isinstance(data, list):
-        raise ValueError("data/run-log.json must contain a JSON array")
-    return data
+def read_json(path: Path, default):
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return default
+
+
+def write_js(path: Path, variable: str, value) -> None:
+    path.write_text(
+        f"window.{variable} = "
+        + json.dumps(value, ensure_ascii=False, indent=2)
+        + ";\n",
+        encoding="utf-8",
+    )
 
 
 def main() -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    entries = read_run_log()
-    RUN_LOG_JS.write_text(
-        "window.__MINOTAUR_RUN_LOG__ = "
-        + json.dumps(entries, ensure_ascii=False, indent=2)
-        + ";\n",
-        encoding="utf-8",
+    project_state = read_json(DATA_DIR / "project-state.json", {})
+    task_board = read_json(DATA_DIR / "task-board.json", {"columns": {}, "tasks": []})
+    avatar_manifest = read_json(DATA_DIR / "avatar-manifest.json", {})
+    live2d_manifest = read_json(DATA_DIR / "live2d-sourcekit-manifest.json", {})
+    run_log = read_json(DATA_DIR / "run-log.json", [])
+    if not isinstance(run_log, list):
+        run_log = []
+
+    write_js(DATA_DIR / "run-log.js", "__MINOTAUR_RUN_LOG__", run_log)
+    write_js(
+        DATA_DIR / "dashboard-data.js",
+        "__MINOTAUR_DASHBOARD_DATA__",
+        {
+            "projectState": project_state,
+            "taskBoard": task_board,
+            "avatarManifest": avatar_manifest,
+            "live2dManifest": live2d_manifest,
+            "runLog": run_log,
+            "generatedAt": datetime.now(TAIPEI).isoformat(timespec="seconds"),
+        },
     )
-    print("Built data/run-log.js")
+    print("Built data/run-log.js and data/dashboard-data.js")
     return 0
 
 

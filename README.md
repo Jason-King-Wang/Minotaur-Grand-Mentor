@@ -1,6 +1,6 @@
 # Minotaur Grand Mentor
 
-Minotaur Grand Mentor is an original YouTube VTuber project for a powerful, wild, cyber trading mentor character. Version 1 is a static PNGTuber MVP that can run in OBS Browser Source without a backend. Later versions can upgrade the same character direction into a Live2D avatar.
+Minotaur Grand Mentor is an original YouTube VTuber project for a powerful, wild, cyber trading mentor character. Version 0.2 is a static PNGTuber MVP plus Live2D-ready planning package: engineering, docs, dashboard, overlay, records, validation, placeholders, and handoff materials are complete, while final art, layered PSD, and Live2D rigging remain external production work.
 
 > Disclaimer: This content is for research, education, and entertainment only. It does not constitute investment advice.
 
@@ -17,13 +17,18 @@ The first version should make `overlay/index.html` usable as an OBS Browser Sour
 
 ## Folder Map
 
+- `.minotaur-project-root` - safety marker for scope guard tooling.
+- `SCOPE_LOCK.md` - root-level Obsidian scope protection rule.
 - `docs/` - project brief, character bible, style guide, asset spec, prompts, blueprint, OBS setup, Live2D notes, and next actions.
 - `assets/reference/` - mood boards, design references, and original inspiration notes.
-- `assets/avatar/pngtuber/` - PNGTuber expression files.
+- `assets/avatar/placeholders/` - generated SVG placeholders.
+- `assets/avatar/pngtuber/` - final PNGTuber expression files.
+- `assets/avatar/live2d/` - Live2D source kit and future final PSD notes.
 - `overlay/` - OBS-ready static overlay.
 - `dashboard/` - static project dashboard.
 - `data/` - JSON state, avatar manifest, and public JS run-log manifest.
 - `records/` - timestamped Markdown execution records.
+- `obsidian_project/` - portable Obsidian project pages.
 - `tools/` - standard-library Python tools.
 - `tests/` - basic project file checks.
 
@@ -70,6 +75,12 @@ Then run:
 python tools\validate_assets.py
 ```
 
+To generate temporary SVG placeholders:
+
+```powershell
+python tools\generate_placeholder_assets.py
+```
+
 ## How To Update Records
 
 Use the logging tool from the project root:
@@ -93,3 +104,15 @@ This project is intentionally static. To publish:
 
 No API keys, tokens, personal data, or backend services are required.
 
+## Current Boundary
+
+Everything Codex can complete without final art is intended to be done in this repo. The remaining work is:
+
+- Create final PNGTuber expression PNG files.
+- Create Live2D final front master artwork.
+- Create the layered Live2D PSD.
+- Complete Live2D Cubism rigging and VTube Studio testing.
+
+## Source Blueprint
+
+The full upstream Codex work blueprint is archived at `docs/CODEX_WORK_BLUEPRINT_FULL.md`.

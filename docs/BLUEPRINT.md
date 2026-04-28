@@ -4,6 +4,10 @@ This project follows an Agent teaching workflow: create context, build the knowl
 
 > Disclaimer: This content is for research, education, and entertainment only. It does not constitute investment advice.
 
+## Source Blueprint
+
+The full v2 working blueprint is archived in `docs/CODEX_WORK_BLUEPRINT_FULL.md`. This file is the operational summary; the archived blueprint is the long-form source specification.
+
 ## Phase 1: Project Scaffold
 
 - Status: done
@@ -51,4 +55,3 @@ This project follows an Agent teaching workflow: create context, build the knowl
 - Status: future
 - Output: Live2D checklist and upgrade direction.
 - Acceptance criteria: PSD layer checklist and rigger handoff checklist are defined before production begins.
-

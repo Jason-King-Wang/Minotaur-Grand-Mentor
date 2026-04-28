@@ -61,6 +61,7 @@ def unique_record_path(timestamp: datetime, phase: str) -> Path:
 
 
 def write_record(path: Path, entry: dict) -> None:
+    files = "\n".join(f"- `{item}`" for item in entry.get("files_changed", [])) or "- None listed"
     content = f"""# {entry["phase"]}: {entry["summary"]}
 
 - Time: {entry["timestamp"]}
@@ -69,6 +70,10 @@ def write_record(path: Path, entry: dict) -> None:
 ## Details
 
 {entry["details"]}
+
+## Files Changed
+
+{files}
 
 ## Next
 
@@ -80,13 +85,14 @@ def write_record(path: Path, entry: dict) -> None:
 def update_project_state(entry: dict) -> None:
     state = read_json(PROJECT_STATE, {})
     state.setdefault("project", "Minotaur Grand Mentor")
-    state.setdefault("version", "0.1.0")
+    state.setdefault("version", "0.2.0")
     state.setdefault("completed_tasks", [])
     state.setdefault("pending_tasks", [])
     state.setdefault("missing_assets", [])
+    state.setdefault("blocked_by_art", [])
+    state.setdefault("blocked_by_rigging", [])
 
     state["current_phase"] = entry["phase"]
-    state["overall_status"] = f'{entry["phase"]}: {entry["status"]} - {entry["summary"]}'
     state["last_updated"] = entry["timestamp"]
     state["notes"] = entry["next"]
 
@@ -95,24 +101,48 @@ def update_project_state(entry: dict) -> None:
         if task_label not in state["completed_tasks"]:
             state["completed_tasks"].append(task_label)
         state["pending_tasks"] = [
-            task
-            for task in state["pending_tasks"]
-            if not task.startswith(entry["phase"])
+            task for task in state["pending_tasks"] if not task.startswith(entry["phase"])
         ]
     else:
         if task_label not in state["pending_tasks"]:
             state["pending_tasks"].append(task_label)
+
+    if entry["phase"].lower() == "final handoff" and entry["status"].lower() == "done":
+        state.update(
+            {
+                "current_phase": "waiting_for_art",
+                "overall_status": "ready_waiting_for_art_assets",
+                "engineering_status": "done",
+                "documentation_status": "done",
+                "overlay_status": "placeholder_ready",
+                "dashboard_status": "ready",
+                "live2d_status": "spec_ready_waiting_for_art_and_rigging",
+                "blocked_by_art": [
+                    "PNGTuber expression PNG files",
+                    "Live2D final front master image",
+                    "Live2D final layered PSD",
+                ],
+                "blocked_by_rigging": [
+                    "Live2D Cubism rigging",
+                    ".moc3 export",
+                    "VTube Studio test",
+                ],
+            }
+        )
+    else:
+        state["overall_status"] = f'{entry["phase"]}: {entry["status"]} - {entry["summary"]}'
 
     write_json(PROJECT_STATE, state)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Create a project record and update public log data.")
-    parser.add_argument("--phase", required=True, help="Phase name, e.g. Phase 1.")
-    parser.add_argument("--status", required=True, help="Status such as done, pending, or blocked.")
-    parser.add_argument("--summary", required=True, help="Short event summary.")
-    parser.add_argument("--details", required=True, help="Longer event details.")
-    parser.add_argument("--next", required=True, dest="next_step", help="Next action or handoff note.")
+    parser.add_argument("--phase", required=True)
+    parser.add_argument("--status", required=True)
+    parser.add_argument("--summary", required=True)
+    parser.add_argument("--details", required=True)
+    parser.add_argument("--next", required=True, dest="next_step")
+    parser.add_argument("--files", nargs="*", default=[], help="Optional changed file paths.")
     args = parser.parse_args()
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -121,12 +151,14 @@ def main() -> int:
     timestamp = now_local()
     record_path = unique_record_path(timestamp, args.phase)
     entry = {
+        "id": f"{timestamp.strftime('%Y%m%d-%H%M%S')}-{slugify(args.phase)}",
         "timestamp": timestamp.isoformat(timespec="seconds"),
         "phase": args.phase,
         "status": args.status,
         "summary": args.summary,
         "details": args.details,
         "next": args.next_step,
+        "files_changed": args.files,
         "record": str(record_path.relative_to(ROOT)).replace("\\", "/"),
     }
 

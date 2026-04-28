@@ -30,3 +30,5 @@ After adding or changing files, run:
 python tools\validate_assets.py
 ```
 
+Temporary placeholders are generated into `assets/avatar/placeholders/`; do not treat them as final PNGTuber art.
+

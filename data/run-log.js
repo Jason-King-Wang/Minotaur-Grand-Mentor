@@ -79,5 +79,49 @@ window.__MINOTAUR_RUN_LOG__ = [
     "details": "Prepared Minotaur Grand Mentor docs, data, records, overlay, dashboard, tools, and tests for upload to Jason-King-Wang/Minotaur-Grand-Mentor.",
     "next": "Push the static PNGTuber MVP project content to GitHub main branch.",
     "record": "records/2026-04-27/005953-github-upload.md"
+  },
+  {
+    "id": "20260429-000818-final-handoff",
+    "timestamp": "2026-04-29T00:08:18+08:00",
+    "phase": "Final Handoff",
+    "status": "done",
+    "summary": "Completed all non-art deliverables",
+    "details": "Project scaffold, docs, overlay, dashboard, logging, validation, Obsidian project pages, placeholder assets, and Live2D specs are complete. Waiting for final art assets and Live2D rigging.",
+    "next": "Create final PNGTuber images and Live2D layered PSD.",
+    "files_changed": [
+      "README.md",
+      "CODEX.md",
+      "SCOPE_LOCK.md",
+      "docs/BOTTOM_LINES.md",
+      "docs/FINAL_HANDOFF.md",
+      "data/project-state.json",
+      "data/task-board.json",
+      "data/live2d-sourcekit-manifest.json",
+      "data/dashboard-data.js",
+      "tools/scope_guard.py",
+      "tools/generate_placeholder_assets.py",
+      "tools/generate_final_report.py",
+      "overlay/app.js",
+      "dashboard/dashboard.js",
+      "tests/test_project_files.py"
+    ],
+    "record": "records/2026-04-29/000818-final-handoff.md"
+  },
+  {
+    "id": "20260429-001050-blueprint-archive",
+    "timestamp": "2026-04-29T00:10:50+08:00",
+    "phase": "Blueprint Archive",
+    "status": "done",
+    "summary": "Archived full v2 Codex blueprint",
+    "details": "Copied the ChatGPT Pro generated full v2 blueprint into docs/CODEX_WORK_BLUEPRINT_FULL.md and linked it from README, CODEX, BLUEPRINT, and tests.",
+    "next": "Use docs/CODEX_WORK_BLUEPRINT_FULL.md as the long-form source spec for future Codex work.",
+    "files_changed": [
+      "docs/CODEX_WORK_BLUEPRINT_FULL.md",
+      "README.md",
+      "CODEX.md",
+      "docs/BLUEPRINT.md",
+      "tests/test_project_files.py"
+    ],
+    "record": "records/2026-04-29/001050-blueprint-archive.md"
   }
 ];

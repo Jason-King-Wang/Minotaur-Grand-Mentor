@@ -1,0 +1,192 @@
+{
+  "columns": {
+    "not_started": [],
+    "in_progress": [],
+    "done": [
+      "scope-lock",
+      "project-scaffold",
+      "docs-system",
+      "software-setup",
+      "character-bible",
+      "asset-spec",
+      "image-prompts",
+      "pngtuber-overlay",
+      "dashboard",
+      "logging-system",
+      "asset-validator",
+      "placeholder-generator",
+      "obsidian-project-pages",
+      "live2d-layer-spec",
+      "live2d-rigger-checklist",
+      "obs-setup-doc",
+      "github-pages-doc",
+      "tests",
+      "final-report"
+    ],
+    "waiting_for_art": [
+      "waiting-for-pngtuber-art",
+      "waiting-for-live2d-art"
+    ],
+    "waiting_for_rigging": [
+      "waiting-for-live2d-rigging"
+    ],
+    "blocked": []
+  },
+  "tasks": [
+    {
+      "id": "scope-lock",
+      "title": "Create bottom lines and Obsidian scope lock",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/BOTTOM_LINES.md exists and states Codex cannot modify other Obsidian content."
+    },
+    {
+      "id": "project-scaffold",
+      "title": "Complete v2 project scaffold",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "Required folders, root marker, docs, data, overlay, dashboard, tools, tests, and obsidian_project pages exist."
+    },
+    {
+      "id": "docs-system",
+      "title": "Write project documentation system",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "Core docs describe project, safety rules, setup, acceptance criteria, and handoff."
+    },
+    {
+      "id": "software-setup",
+      "title": "Document software setup",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/SOFTWARE_SETUP.md covers engineering, art, and Live2D tools."
+    },
+    {
+      "id": "character-bible",
+      "title": "Define character bible",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/CHARACTER_BIBLE.md defines persona, voice, visuals, and boundaries."
+    },
+    {
+      "id": "asset-spec",
+      "title": "Define asset specifications",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/ASSET_SPEC.md covers PNGTuber and Live2D assets."
+    },
+    {
+      "id": "image-prompts",
+      "title": "Write image prompts",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/IMAGE_PROMPTS.md includes base, expression, negative, character sheet, and three-view prompts."
+    },
+    {
+      "id": "pngtuber-overlay",
+      "title": "Build PNGTuber overlay",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "Overlay supports placeholder, mic volume, hotkeys, query params, blink, breathing, and debug panel."
+    },
+    {
+      "id": "dashboard",
+      "title": "Build static dashboard",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "Dashboard reads JSON and JS fallback data."
+    },
+    {
+      "id": "logging-system",
+      "title": "Build logging system",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "tools/log_event.py appends JSON logs and writes Markdown records."
+    },
+    {
+      "id": "asset-validator",
+      "title": "Build asset validator",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "tools/validate_assets.py reports missing PNGTuber and Live2D assets without crashing."
+    },
+    {
+      "id": "placeholder-generator",
+      "title": "Build placeholder generator",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "tools/generate_placeholder_assets.py creates engineering-only SVG placeholders."
+    },
+    {
+      "id": "obsidian-project-pages",
+      "title": "Create Obsidian project pages",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "obsidian_project pages summarize home, bottom lines, task board, asset status, and next actions."
+    },
+    {
+      "id": "live2d-layer-spec",
+      "title": "Write Live2D layer spec",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/LIVE2D_LAYER_SPEC.md defines PSD layer groups and names."
+    },
+    {
+      "id": "live2d-rigger-checklist",
+      "title": "Write rigger checklist",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/LIVE2D_RIGGER_CHECKLIST.md defines handoff and delivery checks."
+    },
+    {
+      "id": "obs-setup-doc",
+      "title": "Write OBS setup doc",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/OBS_SETUP.md explains local, GitHub Pages, microphone, and hotkey setup."
+    },
+    {
+      "id": "github-pages-doc",
+      "title": "Write GitHub Pages setup doc",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/GITHUB_PAGES_SETUP.md explains dashboard and overlay publication."
+    },
+    {
+      "id": "tests",
+      "title": "Create project tests",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "tests/test_project_files.py checks required files and JSON."
+    },
+    {
+      "id": "final-report",
+      "title": "Create final handoff",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "docs/FINAL_HANDOFF.md explains completed work, missing art, and next steps."
+    },
+    {
+      "id": "waiting-for-pngtuber-art",
+      "title": "Waiting for final PNGTuber art",
+      "status": "waiting_for_art",
+      "owner": "user",
+      "acceptance": "Final PNGTuber expression PNG files are added to assets/avatar/pngtuber/."
+    },
+    {
+      "id": "waiting-for-live2d-art",
+      "title": "Waiting for final Live2D artwork and PSD",
+      "status": "waiting_for_art",
+      "owner": "user",
+      "acceptance": "Final front master and layered PSD exist under assets/avatar/live2d/final/."
+    },
+    {
+      "id": "waiting-for-live2d-rigging",
+      "title": "Waiting for Live2D rigging",
+      "status": "waiting_for_rigging",
+      "owner": "rigger",
+      "acceptance": "Live2D Cubism model and VTube Studio test are complete."
+    }
+  ]
+}
+

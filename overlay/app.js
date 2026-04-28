@@ -23,7 +23,10 @@
   const state = {
     threshold: readNumberParam("threshold", 0.05),
     scale: readNumberParam("scale", 1),
+    x: readSignedNumberParam("x", 0),
+    y: readSignedNumberParam("y", 0),
     debug: params.get("debug") === "1",
+    micEnabled: params.get("mic") !== "0",
     micStatus: "not requested",
     currentExpression: "idle_closed",
     manualExpression: "idle_closed",
@@ -44,8 +47,12 @@
   const debugThreshold = document.getElementById("debugThreshold");
   const debugLoaded = document.getElementById("debugLoaded");
   const debugMissing = document.getElementById("debugMissing");
+  const debugBlink = document.getElementById("debugBlink");
+  const debugMode = document.getElementById("debugMode");
 
   avatarWrap.style.setProperty("--avatar-scale", String(state.scale));
+  avatarWrap.style.setProperty("--avatar-x", `${state.x}px`);
+  avatarWrap.style.setProperty("--avatar-y", `${state.y}px`);
   debugPanel.hidden = !state.debug;
 
   function readNumberParam(name, fallback) {
@@ -55,6 +62,15 @@
     }
     const value = Number(raw);
     return Number.isFinite(value) && value > 0 ? value : fallback;
+  }
+
+  function readSignedNumberParam(name, fallback) {
+    const raw = params.get(name);
+    if (raw === null) {
+      return fallback;
+    }
+    const value = Number(raw);
+    return Number.isFinite(value) ? value : fallback;
   }
 
   function projectUrl(path) {
@@ -123,7 +139,7 @@
     if (state.isBlinking && state.loaded.has("blink_closed")) {
       return "blink_closed";
     }
-    if (state.volume >= state.threshold && state.loaded.has("talk_open")) {
+    if (state.micEnabled && state.volume >= state.threshold && state.loaded.has("talk_open")) {
       return "talk_open";
     }
     return state.manualExpression;
@@ -146,6 +162,12 @@
   }
 
   async function setupMic() {
+    if (!state.micEnabled) {
+      state.micStatus = "disabled";
+      updateDebug();
+      return;
+    }
+
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       state.micStatus = "unavailable";
       updateDebug();
@@ -190,6 +212,8 @@
     debugThreshold.textContent = state.threshold.toFixed(3);
     debugLoaded.textContent = Array.from(state.loaded.keys()).join(", ") || "none";
     debugMissing.textContent = Array.from(state.missing).join(", ") || "none";
+    debugBlink.textContent = String(state.isBlinking);
+    debugMode.textContent = state.micEnabled ? "mic-auto" : "manual";
   }
 
   function setManualExpression(id) {
@@ -206,10 +230,21 @@
       if (key === "3") setManualExpression("angry");
       if (key === "4") setManualExpression("thinking");
       if (key === "5") setManualExpression("gesture_point");
+      if (key === "6") setManualExpression("shock");
       if (key === "0") setManualExpression("idle_closed");
       if (key === "d") {
         state.debug = !state.debug;
         debugPanel.hidden = !state.debug;
+      }
+      if (key === "m") {
+        state.micEnabled = !state.micEnabled;
+        if (state.micEnabled && state.micStatus === "disabled") {
+          setupMic();
+        } else if (!state.micEnabled) {
+          state.volume = 0;
+          state.micStatus = "disabled";
+        }
+        updateDebug();
       }
     });
   }
@@ -225,4 +260,3 @@
 
   boot();
 })();
-

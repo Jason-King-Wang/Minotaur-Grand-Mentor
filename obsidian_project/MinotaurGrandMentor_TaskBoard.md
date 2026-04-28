@@ -1,0 +1,24 @@
+# Minotaur Grand Mentor Task Board
+
+- [done] scope-lock: Create bottom lines and Obsidian scope lock
+- [done] project-scaffold: Complete v2 project scaffold
+- [done] docs-system: Write project documentation system
+- [done] software-setup: Document software setup
+- [done] character-bible: Define character bible
+- [done] asset-spec: Define asset specifications
+- [done] image-prompts: Write image prompts
+- [done] pngtuber-overlay: Build PNGTuber overlay
+- [done] dashboard: Build static dashboard
+- [done] logging-system: Build logging system
+- [done] asset-validator: Build asset validator
+- [done] placeholder-generator: Build placeholder generator
+- [done] obsidian-project-pages: Create Obsidian project pages
+- [done] live2d-layer-spec: Write Live2D layer spec
+- [done] live2d-rigger-checklist: Write rigger checklist
+- [done] obs-setup-doc: Write OBS setup doc
+- [done] github-pages-doc: Write GitHub Pages setup doc
+- [done] tests: Create project tests
+- [done] final-report: Create final handoff
+- [waiting_for_art] waiting-for-pngtuber-art: Waiting for final PNGTuber art
+- [waiting_for_art] waiting-for-live2d-art: Waiting for final Live2D artwork and PSD
+- [waiting_for_rigging] waiting-for-live2d-rigging: Waiting for Live2D rigging

@@ -1,44 +1,32 @@
 (function () {
   "use strict";
 
-  const DEFAULT_STATE = {
+  const bundle = window.__MINOTAUR_DASHBOARD_DATA__ || {};
+
+  const DEFAULT_STATE = bundle.projectState || {
     project: "Minotaur Grand Mentor",
-    version: "0.1.0",
-    current_phase: "pngtuber-mvp",
-    overall_status: "Open through a local server or GitHub Pages for live JSON loading.",
+    version: "0.2.0",
+    current_phase: "waiting_for_art",
+    overall_status: "ready_waiting_for_art_assets",
+    core_goal: "Complete engineering and wait for final art.",
+    scope_lock: "Only modify files inside Minotaur-Grand-Mentor project root.",
+    engineering_status: "done",
+    documentation_status: "done",
+    overlay_status: "placeholder_ready",
+    dashboard_status: "ready",
+    live2d_status: "spec_ready_waiting_for_art_and_rigging",
     completed_tasks: [],
-    pending_tasks: [
-      "Generate idle_closed.png",
-      "Generate talk_open.png",
-      "Generate blink_closed.png",
-      "Generate happy.png",
-      "Run validate_assets.py",
-      "Test overlay in OBS"
-    ],
-    missing_assets: [
-      "assets/avatar/pngtuber/idle_closed.png",
-      "assets/avatar/pngtuber/talk_open.png",
-      "assets/avatar/pngtuber/blink_closed.png",
-      "assets/avatar/pngtuber/happy.png"
-    ],
+    pending_tasks: [],
+    missing_assets: [],
+    blocked_by_art: [],
+    blocked_by_rigging: [],
     last_updated: "not loaded",
-    notes: "Fallback state is displayed because JSON fetch is unavailable in this context."
+    notes: []
   };
 
-  const DEFAULT_MANIFEST = {
-    required_assets: [
-      { id: "idle_closed", path: "assets/avatar/pngtuber/idle_closed.png", required: true },
-      { id: "talk_open", path: "assets/avatar/pngtuber/talk_open.png", required: true },
-      { id: "blink_closed", path: "assets/avatar/pngtuber/blink_closed.png", required: true },
-      { id: "happy", path: "assets/avatar/pngtuber/happy.png", required: true }
-    ],
-    optional_assets: [
-      { id: "angry", path: "assets/avatar/pngtuber/angry.png", required: false },
-      { id: "thinking", path: "assets/avatar/pngtuber/thinking.png", required: false },
-      { id: "gesture_point", path: "assets/avatar/pngtuber/gesture_point.png", required: false },
-      { id: "shock", path: "assets/avatar/pngtuber/shock.png", required: false }
-    ]
-  };
+  const DEFAULT_MANIFEST = bundle.avatarManifest || { required_assets: [], optional_assets: [] };
+  const DEFAULT_LIVE2D = bundle.live2dManifest || { required_final_files: [] };
+  const DEFAULT_TASKS = bundle.taskBoard || { tasks: [] };
 
   const stateList = document.getElementById("stateList");
   const missingAssets = document.getElementById("missingAssets");
@@ -50,14 +38,16 @@
   async function loadJson(path, fallback) {
     try {
       const response = await fetch(path, { cache: "no-store" });
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return await response.json();
     } catch (error) {
       console.warn(`Using fallback for ${path}`, error);
       return fallback;
     }
+  }
+
+  function asArray(value) {
+    return Array.isArray(value) ? value : value ? [String(value)] : [];
   }
 
   function renderList(element, values, emptyText) {
@@ -77,8 +67,15 @@
       Version: state.version,
       Phase: state.current_phase,
       Status: state.overall_status,
+      Goal: state.core_goal,
+      Scope: state.scope_lock,
+      Engineering: state.engineering_status,
+      Documentation: state.documentation_status,
+      Overlay: state.overlay_status,
+      Dashboard: state.dashboard_status,
+      Live2D: state.live2d_status,
       Updated: state.last_updated,
-      Notes: state.notes
+      Notes: asArray(state.notes).join(" | ") || state.notes
     };
     for (const [label, value] of Object.entries(rows)) {
       const dt = document.createElement("dt");
@@ -89,11 +86,12 @@
     }
   }
 
-  function renderAssets(manifest, missing) {
+  function renderAssets(manifest, live2d, missing) {
     assetChecklist.innerHTML = "";
     const allAssets = [
       ...(manifest.required_assets || []),
-      ...(manifest.optional_assets || [])
+      ...(manifest.optional_assets || []),
+      ...(live2d.required_final_files || [])
     ];
     const missingSet = new Set(missing || []);
     for (const asset of allAssets) {
@@ -129,22 +127,33 @@
     }
   }
 
+  function taskTitles(taskBoard, status) {
+    return (taskBoard.tasks || [])
+      .filter((task) => task.status === status)
+      .map((task) => `${task.id}: ${task.title}`);
+  }
+
   async function boot() {
-    const [state, manifest, runLogJson] = await Promise.all([
+    const [state, manifest, live2d, taskBoard, runLogJson] = await Promise.all([
       loadJson("../data/project-state.json", DEFAULT_STATE),
       loadJson("../data/avatar-manifest.json", DEFAULT_MANIFEST),
-      loadJson("../data/run-log.json", null)
+      loadJson("../data/live2d-sourcekit-manifest.json", DEFAULT_LIVE2D),
+      loadJson("../data/task-board.json", DEFAULT_TASKS),
+      loadJson("../data/run-log.json", bundle.runLog || window.__MINOTAUR_RUN_LOG__ || [])
     ]);
 
     const runLog = Array.isArray(runLogJson)
       ? runLogJson
-      : (window.__MINOTAUR_RUN_LOG__ || []);
+      : (bundle.runLog || window.__MINOTAUR_RUN_LOG__ || []);
 
     renderState(state);
     renderList(missingAssets, state.missing_assets, "No missing required assets recorded.");
-    renderList(completedTasks, state.completed_tasks, "No completed tasks recorded.");
-    renderList(pendingTasks, state.pending_tasks, "No pending tasks recorded.");
-    renderAssets(manifest, state.missing_assets);
+    renderList(completedTasks, state.completed_tasks.length ? state.completed_tasks : taskTitles(taskBoard, "done"), "No completed tasks recorded.");
+    renderList(pendingTasks, state.pending_tasks.length ? state.pending_tasks : [
+      ...taskTitles(taskBoard, "waiting_for_art"),
+      ...taskTitles(taskBoard, "waiting_for_rigging")
+    ], "No pending tasks recorded.");
+    renderAssets(manifest, live2d, state.missing_assets);
     renderLogs(runLog);
   }
 

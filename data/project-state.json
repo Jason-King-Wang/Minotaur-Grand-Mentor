@@ -1,8 +1,16 @@
 {
   "project": "Minotaur Grand Mentor",
-  "version": "0.1.0",
-  "current_phase": "GitHub Upload",
-  "overall_status": "Assets pending: 4 required PNGTuber files missing",
+  "version": "0.2.0",
+  "mode": "engineering_until_art_missing",
+  "current_phase": "Blueprint Archive",
+  "overall_status": "Blueprint Archive: done - Archived full v2 Codex blueprint",
+  "core_goal": "Complete all Codex-capable engineering, docs, dashboard, overlay, logging, and asset specs; leave only final art and Live2D rigging.",
+  "scope_lock": "Only modify files inside Minotaur-Grand-Mentor project root. Do not modify other Obsidian content.",
+  "engineering_status": "done",
+  "documentation_status": "done",
+  "overlay_status": "placeholder_ready",
+  "dashboard_status": "ready",
+  "live2d_status": "spec_ready_waiting_for_art_and_rigging",
   "completed_tasks": [
     "Phase 1: Created project scaffold",
     "Phase 2: Wrote project documentation",
@@ -12,7 +20,9 @@
     "Phase 6: Built static dashboard",
     "Phase 7: Ran project file tests",
     "Phase 8: Completed PNGTuber MVP initialization",
-    "GitHub Upload: Prepared repository content for GitHub upload"
+    "GitHub Upload: Prepared repository content for GitHub upload",
+    "Final Handoff: Completed all non-art deliverables",
+    "Blueprint Archive: Archived full v2 Codex blueprint"
   ],
   "pending_tasks": [
     "Generate idle_closed.png",
@@ -27,8 +37,20 @@
     "assets/avatar/pngtuber/idle_closed.png",
     "assets/avatar/pngtuber/talk_open.png",
     "assets/avatar/pngtuber/blink_closed.png",
-    "assets/avatar/pngtuber/happy.png"
+    "assets/avatar/pngtuber/happy.png",
+    "assets/avatar/live2d/final/final_front_master.png",
+    "assets/avatar/live2d/final/final_layered_model.psd"
   ],
-  "last_updated": "2026-04-27T00:59:53+08:00",
-  "notes": "Push the static PNGTuber MVP project content to GitHub main branch."
+  "blocked_by_art": [
+    "PNGTuber expression PNG files",
+    "Live2D final front master image",
+    "Live2D final layered PSD"
+  ],
+  "blocked_by_rigging": [
+    "Live2D Cubism rigging",
+    ".moc3 export",
+    "VTube Studio test"
+  ],
+  "last_updated": "2026-04-29T00:10:50+08:00",
+  "notes": "Use docs/CODEX_WORK_BLUEPRINT_FULL.md as the long-form source spec for future Codex work."
 }

@@ -1,0 +1,56 @@
+{
+  "project": "Minotaur Grand Mentor",
+  "version": "0.2.0",
+  "mode": "live2d-source-prep",
+  "status": "waiting_for_final_art_and_layered_psd",
+  "required_final_files": [
+    {
+      "id": "final_front_master",
+      "path": "assets/avatar/live2d/final/final_front_master.png",
+      "required": true,
+      "description": "Final front-facing master artwork"
+    },
+    {
+      "id": "final_layered_psd",
+      "path": "assets/avatar/live2d/final/final_layered_model.psd",
+      "required": true,
+      "description": "Final layered PSD for Live2D rigging"
+    }
+  ],
+  "required_layers": [
+    "torso_jacket",
+    "neck",
+    "head_base",
+    "muzzle",
+    "nose",
+    "front_hair",
+    "back_hair",
+    "left_horn",
+    "right_horn",
+    "left_ear",
+    "right_ear",
+    "left_eye_white",
+    "left_iris",
+    "left_pupil",
+    "left_upper_eyelid",
+    "left_lower_eyelid",
+    "right_eye_white",
+    "right_iris",
+    "right_pupil",
+    "right_upper_eyelid",
+    "right_lower_eyelid",
+    "left_eyebrow",
+    "right_eyebrow",
+    "upper_lip",
+    "lower_lip",
+    "mouth_inner",
+    "upper_teeth",
+    "lower_teeth",
+    "tongue",
+    "jacket_body",
+    "left_collar",
+    "right_collar",
+    "zipper"
+  ]
+}
+
