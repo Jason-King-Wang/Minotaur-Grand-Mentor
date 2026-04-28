@@ -48,7 +48,7 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       ".moc3 export",
       "VTube Studio test"
     ],
-    "last_updated": "2026-04-29T07:20:09+08:00",
+    "last_updated": "2026-04-29T07:21:13+08:00",
     "notes": "Push imported PNGTuber assets and updated project status to GitHub main."
   },
   "taskBoard": {
@@ -537,5 +537,5 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       "record": "records/2026-04-29/072002-github-sync.md"
     }
   ],
-  "generatedAt": "2026-04-29T07:20:12+08:00"
+  "generatedAt": "2026-04-29T07:21:27+08:00"
 };
