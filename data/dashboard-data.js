@@ -3,13 +3,13 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
     "project": "Minotaur Grand Mentor",
     "version": "0.2.0",
     "mode": "engineering_until_art_missing",
-    "current_phase": "waiting_for_art",
-    "overall_status": "ready_waiting_for_art_assets",
+    "current_phase": "pngtuber_mvp_ready",
+    "overall_status": "pngtuber_mvp_ready_waiting_for_live2d_assets",
     "core_goal": "Complete all Codex-capable engineering, docs, dashboard, overlay, logging, and asset specs; leave only final art and Live2D rigging.",
     "scope_lock": "Only modify files inside Minotaur-Grand-Mentor project root. Do not modify other Obsidian content.",
     "engineering_status": "done",
     "documentation_status": "done",
-    "overlay_status": "placeholder_ready",
+    "overlay_status": "pngtuber_assets_ready",
     "dashboard_status": "ready",
     "live2d_status": "spec_ready_waiting_for_art_and_rigging",
     "completed_tasks": [
@@ -23,27 +23,23 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       "Phase 8: Completed PNGTuber MVP initialization",
       "GitHub Upload: Prepared repository content for GitHub upload",
       "Final Handoff: Completed all non-art deliverables",
-      "Blueprint Archive: Archived full v2 Codex blueprint"
+      "Blueprint Archive: Archived full v2 Codex blueprint",
+      "PNGTuber Assets: Imported MVP PNGTuber assets",
+      "PNGTuber Status Cleanup: Updated tasks after PNGTuber asset import",
+      "GitHub Sync: Prepared PNGTuber asset sync"
     ],
     "pending_tasks": [
-      "Generate idle_closed.png",
-      "Generate talk_open.png",
-      "Generate blink_closed.png",
-      "Generate happy.png",
-      "Place PNG files into assets/avatar/pngtuber/",
-      "Run python tools\\validate_assets.py",
-      "Test overlay/index.html in OBS Browser Source"
+      "Test overlay/index.html in OBS Browser Source",
+      "Confirm microphone mouth switching with overlay/index.html?debug=1",
+      "Create Live2D final front master artwork",
+      "Create Live2D layered PSD",
+      "Send PSD and checklist to Live2D rigger"
     ],
     "missing_assets": [
-      "assets/avatar/pngtuber/idle_closed.png",
-      "assets/avatar/pngtuber/talk_open.png",
-      "assets/avatar/pngtuber/blink_closed.png",
-      "assets/avatar/pngtuber/happy.png",
       "assets/avatar/live2d/final/final_front_master.png",
       "assets/avatar/live2d/final/final_layered_model.psd"
     ],
     "blocked_by_art": [
-      "PNGTuber expression PNG files",
       "Live2D final front master image",
       "Live2D final layered PSD"
     ],
@@ -52,8 +48,8 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       ".moc3 export",
       "VTube Studio test"
     ],
-    "last_updated": "2026-04-29T00:10:50+08:00",
-    "notes": "Full v2 blueprint archived. Next: create final PNGTuber images and Live2D layered PSD."
+    "last_updated": "2026-04-29T07:20:09+08:00",
+    "notes": "Push imported PNGTuber assets and updated project status to GitHub main."
   },
   "taskBoard": {
     "columns": {
@@ -78,10 +74,10 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
         "obs-setup-doc",
         "github-pages-doc",
         "tests",
-        "final-report"
+        "final-report",
+        "waiting-for-pngtuber-art"
       ],
       "waiting_for_art": [
-        "waiting-for-pngtuber-art",
         "waiting-for-live2d-art"
       ],
       "waiting_for_rigging": [
@@ -225,8 +221,8 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       },
       {
         "id": "waiting-for-pngtuber-art",
-        "title": "Waiting for final PNGTuber art",
-        "status": "waiting_for_art",
+        "title": "Final PNGTuber MVP art imported",
+        "status": "done",
         "owner": "user",
         "acceptance": "Final PNGTuber expression PNG files are added to assets/avatar/pngtuber/."
       },
@@ -483,7 +479,63 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
         "tests/test_project_files.py"
       ],
       "record": "records/2026-04-29/001050-blueprint-archive.md"
+    },
+    {
+      "id": "20260429-071542-pngtuber-assets",
+      "timestamp": "2026-04-29T07:15:42+08:00",
+      "phase": "PNGTuber Assets",
+      "status": "done",
+      "summary": "Imported MVP PNGTuber assets",
+      "details": "Imported idle_closed, talk_open, blink_closed, and happy PNG files from pngtuber_mvp_assets.zip. Archived the contact sheet in assets/reference.",
+      "next": "Test overlay in OBS, then create Live2D front master and layered PSD.",
+      "files_changed": [
+        "assets/avatar/pngtuber/idle_closed.png",
+        "assets/avatar/pngtuber/talk_open.png",
+        "assets/avatar/pngtuber/blink_closed.png",
+        "assets/avatar/pngtuber/happy.png",
+        "assets/reference/pngtuber_mvp_contact_sheet.png",
+        "docs/NEXT_ACTIONS.md",
+        "data/task-board.json",
+        "tools/validate_assets.py"
+      ],
+      "record": "records/2026-04-29/071542-pngtuber-assets.md"
+    },
+    {
+      "id": "20260429-071627-pngtuber-status-cleanup",
+      "timestamp": "2026-04-29T07:16:27+08:00",
+      "phase": "PNGTuber Status Cleanup",
+      "status": "done",
+      "summary": "Updated tasks after PNGTuber asset import",
+      "details": "Removed completed PNG generation tasks from pending_tasks, kept OBS testing and Live2D art/PSD as remaining work, and updated final handoff to mention imported MVP assets.",
+      "next": "Test overlay in OBS, then create Live2D front master and layered PSD.",
+      "files_changed": [
+        "data/project-state.json",
+        "docs/FINAL_HANDOFF.md"
+      ],
+      "record": "records/2026-04-29/071627-pngtuber-status-cleanup.md"
+    },
+    {
+      "id": "20260429-072002-github-sync",
+      "timestamp": "2026-04-29T07:20:02+08:00",
+      "phase": "GitHub Sync",
+      "status": "done",
+      "summary": "Prepared PNGTuber asset sync",
+      "details": "Validated imported PNGTuber MVP assets and prepared updated state, records, and dashboard fallback data for GitHub upload.",
+      "next": "Push imported PNGTuber assets and updated project status to GitHub main.",
+      "files_changed": [
+        "assets/avatar/pngtuber/idle_closed.png",
+        "assets/avatar/pngtuber/talk_open.png",
+        "assets/avatar/pngtuber/blink_closed.png",
+        "assets/avatar/pngtuber/happy.png",
+        "assets/reference/pngtuber_mvp_contact_sheet.png",
+        "data/project-state.json",
+        "data/run-log.json",
+        "data/run-log.js",
+        "data/dashboard-data.js",
+        "docs/NEXT_ACTIONS.md"
+      ],
+      "record": "records/2026-04-29/072002-github-sync.md"
     }
   ],
-  "generatedAt": "2026-04-29T00:11:55+08:00"
+  "generatedAt": "2026-04-29T07:20:12+08:00"
 };

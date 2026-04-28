@@ -4,30 +4,26 @@
 
 - Scope lock and Obsidian protection.
 - Documentation, dashboard, overlay, records, validation, placeholder, and Live2D specification tooling.
+- PNGTuber MVP assets imported: `idle_closed.png`, `talk_open.png`, `blink_closed.png`, `happy.png`.
 - Public fallback data for static dashboard use.
 
 ## Current Status
 
-- Overall: `ready_waiting_for_art_assets`
-- Current phase: `waiting_for_art`
+- Overall: `pngtuber_mvp_ready_waiting_for_live2d_assets`
+- Current phase: `pngtuber_mvp_ready`
 - Engineering: `done`
 - Documentation: `done`
-- Overlay: `placeholder_ready`
+- Overlay: `pngtuber_assets_ready`
 - Dashboard: `ready`
 - Live2D: `spec_ready_waiting_for_art_and_rigging`
 
 ## Missing Assets
 
-- `assets/avatar/pngtuber/idle_closed.png`
-- `assets/avatar/pngtuber/talk_open.png`
-- `assets/avatar/pngtuber/blink_closed.png`
-- `assets/avatar/pngtuber/happy.png`
 - `assets/avatar/live2d/final/final_front_master.png`
 - `assets/avatar/live2d/final/final_layered_model.psd`
 
 ## Blocked By Art
 
-- PNGTuber expression PNG files
 - Live2D final front master image
 - Live2D final layered PSD
 

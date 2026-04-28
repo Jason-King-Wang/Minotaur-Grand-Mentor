@@ -21,10 +21,10 @@
       "obs-setup-doc",
       "github-pages-doc",
       "tests",
-      "final-report"
+      "final-report",
+      "waiting-for-pngtuber-art"
     ],
     "waiting_for_art": [
-      "waiting-for-pngtuber-art",
       "waiting-for-live2d-art"
     ],
     "waiting_for_rigging": [
@@ -168,8 +168,8 @@
     },
     {
       "id": "waiting-for-pngtuber-art",
-      "title": "Waiting for final PNGTuber art",
-      "status": "waiting_for_art",
+      "title": "Final PNGTuber MVP art imported",
+      "status": "done",
       "owner": "user",
       "acceptance": "Final PNGTuber expression PNG files are added to assets/avatar/pngtuber/."
     },
@@ -189,4 +189,3 @@
     }
   ]
 }
-

@@ -52,11 +52,21 @@ def update_project_state(missing_assets: list[str], blocked_by_art: list[str]) -
     state["missing_assets"] = missing_assets
     state["blocked_by_art"] = blocked_by_art
     state["last_updated"] = datetime.now(TAIPEI).isoformat(timespec="seconds")
-    if missing_assets:
+    missing_pngtuber = [item for item in missing_assets if "/pngtuber/" in item.replace("\\", "/")]
+    missing_live2d = [item for item in missing_assets if "/live2d/" in item.replace("\\", "/")]
+
+    if missing_pngtuber:
         state["overall_status"] = "ready_waiting_for_art_assets"
         state["current_phase"] = "waiting_for_art"
+        state["overlay_status"] = "placeholder_ready"
+    elif missing_live2d:
+        state["overall_status"] = "pngtuber_mvp_ready_waiting_for_live2d_assets"
+        state["current_phase"] = "pngtuber_mvp_ready"
+        state["overlay_status"] = "pngtuber_assets_ready"
     else:
         state["overall_status"] = "required_art_assets_present"
+        state["current_phase"] = "art_assets_present"
+        state["overlay_status"] = "pngtuber_assets_ready"
     write_json(PROJECT_STATE, state)
 
 
@@ -117,4 +127,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

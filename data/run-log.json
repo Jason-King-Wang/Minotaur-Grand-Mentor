@@ -123,5 +123,61 @@
       "tests/test_project_files.py"
     ],
     "record": "records/2026-04-29/001050-blueprint-archive.md"
+  },
+  {
+    "id": "20260429-071542-pngtuber-assets",
+    "timestamp": "2026-04-29T07:15:42+08:00",
+    "phase": "PNGTuber Assets",
+    "status": "done",
+    "summary": "Imported MVP PNGTuber assets",
+    "details": "Imported idle_closed, talk_open, blink_closed, and happy PNG files from pngtuber_mvp_assets.zip. Archived the contact sheet in assets/reference.",
+    "next": "Test overlay in OBS, then create Live2D front master and layered PSD.",
+    "files_changed": [
+      "assets/avatar/pngtuber/idle_closed.png",
+      "assets/avatar/pngtuber/talk_open.png",
+      "assets/avatar/pngtuber/blink_closed.png",
+      "assets/avatar/pngtuber/happy.png",
+      "assets/reference/pngtuber_mvp_contact_sheet.png",
+      "docs/NEXT_ACTIONS.md",
+      "data/task-board.json",
+      "tools/validate_assets.py"
+    ],
+    "record": "records/2026-04-29/071542-pngtuber-assets.md"
+  },
+  {
+    "id": "20260429-071627-pngtuber-status-cleanup",
+    "timestamp": "2026-04-29T07:16:27+08:00",
+    "phase": "PNGTuber Status Cleanup",
+    "status": "done",
+    "summary": "Updated tasks after PNGTuber asset import",
+    "details": "Removed completed PNG generation tasks from pending_tasks, kept OBS testing and Live2D art/PSD as remaining work, and updated final handoff to mention imported MVP assets.",
+    "next": "Test overlay in OBS, then create Live2D front master and layered PSD.",
+    "files_changed": [
+      "data/project-state.json",
+      "docs/FINAL_HANDOFF.md"
+    ],
+    "record": "records/2026-04-29/071627-pngtuber-status-cleanup.md"
+  },
+  {
+    "id": "20260429-072002-github-sync",
+    "timestamp": "2026-04-29T07:20:02+08:00",
+    "phase": "GitHub Sync",
+    "status": "done",
+    "summary": "Prepared PNGTuber asset sync",
+    "details": "Validated imported PNGTuber MVP assets and prepared updated state, records, and dashboard fallback data for GitHub upload.",
+    "next": "Push imported PNGTuber assets and updated project status to GitHub main.",
+    "files_changed": [
+      "assets/avatar/pngtuber/idle_closed.png",
+      "assets/avatar/pngtuber/talk_open.png",
+      "assets/avatar/pngtuber/blink_closed.png",
+      "assets/avatar/pngtuber/happy.png",
+      "assets/reference/pngtuber_mvp_contact_sheet.png",
+      "data/project-state.json",
+      "data/run-log.json",
+      "data/run-log.js",
+      "data/dashboard-data.js",
+      "docs/NEXT_ACTIONS.md"
+    ],
+    "record": "records/2026-04-29/072002-github-sync.md"
   }
 ]
