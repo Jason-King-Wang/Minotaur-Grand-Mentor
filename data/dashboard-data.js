@@ -3,8 +3,8 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
     "project": "Minotaur Grand Mentor",
     "version": "0.2.0",
     "mode": "engineering_until_art_missing",
-    "current_phase": "Blueprint Archive",
-    "overall_status": "Blueprint Archive: done - Archived full v2 Codex blueprint",
+    "current_phase": "waiting_for_art",
+    "overall_status": "ready_waiting_for_art_assets",
     "core_goal": "Complete all Codex-capable engineering, docs, dashboard, overlay, logging, and asset specs; leave only final art and Live2D rigging.",
     "scope_lock": "Only modify files inside Minotaur-Grand-Mentor project root. Do not modify other Obsidian content.",
     "engineering_status": "done",
@@ -53,7 +53,7 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       "VTube Studio test"
     ],
     "last_updated": "2026-04-29T00:10:50+08:00",
-    "notes": "Use docs/CODEX_WORK_BLUEPRINT_FULL.md as the long-form source spec for future Codex work."
+    "notes": "Full v2 blueprint archived. Next: create final PNGTuber images and Live2D layered PSD."
   },
   "taskBoard": {
     "columns": {
@@ -485,5 +485,5 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       "record": "records/2026-04-29/001050-blueprint-archive.md"
     }
   ],
-  "generatedAt": "2026-04-29T00:10:50+08:00"
+  "generatedAt": "2026-04-29T00:11:55+08:00"
 };
