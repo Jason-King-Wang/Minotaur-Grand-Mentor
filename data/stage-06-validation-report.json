@@ -1,0 +1,446 @@
+{
+  "project": "Minotaur Grand Mentor",
+  "phase": "Stage 06 same-canvas layer pack",
+  "generated_at": "2026-04-29T22:21:57+08:00",
+  "source_png_validation": {
+    "checked": 65,
+    "missing": [],
+    "invalid": [],
+    "not_rgba": [],
+    "transparent_count": 57,
+    "opaque_preview_contact_sheets": [
+      {
+        "path": "05_preview/core_components_contact_sheet.png",
+        "size": [
+          1050,
+          622
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      },
+      {
+        "path": "05_preview/final_master_contact_sheet.png",
+        "size": [
+          276,
+          320
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      },
+      {
+        "path": "05_preview/group_01_eyes_contact_sheet.png",
+        "size": [
+          1308,
+          622
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      },
+      {
+        "path": "05_preview/group_02_mouth_contact_sheet.png",
+        "size": [
+          792,
+          622
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      },
+      {
+        "path": "05_preview/group_03_brow_hair_contact_sheet.png",
+        "size": [
+          792,
+          622
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      },
+      {
+        "path": "05_preview/group_04_collar_neck_contact_sheet.png",
+        "size": [
+          792,
+          320
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      },
+      {
+        "path": "05_preview/group_05_occlusion_fill_contact_sheet.png",
+        "size": [
+          792,
+          1528
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      },
+      {
+        "path": "05_preview/preview_pngtuber_contact_sheet.png",
+        "size": [
+          1050,
+          622
+        ],
+        "mode": "RGBA",
+        "has_transparency": false
+      }
+    ],
+    "opaque_non_preview_pngs": [],
+    "summary": "65 source PNGs exist and are RGBA; 57 layer/avatar PNGs are transparent; 8 preview contact sheets are RGBA but intentionally opaque."
+  },
+  "same_canvas_output_validation": {
+    "output_folder": "assets/avatar/live2d/final/layers_png_same_canvas/",
+    "count": 34,
+    "required_size": [
+      4096,
+      4096
+    ],
+    "problems": [],
+    "files": [
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/back_hair.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_center.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_left.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_right.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/head_base.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/head_base_full_no_features.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/jacket_collar_left.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/jacket_collar_right.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_ear.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_eye_white.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_eyebrow.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_horn.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_iris.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_lower_eyelid.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_pupil.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_upper_eyelid.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/lower_teeth.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/mouth_inner.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/mouth_lower_lip.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/mouth_upper_lip.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/muzzle_base.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/neck.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/nose.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_ear.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_eye_white.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_eyebrow.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_horn.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_iris.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_lower_eyelid.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_pupil.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_upper_eyelid.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/tongue.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/torso_jacket.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      },
+      {
+        "path": "assets/avatar/live2d/final/layers_png_same_canvas/upper_teeth.png",
+        "size": [
+          4096,
+          4096
+        ],
+        "mode": "RGBA",
+        "has_transparency": true,
+        "has_visible_pixels": true
+      }
+    ],
+    "summary": "34 generated same-canvas PNG layers are 4096x4096 RGBA transparent and contain visible pixels."
+  },
+  "live2d_boundaries": {
+    "same_canvas_layer_pack": "built_pending_visual_review",
+    "final_layered_model_psd": "pending",
+    "live2d_moc3": "pending",
+    "note": "This is not a finished Live2D model, not a final PSD, and not a .moc3 rig."
+  }
+}

@@ -2,19 +2,21 @@
   "project": "Minotaur Grand Mentor",
   "version": "0.2.0",
   "mode": "live2d-source-prep",
-  "status": "waiting_for_final_art_and_layered_psd",
+  "status": "same_canvas_pack_built_pending_visual_review_final_psd_pending",
   "required_final_files": [
     {
       "id": "final_front_master",
       "path": "assets/avatar/live2d/final/final_front_master.png",
       "required": true,
-      "description": "Final front-facing master artwork"
+      "description": "Final front-facing master artwork",
+      "status": "present"
     },
     {
       "id": "final_layered_psd",
       "path": "assets/avatar/live2d/final/final_layered_model.psd",
       "required": true,
-      "description": "Final layered PSD for Live2D rigging"
+      "description": "Final layered PSD for Live2D rigging",
+      "status": "pending"
     }
   ],
   "required_layers": [
@@ -51,6 +53,23 @@
     "left_collar",
     "right_collar",
     "zipper"
+  ],
+  "updated_at": "2026-04-29T22:21:57+08:00",
+  "same_canvas_layer_pack": {
+    "status": "built_pending_visual_review",
+    "path": "assets/avatar/live2d/final/layers_png_same_canvas/",
+    "png_count": 34,
+    "canvas_size": [
+      4096,
+      4096
+    ],
+    "note": "Not a final PSD and not a finished Live2D model."
+  },
+  "pending_rigging_outputs": [
+    {
+      "id": "live2d_moc3",
+      "path": "assets/avatar/live2d/rigging/MinotaurGrandMentor.moc3",
+      "status": "pending"
+    }
   ]
 }
-

@@ -26,6 +26,8 @@
 
   const DEFAULT_MANIFEST = bundle.avatarManifest || { required_assets: [], optional_assets: [] };
   const DEFAULT_LIVE2D = bundle.live2dManifest || { required_final_files: [] };
+  const DEFAULT_COMPONENTS = bundle.live2dComponentManifest || { status: {}, same_canvas_outputs: {} };
+  const DEFAULT_STAGE_06_VALIDATION = bundle.stage06Validation || {};
   const DEFAULT_TASKS = bundle.taskBoard || { tasks: [] };
 
   const stateList = document.getElementById("stateList");
@@ -33,6 +35,7 @@
   const completedTasks = document.getElementById("completedTasks");
   const pendingTasks = document.getElementById("pendingTasks");
   const assetChecklist = document.getElementById("assetChecklist");
+  const stage06State = document.getElementById("stage06State");
   const runLogs = document.getElementById("runLogs");
 
   async function loadJson(path, fallback) {
@@ -107,6 +110,33 @@
     }
   }
 
+  function renderStage06(componentManifest, validation) {
+    if (!stage06State) return;
+    stage06State.innerHTML = "";
+    const status = componentManifest.status || {};
+    const outputs = componentManifest.same_canvas_outputs || {};
+    const pngValidation = componentManifest.png_validation || validation || {};
+    const rows = {
+      "PNGTuber": status.pngtuber,
+      "Live2D Components": status.live2d_source_components,
+      "Same Canvas Pack": status.same_canvas_layer_pack,
+      "Visual Review": status.visual_review,
+      "Final PSD": status.final_layered_model_psd,
+      ".moc3": status.live2d_moc3,
+      "Output Folder": outputs.output_folder || componentManifest.canvas_plan?.output_folder,
+      "Output PNGs": outputs.count,
+      "Canvas": outputs.canvas_size ? outputs.canvas_size.join("x") : "",
+      "Validation": pngValidation.summary || ""
+    };
+    for (const [label, value] of Object.entries(rows)) {
+      const dt = document.createElement("dt");
+      const dd = document.createElement("dd");
+      dt.textContent = label;
+      dd.textContent = value || "pending";
+      stage06State.append(dt, dd);
+    }
+  }
+
   function renderLogs(entries) {
     runLogs.innerHTML = "";
     const items = entries && entries.length ? entries.slice().reverse().slice(0, 10) : [];
@@ -134,10 +164,12 @@
   }
 
   async function boot() {
-    const [state, manifest, live2d, taskBoard, runLogJson] = await Promise.all([
+    const [state, manifest, live2d, componentManifest, validation, taskBoard, runLogJson] = await Promise.all([
       loadJson("../data/project-state.json", DEFAULT_STATE),
       loadJson("../data/avatar-manifest.json", DEFAULT_MANIFEST),
       loadJson("../data/live2d-sourcekit-manifest.json", DEFAULT_LIVE2D),
+      loadJson("../data/live2d-component-manifest.json", DEFAULT_COMPONENTS),
+      loadJson("../data/stage-06-validation-report.json", DEFAULT_STAGE_06_VALIDATION),
       loadJson("../data/task-board.json", DEFAULT_TASKS),
       loadJson("../data/run-log.json", bundle.runLog || window.__MINOTAUR_RUN_LOG__ || [])
     ]);
@@ -154,9 +186,9 @@
       ...taskTitles(taskBoard, "waiting_for_rigging")
     ], "No pending tasks recorded.");
     renderAssets(manifest, live2d, state.missing_assets);
+    renderStage06(componentManifest, validation);
     renderLogs(runLog);
   }
 
   boot();
 })();
-

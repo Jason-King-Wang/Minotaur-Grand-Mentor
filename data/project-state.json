@@ -1,16 +1,16 @@
 {
   "project": "Minotaur Grand Mentor",
   "version": "0.2.0",
-  "mode": "engineering_until_art_missing",
-  "current_phase": "pngtuber_mvp_ready",
-  "overall_status": "pngtuber_mvp_ready_waiting_for_live2d_assets",
+  "mode": "stage_06_same_canvas",
+  "current_phase": "stage_06_same_canvas_pack_built",
+  "overall_status": "same_canvas_layer_pack_built_pending_psd_and_rigging",
   "core_goal": "Complete all Codex-capable engineering, docs, dashboard, overlay, logging, and asset specs; leave only final art and Live2D rigging.",
   "scope_lock": "Only modify files inside Minotaur-Grand-Mentor project root. Do not modify other Obsidian content.",
   "engineering_status": "done",
   "documentation_status": "done",
   "overlay_status": "pngtuber_assets_ready",
   "dashboard_status": "ready",
-  "live2d_status": "spec_ready_waiting_for_art_and_rigging",
+  "live2d_status": "same_canvas_pack_built_pending_visual_review_final_psd_and_moc3_pending",
   "completed_tasks": [
     "Phase 1: Created project scaffold",
     "Phase 2: Wrote project documentation",
@@ -25,21 +25,23 @@
     "Blueprint Archive: Archived full v2 Codex blueprint",
     "PNGTuber Assets: Imported MVP PNGTuber assets",
     "PNGTuber Status Cleanup: Updated tasks after PNGTuber asset import",
-    "GitHub Sync: Prepared PNGTuber asset sync"
+    "GitHub Sync: Prepared PNGTuber asset sync",
+    "Asset Handoff v2: Imported PNGTuber, Live2D components, and Stage 06 files",
+    "Stage 06: Built same-canvas layer pack",
+    "Stage 06 Same Canvas Pack: Built same-canvas layer pack"
   ],
   "pending_tasks": [
     "Test overlay/index.html in OBS Browser Source",
     "Confirm microphone mouth switching with overlay/index.html?debug=1",
-    "Create Live2D final front master artwork",
-    "Create Live2D layered PSD",
-    "Send PSD and checklist to Live2D rigger"
+    "Visually review assets/avatar/live2d/final/layers_png_same_canvas/ alignment against final_front_master.png",
+    "Assemble final layered PSD at assets/avatar/live2d/final/final_layered_model.psd",
+    "Send PSD and docs/LIVE2D_RIGGER_CHECKLIST.md to the rigger",
+    "Complete Live2D rigging and .moc3 export"
   ],
   "missing_assets": [
-    "assets/avatar/live2d/final/final_front_master.png",
     "assets/avatar/live2d/final/final_layered_model.psd"
   ],
   "blocked_by_art": [
-    "Live2D final front master image",
     "Live2D final layered PSD"
   ],
   "blocked_by_rigging": [
@@ -47,6 +49,10 @@
     ".moc3 export",
     "VTube Studio test"
   ],
-  "last_updated": "2026-04-29T07:21:13+08:00",
-  "notes": "Push imported PNGTuber assets and updated project status to GitHub main."
+  "last_updated": "2026-04-29T22:24:04+08:00",
+  "notes": "Review same-canvas alignment, then assemble final_layered_model.psd and send it to the Live2D rigger.",
+  "pending_artifacts": [
+    "assets/avatar/live2d/final/final_layered_model.psd",
+    "assets/avatar/live2d/rigging/MinotaurGrandMentor.moc3"
+  ]
 }

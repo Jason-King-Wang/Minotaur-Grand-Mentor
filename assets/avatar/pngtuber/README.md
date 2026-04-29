@@ -1,34 +1,14 @@
-# PNGTuber Avatar Assets
+# PNGTuber Assets
 
-Place transparent PNG avatar states here.
+8 PNGTuber expression images. These can be used by the overlay immediately.
 
-Required MVP files:
-
-- `idle_closed.png`
-- `talk_open.png`
-- `blink_closed.png`
-- `happy.png`
-
-Optional files:
+## Files
 
 - `angry.png`
-- `thinking.png`
+- `blink_closed.png`
 - `gesture_point.png`
+- `happy.png`
+- `idle_closed.png`
 - `shock.png`
-
-Recommended export settings:
-
-- `2048x2048` or `3000x3000`.
-- Transparent PNG.
-- Half-body centered.
-- Horns fully visible.
-- Consistent character design.
-
-After adding or changing files, run:
-
-```powershell
-python tools\validate_assets.py
-```
-
-Temporary placeholders are generated into `assets/avatar/placeholders/`; do not treat them as final PNGTuber art.
-
+- `talk_open.png`
+- `thinking.png`

@@ -34,6 +34,8 @@ def main() -> int:
     task_board = read_json(DATA_DIR / "task-board.json", {"columns": {}, "tasks": []})
     avatar_manifest = read_json(DATA_DIR / "avatar-manifest.json", {})
     live2d_manifest = read_json(DATA_DIR / "live2d-sourcekit-manifest.json", {})
+    live2d_component_manifest = read_json(DATA_DIR / "live2d-component-manifest.json", {})
+    stage_06_validation = read_json(DATA_DIR / "stage-06-validation-report.json", {})
     run_log = read_json(DATA_DIR / "run-log.json", [])
     if not isinstance(run_log, list):
         run_log = []
@@ -47,6 +49,8 @@ def main() -> int:
             "taskBoard": task_board,
             "avatarManifest": avatar_manifest,
             "live2dManifest": live2d_manifest,
+            "live2dComponentManifest": live2d_component_manifest,
+            "stage06Validation": stage_06_validation,
             "runLog": run_log,
             "generatedAt": datetime.now(TAIPEI).isoformat(timespec="seconds"),
         },
@@ -57,4 +61,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

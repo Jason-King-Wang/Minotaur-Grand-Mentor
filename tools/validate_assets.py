@@ -11,6 +11,7 @@ DATA_DIR = ROOT / "data"
 AVATAR_MANIFEST = DATA_DIR / "avatar-manifest.json"
 LIVE2D_MANIFEST = DATA_DIR / "live2d-sourcekit-manifest.json"
 PROJECT_STATE = DATA_DIR / "project-state.json"
+SAME_CANVAS_DIR = ROOT / "assets" / "avatar" / "live2d" / "final" / "layers_png_same_canvas"
 TAIPEI = timezone(timedelta(hours=8))
 
 
@@ -60,8 +61,15 @@ def update_project_state(missing_assets: list[str], blocked_by_art: list[str]) -
         state["current_phase"] = "waiting_for_art"
         state["overlay_status"] = "placeholder_ready"
     elif missing_live2d:
-        state["overall_status"] = "pngtuber_mvp_ready_waiting_for_live2d_assets"
-        state["current_phase"] = "pngtuber_mvp_ready"
+        same_canvas_count = len(list(SAME_CANVAS_DIR.glob("*.png"))) if SAME_CANVAS_DIR.exists() else 0
+        if same_canvas_count and all("final_layered_model" in item for item in missing_live2d):
+            state["overall_status"] = "same_canvas_layer_pack_built_pending_psd_and_rigging"
+            state["current_phase"] = "stage_06_same_canvas_pack_built"
+            state["live2d_status"] = "same_canvas_pack_built_pending_visual_review_final_psd_and_moc3_pending"
+        else:
+            state["overall_status"] = "pngtuber_mvp_ready_waiting_for_live2d_assets"
+            state["current_phase"] = "pngtuber_mvp_ready"
+            state["live2d_status"] = "spec_ready_waiting_for_art_and_rigging"
         state["overlay_status"] = "pngtuber_assets_ready"
     else:
         state["overall_status"] = "required_art_assets_present"
@@ -121,7 +129,8 @@ def main() -> int:
             print(f"- {note}")
 
     update_project_state(missing_assets, blocked_by_art)
-    print("\nStatus: waiting_for_art_assets" if missing_assets else "\nStatus: ready")
+    state = read_json(PROJECT_STATE, {})
+    print(f"\nStatus: {state.get('overall_status', 'ready' if not missing_assets else 'waiting_for_art_assets')}")
     return 0
 
 

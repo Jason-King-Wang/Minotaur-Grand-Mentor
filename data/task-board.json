@@ -22,15 +22,20 @@
       "github-pages-doc",
       "tests",
       "final-report",
-      "waiting-for-pngtuber-art"
+      "waiting-for-pngtuber-art",
+      "stage-06-same-canvas-pack"
     ],
     "waiting_for_art": [
-      "waiting-for-live2d-art"
+      "waiting-for-live2d-art",
+      "waiting-for-layered-psd"
     ],
     "waiting_for_rigging": [
       "waiting-for-live2d-rigging"
     ],
-    "blocked": []
+    "blocked": [],
+    "pending_visual_review": [
+      "same-canvas-visual-review"
+    ]
   },
   "tasks": [
     {
@@ -186,6 +191,27 @@
       "status": "waiting_for_rigging",
       "owner": "rigger",
       "acceptance": "Live2D Cubism model and VTube Studio test are complete."
+    },
+    {
+      "id": "stage-06-same-canvas-pack",
+      "title": "Build Stage 06 same-canvas layer pack",
+      "status": "done",
+      "owner": "codex",
+      "acceptance": "Generated 4096x4096 RGBA transparent PNG layers under assets/avatar/live2d/final/layers_png_same_canvas/."
+    },
+    {
+      "id": "same-canvas-visual-review",
+      "title": "Review same-canvas alignment against final front master",
+      "status": "pending_visual_review",
+      "owner": "user/rigger",
+      "acceptance": "User or rigger confirms layer placement is ready for PSD assembly."
+    },
+    {
+      "id": "waiting-for-layered-psd",
+      "title": "Create final layered PSD from reviewed same-canvas layers",
+      "status": "waiting_for_art",
+      "owner": "artist/user",
+      "acceptance": "assets/avatar/live2d/final/final_layered_model.psd exists and follows docs/LIVE2D_LAYER_SPEC.md."
     }
   ]
 }

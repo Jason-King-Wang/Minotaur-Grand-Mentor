@@ -2,16 +2,16 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
   "projectState": {
     "project": "Minotaur Grand Mentor",
     "version": "0.2.0",
-    "mode": "engineering_until_art_missing",
-    "current_phase": "pngtuber_mvp_ready",
-    "overall_status": "pngtuber_mvp_ready_waiting_for_live2d_assets",
+    "mode": "stage_06_same_canvas",
+    "current_phase": "stage_06_same_canvas_pack_built",
+    "overall_status": "same_canvas_layer_pack_built_pending_psd_and_rigging",
     "core_goal": "Complete all Codex-capable engineering, docs, dashboard, overlay, logging, and asset specs; leave only final art and Live2D rigging.",
     "scope_lock": "Only modify files inside Minotaur-Grand-Mentor project root. Do not modify other Obsidian content.",
     "engineering_status": "done",
     "documentation_status": "done",
     "overlay_status": "pngtuber_assets_ready",
     "dashboard_status": "ready",
-    "live2d_status": "spec_ready_waiting_for_art_and_rigging",
+    "live2d_status": "same_canvas_pack_built_pending_visual_review_final_psd_and_moc3_pending",
     "completed_tasks": [
       "Phase 1: Created project scaffold",
       "Phase 2: Wrote project documentation",
@@ -26,21 +26,23 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       "Blueprint Archive: Archived full v2 Codex blueprint",
       "PNGTuber Assets: Imported MVP PNGTuber assets",
       "PNGTuber Status Cleanup: Updated tasks after PNGTuber asset import",
-      "GitHub Sync: Prepared PNGTuber asset sync"
+      "GitHub Sync: Prepared PNGTuber asset sync",
+      "Asset Handoff v2: Imported PNGTuber, Live2D components, and Stage 06 files",
+      "Stage 06: Built same-canvas layer pack",
+      "Stage 06 Same Canvas Pack: Built same-canvas layer pack"
     ],
     "pending_tasks": [
       "Test overlay/index.html in OBS Browser Source",
       "Confirm microphone mouth switching with overlay/index.html?debug=1",
-      "Create Live2D final front master artwork",
-      "Create Live2D layered PSD",
-      "Send PSD and checklist to Live2D rigger"
+      "Visually review assets/avatar/live2d/final/layers_png_same_canvas/ alignment against final_front_master.png",
+      "Assemble final layered PSD at assets/avatar/live2d/final/final_layered_model.psd",
+      "Send PSD and docs/LIVE2D_RIGGER_CHECKLIST.md to the rigger",
+      "Complete Live2D rigging and .moc3 export"
     ],
     "missing_assets": [
-      "assets/avatar/live2d/final/final_front_master.png",
       "assets/avatar/live2d/final/final_layered_model.psd"
     ],
     "blocked_by_art": [
-      "Live2D final front master image",
       "Live2D final layered PSD"
     ],
     "blocked_by_rigging": [
@@ -48,8 +50,12 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       ".moc3 export",
       "VTube Studio test"
     ],
-    "last_updated": "2026-04-29T07:21:13+08:00",
-    "notes": "Push imported PNGTuber assets and updated project status to GitHub main."
+    "last_updated": "2026-04-29T22:24:04+08:00",
+    "notes": "Review same-canvas alignment, then assemble final_layered_model.psd and send it to the Live2D rigger.",
+    "pending_artifacts": [
+      "assets/avatar/live2d/final/final_layered_model.psd",
+      "assets/avatar/live2d/rigging/MinotaurGrandMentor.moc3"
+    ]
   },
   "taskBoard": {
     "columns": {
@@ -75,15 +81,20 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
         "github-pages-doc",
         "tests",
         "final-report",
-        "waiting-for-pngtuber-art"
+        "waiting-for-pngtuber-art",
+        "stage-06-same-canvas-pack"
       ],
       "waiting_for_art": [
-        "waiting-for-live2d-art"
+        "waiting-for-live2d-art",
+        "waiting-for-layered-psd"
       ],
       "waiting_for_rigging": [
         "waiting-for-live2d-rigging"
       ],
-      "blocked": []
+      "blocked": [],
+      "pending_visual_review": [
+        "same-canvas-visual-review"
+      ]
     },
     "tasks": [
       {
@@ -239,6 +250,27 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
         "status": "waiting_for_rigging",
         "owner": "rigger",
         "acceptance": "Live2D Cubism model and VTube Studio test are complete."
+      },
+      {
+        "id": "stage-06-same-canvas-pack",
+        "title": "Build Stage 06 same-canvas layer pack",
+        "status": "done",
+        "owner": "codex",
+        "acceptance": "Generated 4096x4096 RGBA transparent PNG layers under assets/avatar/live2d/final/layers_png_same_canvas/."
+      },
+      {
+        "id": "same-canvas-visual-review",
+        "title": "Review same-canvas alignment against final front master",
+        "status": "pending_visual_review",
+        "owner": "user/rigger",
+        "acceptance": "User or rigger confirms layer placement is ready for PSD assembly."
+      },
+      {
+        "id": "waiting-for-layered-psd",
+        "title": "Create final layered PSD from reviewed same-canvas layers",
+        "status": "waiting_for_art",
+        "owner": "artist/user",
+        "acceptance": "assets/avatar/live2d/final/final_layered_model.psd exists and follows docs/LIVE2D_LAYER_SPEC.md."
       }
     ]
   },
@@ -303,19 +335,21 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
     "project": "Minotaur Grand Mentor",
     "version": "0.2.0",
     "mode": "live2d-source-prep",
-    "status": "waiting_for_final_art_and_layered_psd",
+    "status": "same_canvas_pack_built_pending_visual_review_final_psd_pending",
     "required_final_files": [
       {
         "id": "final_front_master",
         "path": "assets/avatar/live2d/final/final_front_master.png",
         "required": true,
-        "description": "Final front-facing master artwork"
+        "description": "Final front-facing master artwork",
+        "status": "present"
       },
       {
         "id": "final_layered_psd",
         "path": "assets/avatar/live2d/final/final_layered_model.psd",
         "required": true,
-        "description": "Final layered PSD for Live2D rigging"
+        "description": "Final layered PSD for Live2D rigging",
+        "status": "pending"
       }
     ],
     "required_layers": [
@@ -352,7 +386,643 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
       "left_collar",
       "right_collar",
       "zipper"
+    ],
+    "updated_at": "2026-04-29T22:21:57+08:00",
+    "same_canvas_layer_pack": {
+      "status": "built_pending_visual_review",
+      "path": "assets/avatar/live2d/final/layers_png_same_canvas/",
+      "png_count": 34,
+      "canvas_size": [
+        4096,
+        4096
+      ],
+      "note": "Not a final PSD and not a finished Live2D model."
+    },
+    "pending_rigging_outputs": [
+      {
+        "id": "live2d_moc3",
+        "path": "assets/avatar/live2d/rigging/MinotaurGrandMentor.moc3",
+        "status": "pending"
+      }
     ]
+  },
+  "live2dComponentManifest": {
+    "project": "Minotaur Grand Mentor",
+    "package": "Codex All-in-One Asset Handoff",
+    "version": "v2",
+    "created_at": "2026-04-29T07:59:32+00:00",
+    "status": {
+      "pngtuber": "usable_mvp",
+      "live2d_source_components": "ready",
+      "same_canvas_layer_pack": "built_pending_visual_review",
+      "final_layered_model_psd": "pending",
+      "visual_review": "pending_user_or_rigger_review",
+      "live2d_moc3": "pending"
+    },
+    "canvas_plan": {
+      "same_canvas_size": [
+        4096,
+        4096
+      ],
+      "format": "RGBA transparent PNG",
+      "output_folder": "assets/avatar/live2d/final/layers_png_same_canvas/"
+    },
+    "asset_groups": {
+      "pngtuber": "assets/avatar/pngtuber/",
+      "core": "assets/avatar/live2d/components/core/",
+      "eyes": "assets/avatar/live2d/components/eyes/",
+      "mouth": "assets/avatar/live2d/components/mouth/",
+      "brow_hair": "assets/avatar/live2d/components/brow_hair/",
+      "body": "assets/avatar/live2d/components/body/",
+      "occlusion_fill": "assets/avatar/live2d/components/occlusion_fill/",
+      "final": "assets/avatar/live2d/final/"
+    },
+    "png_count": 65,
+    "files": [
+      "05_preview/core_components_contact_sheet.png",
+      "05_preview/final_master_contact_sheet.png",
+      "05_preview/group_01_eyes_contact_sheet.png",
+      "05_preview/group_02_mouth_contact_sheet.png",
+      "05_preview/group_03_brow_hair_contact_sheet.png",
+      "05_preview/group_04_collar_neck_contact_sheet.png",
+      "05_preview/group_05_occlusion_fill_contact_sheet.png",
+      "05_preview/preview_pngtuber_contact_sheet.png",
+      "assets/avatar/live2d/components/body/jacket_collar_left.png",
+      "assets/avatar/live2d/components/body/jacket_collar_right.png",
+      "assets/avatar/live2d/components/body/neck.png",
+      "assets/avatar/live2d/components/brow_hair/back_hair.png",
+      "assets/avatar/live2d/components/brow_hair/front_hair_center.png",
+      "assets/avatar/live2d/components/brow_hair/front_hair_left.png",
+      "assets/avatar/live2d/components/brow_hair/front_hair_right.png",
+      "assets/avatar/live2d/components/brow_hair/left_eyebrow.png",
+      "assets/avatar/live2d/components/brow_hair/right_eyebrow.png",
+      "assets/avatar/live2d/components/core/head_base.png",
+      "assets/avatar/live2d/components/core/left_ear.png",
+      "assets/avatar/live2d/components/core/left_horn.png",
+      "assets/avatar/live2d/components/core/muzzle_base.png",
+      "assets/avatar/live2d/components/core/nose.png",
+      "assets/avatar/live2d/components/core/right_ear.png",
+      "assets/avatar/live2d/components/core/right_horn.png",
+      "assets/avatar/live2d/components/core/torso_jacket.png",
+      "assets/avatar/live2d/components/eyes/left_eye_white.png",
+      "assets/avatar/live2d/components/eyes/left_iris.png",
+      "assets/avatar/live2d/components/eyes/left_lower_eyelid.png",
+      "assets/avatar/live2d/components/eyes/left_pupil.png",
+      "assets/avatar/live2d/components/eyes/left_upper_eyelid.png",
+      "assets/avatar/live2d/components/eyes/right_eye_white.png",
+      "assets/avatar/live2d/components/eyes/right_iris.png",
+      "assets/avatar/live2d/components/eyes/right_lower_eyelid.png",
+      "assets/avatar/live2d/components/eyes/right_pupil.png",
+      "assets/avatar/live2d/components/eyes/right_upper_eyelid.png",
+      "assets/avatar/live2d/components/mouth/lower_teeth.png",
+      "assets/avatar/live2d/components/mouth/mouth_inner.png",
+      "assets/avatar/live2d/components/mouth/mouth_lower_lip.png",
+      "assets/avatar/live2d/components/mouth/mouth_upper_lip.png",
+      "assets/avatar/live2d/components/mouth/tongue.png",
+      "assets/avatar/live2d/components/mouth/upper_teeth.png",
+      "assets/avatar/live2d/components/occlusion_fill/chest_fur_under_collar.png",
+      "assets/avatar/live2d/components/occlusion_fill/forehead_under_front_hair.png",
+      "assets/avatar/live2d/components/occlusion_fill/head_base_full_no_features.png",
+      "assets/avatar/live2d/components/occlusion_fill/jacket_inner_collar_left_hidden.png",
+      "assets/avatar/live2d/components/occlusion_fill/jacket_inner_collar_right_hidden.png",
+      "assets/avatar/live2d/components/occlusion_fill/left_cheek_side_fill.png",
+      "assets/avatar/live2d/components/occlusion_fill/left_ear_root_hidden.png",
+      "assets/avatar/live2d/components/occlusion_fill/left_horn_root_hidden.png",
+      "assets/avatar/live2d/components/occlusion_fill/mouth_corner_left_hidden.png",
+      "assets/avatar/live2d/components/occlusion_fill/mouth_corner_right_hidden.png",
+      "assets/avatar/live2d/components/occlusion_fill/muzzle_base_extended_no_nose.png",
+      "assets/avatar/live2d/components/occlusion_fill/neck_extended_under_jaw.png",
+      "assets/avatar/live2d/components/occlusion_fill/right_cheek_side_fill.png",
+      "assets/avatar/live2d/components/occlusion_fill/right_ear_root_hidden.png",
+      "assets/avatar/live2d/components/occlusion_fill/right_horn_root_hidden.png",
+      "assets/avatar/live2d/final/final_front_master.png",
+      "assets/avatar/pngtuber/angry.png",
+      "assets/avatar/pngtuber/blink_closed.png",
+      "assets/avatar/pngtuber/gesture_point.png",
+      "assets/avatar/pngtuber/happy.png",
+      "assets/avatar/pngtuber/idle_closed.png",
+      "assets/avatar/pngtuber/shock.png",
+      "assets/avatar/pngtuber/talk_open.png",
+      "assets/avatar/pngtuber/thinking.png"
+    ],
+    "updated_at": "2026-04-29T22:21:57+08:00",
+    "png_validation": {
+      "summary": "65 source PNGs exist and are RGBA; 57 layer/avatar PNGs are transparent; 8 preview contact sheets are RGBA but intentionally opaque.",
+      "checked": 65,
+      "missing": [],
+      "invalid": [],
+      "not_rgba_count": 0,
+      "transparent_count": 57,
+      "opaque_preview_contact_sheet_count": 8,
+      "opaque_non_preview_count": 0
+    },
+    "same_canvas_outputs": {
+      "status": "built_pending_visual_review",
+      "output_folder": "assets/avatar/live2d/final/layers_png_same_canvas/",
+      "count": 34,
+      "canvas_size": [
+        4096,
+        4096
+      ],
+      "format": "RGBA transparent PNG",
+      "validation_problem_count": 0,
+      "files": [
+        "assets/avatar/live2d/final/layers_png_same_canvas/back_hair.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_center.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_left.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_right.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/head_base.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/head_base_full_no_features.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/jacket_collar_left.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/jacket_collar_right.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_ear.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_eye_white.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_eyebrow.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_horn.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_iris.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_lower_eyelid.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_pupil.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/left_upper_eyelid.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/lower_teeth.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/mouth_inner.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/mouth_lower_lip.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/mouth_upper_lip.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/muzzle_base.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/neck.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/nose.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_ear.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_eye_white.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_eyebrow.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_horn.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_iris.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_lower_eyelid.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_pupil.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/right_upper_eyelid.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/tongue.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/torso_jacket.png",
+        "assets/avatar/live2d/final/layers_png_same_canvas/upper_teeth.png"
+      ]
+    },
+    "pending_artifacts": [
+      {
+        "id": "final_layered_model_psd",
+        "path": "assets/avatar/live2d/final/final_layered_model.psd",
+        "status": "pending",
+        "description": "Final layered PSD assembled after same-canvas visual review."
+      },
+      {
+        "id": "live2d_moc3",
+        "path": "assets/avatar/live2d/rigging/MinotaurGrandMentor.moc3",
+        "status": "pending",
+        "description": "Live2D Cubism rig output; not produced by this Stage 06 pack."
+      }
+    ]
+  },
+  "stage06Validation": {
+    "project": "Minotaur Grand Mentor",
+    "phase": "Stage 06 same-canvas layer pack",
+    "generated_at": "2026-04-29T22:21:57+08:00",
+    "source_png_validation": {
+      "checked": 65,
+      "missing": [],
+      "invalid": [],
+      "not_rgba": [],
+      "transparent_count": 57,
+      "opaque_preview_contact_sheets": [
+        {
+          "path": "05_preview/core_components_contact_sheet.png",
+          "size": [
+            1050,
+            622
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        },
+        {
+          "path": "05_preview/final_master_contact_sheet.png",
+          "size": [
+            276,
+            320
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        },
+        {
+          "path": "05_preview/group_01_eyes_contact_sheet.png",
+          "size": [
+            1308,
+            622
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        },
+        {
+          "path": "05_preview/group_02_mouth_contact_sheet.png",
+          "size": [
+            792,
+            622
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        },
+        {
+          "path": "05_preview/group_03_brow_hair_contact_sheet.png",
+          "size": [
+            792,
+            622
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        },
+        {
+          "path": "05_preview/group_04_collar_neck_contact_sheet.png",
+          "size": [
+            792,
+            320
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        },
+        {
+          "path": "05_preview/group_05_occlusion_fill_contact_sheet.png",
+          "size": [
+            792,
+            1528
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        },
+        {
+          "path": "05_preview/preview_pngtuber_contact_sheet.png",
+          "size": [
+            1050,
+            622
+          ],
+          "mode": "RGBA",
+          "has_transparency": false
+        }
+      ],
+      "opaque_non_preview_pngs": [],
+      "summary": "65 source PNGs exist and are RGBA; 57 layer/avatar PNGs are transparent; 8 preview contact sheets are RGBA but intentionally opaque."
+    },
+    "same_canvas_output_validation": {
+      "output_folder": "assets/avatar/live2d/final/layers_png_same_canvas/",
+      "count": 34,
+      "required_size": [
+        4096,
+        4096
+      ],
+      "problems": [],
+      "files": [
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/back_hair.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_center.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_left.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/front_hair_right.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/head_base.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/head_base_full_no_features.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/jacket_collar_left.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/jacket_collar_right.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_ear.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_eye_white.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_eyebrow.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_horn.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_iris.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_lower_eyelid.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_pupil.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/left_upper_eyelid.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/lower_teeth.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/mouth_inner.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/mouth_lower_lip.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/mouth_upper_lip.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/muzzle_base.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/neck.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/nose.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_ear.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_eye_white.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_eyebrow.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_horn.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_iris.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_lower_eyelid.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_pupil.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/right_upper_eyelid.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/tongue.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/torso_jacket.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        },
+        {
+          "path": "assets/avatar/live2d/final/layers_png_same_canvas/upper_teeth.png",
+          "size": [
+            4096,
+            4096
+          ],
+          "mode": "RGBA",
+          "has_transparency": true,
+          "has_visible_pixels": true
+        }
+      ],
+      "summary": "34 generated same-canvas PNG layers are 4096x4096 RGBA transparent and contain visible pixels."
+    },
+    "live2d_boundaries": {
+      "same_canvas_layer_pack": "built_pending_visual_review",
+      "final_layered_model_psd": "pending",
+      "live2d_moc3": "pending",
+      "note": "This is not a finished Live2D model, not a final PSD, and not a .moc3 rig."
+    }
   },
   "runLog": [
     {
@@ -535,7 +1205,33 @@ window.__MINOTAUR_DASHBOARD_DATA__ = {
         "docs/NEXT_ACTIONS.md"
       ],
       "record": "records/2026-04-29/072002-github-sync.md"
+    },
+    {
+      "id": "20260429-222330-stage-06-same-canvas-pack",
+      "timestamp": "2026-04-29T22:23:30+08:00",
+      "phase": "Stage 06 Same Canvas Pack",
+      "status": "done",
+      "summary": "Built same-canvas layer pack",
+      "details": "Imported the All-in-One Asset Handoff v2 package, validated PNG sources, generated 34 same-canvas 4096x4096 RGBA transparent PNG layers, and marked visual review, final PSD, and .moc3 rigging as pending.",
+      "next": "Review same-canvas alignment, then assemble final_layered_model.psd and send it to the Live2D rigger.",
+      "files_changed": [
+        "README_CODEX_ASSET_HANDOFF.md",
+        "docs/CODEX_IMPORT_ASSET_HANDOFF.md",
+        "docs/STAGE_06_SAME_CANVAS_BLUEPRINT.md",
+        "data/live2d-component-manifest.json",
+        "data/same-canvas-coordinate-map.json",
+        "data/stage-06-validation-report.json",
+        "data/live2d-sourcekit-manifest.json",
+        "data/project-state.json",
+        "data/task-board.json",
+        "tools/build_same_canvas_pack.py",
+        "tools/validate_assets.py",
+        "dashboard/index.html",
+        "dashboard/dashboard.js",
+        "assets/avatar/live2d/final/layers_png_same_canvas"
+      ],
+      "record": "records/2026-04-29/222330-stage-06-same-canvas-pack.md"
     }
   ],
-  "generatedAt": "2026-04-29T07:21:27+08:00"
+  "generatedAt": "2026-04-29T22:24:11+08:00"
 };

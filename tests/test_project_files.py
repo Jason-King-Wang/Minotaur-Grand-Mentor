@@ -15,6 +15,8 @@ REQUIRED_FILES = [
     "SCOPE_LOCK.md",
     "docs/PROJECT_BRIEF.md",
     "docs/CODEX_WORK_BLUEPRINT_FULL.md",
+    "docs/CODEX_IMPORT_ASSET_HANDOFF.md",
+    "docs/STAGE_06_SAME_CANVAS_BLUEPRINT.md",
     "docs/CHARACTER_BIBLE.md",
     "docs/STYLE_GUIDE.md",
     "docs/SOFTWARE_SETUP.md",
@@ -48,6 +50,9 @@ REQUIRED_FILES = [
     "dashboard/dashboard.css",
     "data/avatar-manifest.json",
     "data/live2d-sourcekit-manifest.json",
+    "data/live2d-component-manifest.json",
+    "data/same-canvas-coordinate-map.json",
+    "data/stage-06-validation-report.json",
     "data/project-state.json",
     "data/task-board.json",
     "data/run-log.json",
@@ -64,6 +69,7 @@ REQUIRED_FILES = [
     "tools/log_event.py",
     "tools/validate_assets.py",
     "tools/build_public_data.py",
+    "tools/build_same_canvas_pack.py",
     "tools/generate_placeholder_assets.py",
     "tools/export_obsidian_project_pages.py",
     "tools/generate_final_report.py",
@@ -80,6 +86,9 @@ class ProjectFileTests(unittest.TestCase):
         for path in [
             "data/avatar-manifest.json",
             "data/live2d-sourcekit-manifest.json",
+            "data/live2d-component-manifest.json",
+            "data/same-canvas-coordinate-map.json",
+            "data/stage-06-validation-report.json",
             "data/project-state.json",
             "data/task-board.json",
             "data/run-log.json",
@@ -108,6 +117,13 @@ class ProjectFileTests(unittest.TestCase):
         self.assertIn("final_layered_psd", required_ids)
         self.assertIn("final_front_master", required_ids)
         self.assertIn("head_base", manifest["required_layers"])
+
+    def test_same_canvas_outputs_exist(self) -> None:
+        output_dir = ROOT / "assets/avatar/live2d/final/layers_png_same_canvas"
+        outputs = sorted(output_dir.glob("*.png"))
+        self.assertGreaterEqual(len(outputs), 30)
+        self.assertTrue((output_dir / "head_base.png").exists())
+        self.assertTrue((output_dir / "torso_jacket.png").exists())
 
     def test_project_state_shape(self) -> None:
         state = json.loads((ROOT / "data/project-state.json").read_text(encoding="utf-8"))
