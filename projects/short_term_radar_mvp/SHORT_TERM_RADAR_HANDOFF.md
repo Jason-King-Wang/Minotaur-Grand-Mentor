@@ -1,210 +1,136 @@
-# Short Term Radar MVP Handoff
+# Short Term Radar MVP V2 Handoff
 
-Last updated: 2026-05-10
+Last updated: 2026-05-11
 
-## Goal
+Repository target: `Jason-King-Wang/Minotaur-Grand-Mentor`
+PR branch: `codex/upload-short-term-radar`
+Upload scope: `projects/short_term_radar_mvp/`
 
-Build the MVP from `codex_short_term_radar_spec.md`: a standalone Taiwan stock short-term radar for candidates that may have strong 126-trading-day upside. The implementation must stay independent from existing projects, be read-only for broker APIs, support daily scans, support five-year backtests, and degrade gracefully when some data sources are missing.
+## Scope Guard
 
-## Current Status
+Only this folder is part of the V2 update:
 
-MVP success criteria are complete:
+```text
+projects/short_term_radar_mvp/
+```
 
-1. Daily candidate scan can run.
-2. Each candidate has total score, radar sub-scores, stage, entry zone, reasons, risks, and latest price/volume metrics.
-3. Five-year daily-data backtest can run.
-4. Top-N 126-trading-day 3x / 5x hit-rate outputs are generated.
-5. Markdown report generation works.
-6. Missing data does not break the system; unavailable radars are marked as degraded and total score is re-normalized across available scores.
+Do not modify the VTuber, overlay, dashboard, docs, assets, records, obsidian, tools, or unrelated project folders in the parent repo. External local data paths are read-only inputs and must not be modified.
 
-## Implemented Files
+## What V2 Fixes
 
-Core package:
+- Prevents score inflation when core radars are missing.
+- Adds score coverage and confidence fields.
+- Blocks `S3 candidate_entry` when revenue is missing, revenue score is weak, data coverage is low, or risk is high.
+- Adds local CSV/Parquet revenue and chip adapters.
+- Adds CSV/YAML catalyst adapter.
+- Keeps optional data graceful: missing revenue/chip/catalyst degrades and caps the score instead of breaking scans.
+- Renames backtest metrics to distinguish forward max return from close return.
+- Adds path-based max drawdown, 2x/3x/5x hit rates, and time-to-hit fields.
+- Adds baseline comparisons: random, 120D breakout, volume expansion, and MA alignment.
+- Replaces public hard-coded local paths with environment-variable config and ignored `local.yaml`.
+- Keeps the broker API adapter read-only.
 
-- `short_term_radar/`
+## Main Files
+
+- `short_term_radar/config.py`
+- `short_term_radar/pipeline.py`
+- `short_term_radar/schemas.py`
 - `short_term_radar/adapters/`
 - `short_term_radar/features/`
 - `short_term_radar/scoring/`
 - `short_term_radar/backtest/`
 - `short_term_radar/cli/`
-- `short_term_radar/utils/`
-
-Config and tests:
-
 - `configs/short_term_radar/default.yaml`
+- `configs/short_term_radar/local.yaml.example`
 - `tests/short_term_radar/`
-- `pytest.ini`
+- `reports/short_term_radar/`
 
-Generated outputs:
+## Config
 
-- `reports/short_term_radar/scan_2026-04-30.csv`
-- `reports/short_term_radar/backtest_2021-05-01_2026-04-30.csv`
-- `reports/short_term_radar/backtest_2021-05-01_2026-04-30_candidates.csv`
-- `reports/short_term_radar/report_2026-04-30.md`
+Public config expects:
 
-## Data Source Currently Used
-
-The workspace did not contain five-year daily data. The usable local cache was found here:
-
-```text
-C:\Users\User\Documents\New project 6\tw-golden-cross-star\data\tw_equities
+```powershell
+$env:TW_EQUITIES_DATA_PATH="C:\path\to\tw_equities"
+$env:TW_MONTHLY_REVENUE_PATH="C:\path\to\monthly_revenue.csv" # optional
+$env:TW_CHIP_DATA_PATH="C:\path\to\chip.csv"                  # optional
+$env:TW_CATALYST_PATH="C:\path\to\catalysts.yaml"             # optional
 ```
 
-`configs/short_term_radar/default.yaml` points to that cache. It contains TWSE/TPEX daily OHLCV parquet files and `reference/symbol_master.csv`.
+For local use, copy `configs/short_term_radar/local.yaml.example` to `configs/short_term_radar/local.yaml`. The real `local.yaml` is ignored by git.
 
-Run with Python 3.14 on this machine because that environment has `pandas`, `pyarrow`, and `yaml`.
+## Score Fields
 
-## Broker API Status
+Scan output now includes:
 
-SinoPac/Shioaji support was added only as a read-only market-data adapter:
+- `score_raw_available_norm`
+- `score_coverage_adjusted`
+- `score_cap`
+- `score_total`
+- `data_coverage_ratio`
+- `available_radars`
+- `degraded_radars`
+- `core_data_ready_flag`
+- `expectation_gap_source`
 
-- File: `short_term_radar/adapters/broker_api_adapter.py`
-- Test: `tests/short_term_radar/test_broker_api_adapter.py`
-- It accepts an already logged-in API object from the caller.
-- It does not handle credentials.
-- It has no order placement, modification, cancellation, or account mutation methods.
+When revenue, chip, and catalyst are all missing, score is capped at 70. Missing revenue caps score at 75 and prevents `S3`.
 
-What can come from SinoPac/Shioaji:
+## Stage Rules
 
-- TAIEX / stock K bars via `kbars`
-- ticks
-- snapshots
-- daily quotes
-- attention / disposition stock lists via `notice()` and `punish()`
-- margin/short availability via `credit_enquires()`
-- short stock source via `short_stock_sources()`
-- scanner rankings via `scanners()`
-- stock/index contract metadata
+- `S0`: no usable score.
+- `S1`: observation/watch-only.
+- `S2`: early watch, commonly when revenue is missing.
+- `S3`: candidate entry; requires revenue score >= 60, coverage >= 0.60, breakout/volume confirmation, and low risk.
+- `S4`: hold/trail or wait pullback.
+- `S5`: avoid chasing.
 
-What still needs other data sources:
+## Backtest Outputs
 
-- monthly revenue
-- financial statements
-- three major institutional investor daily buy/sell
-- news/social/analyst coverage
-- insider holding changes
-- pledge ratio
-- structured catalyst event calendar
+- `forward_max_return`
+- `forward_close_return`
+- `forward_min_return_from_entry`
+- `forward_path_max_drawdown`
+- `hit_2x`, `hit_3x`, `hit_5x`
+- `time_to_2x_days`, `time_to_3x_days`, `time_to_5x_days`
 
-## Completed By Spec Area
+Summary outputs use explicit names such as `avg_forward_max_return`, not the ambiguous old `avg_forward_return`.
 
-Phase 1, data and price-volume radar:
-
-- Standalone directory created.
-- Daily price adapter supports CSV and parquet.
-- Basic filters implemented: trading days, average amount, ETF/warrant/full-delivery style exclusions where identifiable.
-- Price-volume features implemented: returns, moving averages, RS vs market, breakout flags, volume z-score, volume expansion.
-- Price-volume scoring and generated reasons implemented.
-- `scan` CLI implemented.
-
-Phase 2, scoring and stage:
-
-- Scoring engine implemented.
-- Price-only expectation-gap proxy implemented.
-- Stage classifier implemented: S0 to S5.
-- Entry zone implemented: `watch_only`, `early_watch`, `candidate_entry`, `hold_or_trail`, `avoid_chasing`.
-- Crowding/risk penalty implemented from price-volume signals.
-- Scan output includes the expected complete field set.
-
-Phase 3, backtest:
-
-- Forward labeler implemented: forward max return, forward close return, max drawdown, hit_3x, hit_5x.
-- Monthly rebalance top-N backtest implemented.
-- Summary and candidate details are written.
-- No-future-leakage test added.
-
-Phase 4, extra adapters:
-
-- Revenue, chip, and catalyst adapters exist as MVP placeholders.
-- Graceful degradation is implemented for missing data.
-- Manual catalysts config key exists, but full event scoring is not connected to a real event source yet.
-
-Phase 5, report:
-
-- Markdown report CLI implemented.
-- Report includes top candidates, score breakdown, reasons, risks, backtest summary, and data degradation notes.
-
-## Still Missing Or Degraded
-
-These are not fully complete because the required real data source has not been connected:
-
-- Revenue radar real monthly revenue calculations.
-- Chip radar real foreign/investment-trust/dealer buy-sell and margin changes.
-- Catalyst radar real future event calendar.
-- Industry RS versus industry index is approximated with available industry/theme grouping, not a dedicated industry-index feed.
-- Attention/disposition and margin/short data can be read from Shioaji, but the daily persistence job has not been added yet.
-- TAIEX Shioaji adapter is implemented and unit-tested with a fake API, but no live API fetch was executed because this session did not use credentials.
-
-## Verification Commands
-
-Run tests:
+## Commands Verified
 
 ```powershell
 py -3.14 -m pytest -q tests\short_term_radar
-```
-
-Compile check:
-
-```powershell
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
-```
 
-Run scan:
-
-```powershell
 py -3.14 -m short_term_radar.cli.scan --config configs/short_term_radar/default.yaml --date 2026-04-30 --top 50 --output reports/short_term_radar/scan_2026-04-30.csv
+
+py -3.14 -m short_term_radar.cli.backtest --config configs/short_term_radar/default.yaml --start 2021-05-01 --end 2026-04-30 --rebalance monthly --top-n 20 --horizon-days 126 --target-multiple 3 --include-baselines true --random-trials 30 --seed 42 --output reports/short_term_radar/backtest_2021-05-01_2026-04-30.csv
+
+py -3.14 -m short_term_radar.cli.report --scan-file reports/short_term_radar/scan_2026-04-30.csv --backtest-file reports/short_term_radar/backtest_2021-05-01_2026-04-30.csv --baseline-file reports/short_term_radar/baseline_comparison_2021-05-01_2026-04-30.csv --output reports/short_term_radar/report_2026-04-30.md
 ```
 
-Run backtest:
-
-```powershell
-py -3.14 -m short_term_radar.cli.backtest --config configs/short_term_radar/default.yaml --start 2021-05-01 --end 2026-04-30 --rebalance monthly --top-n 20 --horizon-days 126 --target-multiple 3 --output reports/short_term_radar/backtest_2021-05-01_2026-04-30.csv
-```
-
-Generate report:
-
-```powershell
-py -3.14 -m short_term_radar.cli.report --scan-file reports/short_term_radar/scan_2026-04-30.csv --backtest-file reports/short_term_radar/backtest_2021-05-01_2026-04-30.csv --output reports/short_term_radar/report_2026-04-30.md
-```
+The validation run used `TW_EQUITIES_DATA_PATH` pointing to the existing local Taiwan OHLCV cache as a read-only input.
 
 ## Last Verified Results
 
 ```text
-pytest: 7 passed
+pytest: 25 passed
 compileall: passed
 scan: wrote 50 candidates
-backtest: wrote summary and candidate details
+backtest: wrote summary, candidate details, baseline comparison, and baseline details
 report: wrote reports/short_term_radar/report_2026-04-30.md
 ```
 
-## Best Next Steps
+## Generated Outputs
 
-1. Add a read-only Shioaji daily collector for TAIEX, attention/disposition, credit enquiries, and short stock source, then persist those snapshots locally.
-2. Add public monthly revenue ingestion and replace the revenue placeholder with real scoring.
-3. Add institutional investor and margin/short historical ingestion.
-4. Add a manual catalyst file and connect catalyst scoring.
-5. Add a GitHub upload scope that excludes `discord-private-ai-bot/`, `discord-downloads/`, `shioaji.log`, secrets, and unrelated local artifacts.
+- `reports/short_term_radar/scan_2026-04-30.csv`
+- `reports/short_term_radar/backtest_2021-05-01_2026-04-30.csv`
+- `reports/short_term_radar/backtest_2021-05-01_2026-04-30_candidates.csv`
+- `reports/short_term_radar/baseline_comparison_2021-05-01_2026-04-30.csv`
+- `reports/short_term_radar/baseline_details_2021-05-01_2026-04-30.csv`
+- `reports/short_term_radar/report_2026-04-30.md`
 
-## Safe GitHub Upload Scope
+## Remaining Data Work
 
-Recommended include list:
-
-- `README.md`
-- `SHORT_TERM_RADAR_HANDOFF.md`
-- `.gitignore`
-- `pytest.ini`
-- `short_term_radar/`
-- `configs/short_term_radar/`
-- `tests/short_term_radar/`
-- selected `reports/short_term_radar/*.csv`
-- selected `reports/short_term_radar/*.md`
-
-Recommended exclude list:
-
-- `.env`
-- `shioaji.log`
-- `discord-private-ai-bot/`
-- `discord-downloads/`
-- `pytest-cache-files-*`
-- `pytest_tmp_manual_check/`
-- unrelated images and local-only artifacts
+- Connect reliable public monthly revenue source.
+- Connect institutional investor and margin/short historical data.
+- Maintain a manual catalyst file or connect a vetted event data source.
+- Verify whether the daily price source includes delisted securities to reduce survivorship bias.

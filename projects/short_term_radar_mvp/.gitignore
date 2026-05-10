@@ -2,6 +2,8 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 pytest-cache-files-*/
+configs/short_term_radar/local.yaml
+configs/short_term_radar/*.local.yaml
 .env
 .env.*
 *.log
@@ -11,3 +13,4 @@ pytest_tmp_manual_check/
 *.sqlite
 *.sqlite3
 雷-設定圖.png
+reports/short_term_radar/tmp/

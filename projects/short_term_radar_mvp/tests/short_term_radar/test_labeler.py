@@ -27,4 +27,4 @@ def test_forward_labels_hit_multiples_and_returns():
     assert label.hit_5x is True
     assert label.forward_max_return == 4.0
     assert label.forward_close_return == 4.0
-    assert label.forward_max_drawdown == pytest.approx(-0.1)
+    assert label.forward_path_max_drawdown == pytest.approx(-0.1)

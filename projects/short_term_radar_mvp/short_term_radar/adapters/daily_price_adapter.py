@@ -8,17 +8,19 @@ from short_term_radar.utils.math_utils import safe_float
 
 
 COLUMN_ALIASES = {
-    "symbol": ["symbol", "stock_id", "code", "ticker", "證券代號"],
-    "name": ["name", "stock_name", "證券名稱", "公司名稱"],
-    "industry": ["industry", "sector", "theme_group", "產業別"],
-    "trade_date": ["trade_date", "date", "交易日期", "年月日"],
-    "open": ["open", "開盤價"],
-    "high": ["high", "最高價"],
-    "low": ["low", "最低價"],
-    "close": ["close", "收盤價"],
-    "volume": ["volume", "成交股數", "成交量"],
-    "amount": ["amount", "value", "成交金額", "成交值"],
-    "market": ["market", "市場別"],
+    "symbol": ["symbol", "stock_id", "code", "ticker"],
+    "name": ["name", "stock_name"],
+    "industry": ["industry", "sector", "theme_group"],
+    "trade_date": ["trade_date", "date"],
+    "open": ["open"],
+    "high": ["high"],
+    "low": ["low"],
+    "close": ["close"],
+    "volume": ["volume"],
+    "amount": ["amount", "value"],
+    "market": ["market"],
+    "market_cap": ["market_cap", "market_value"],
+    "share_capital": ["share_capital", "capital"],
 }
 
 
@@ -54,12 +56,7 @@ class DailyPriceAdapter:
         if data_path.is_file():
             return [data_path]
         data_root = data_path / "daily_ohlcv" if (data_path / "daily_ohlcv").exists() else data_path
-        return sorted(
-            [
-                *data_root.rglob("*.csv"),
-                *data_root.rglob("*.parquet"),
-            ]
-        )
+        return sorted([*data_root.rglob("*.csv"), *data_root.rglob("*.parquet")])
 
     def _load_symbol_meta(self, data_path: Path) -> dict[str, dict[str, str | None]]:
         root = data_path if data_path.is_dir() else data_path.parent
@@ -94,9 +91,7 @@ class DailyPriceAdapter:
         raw_rows = self._read_table(file_path)
         if not raw_rows:
             return []
-
-        sample = raw_rows[0]
-        mapping = self._build_mapping(sample)
+        mapping = self._build_mapping(raw_rows[0])
         return [self._normalize_row(row, mapping) for row in raw_rows]
 
     def _read_table(self, file_path: Path) -> list[dict[str, Any]]:
@@ -106,21 +101,17 @@ class DailyPriceAdapter:
             try:
                 import pandas as pd
             except ImportError as error:
-                raise RuntimeError(
-                    "Reading parquet daily data requires pandas + pyarrow. "
-                    "On this machine, run with `py -3.14 -m ...`."
-                ) from error
+                raise RuntimeError("Reading parquet daily data requires pandas and pyarrow.") from error
             return pd.read_parquet(file_path).to_dict("records")
         return []
 
-    def _build_mapping(self, sample: dict[str, str]) -> dict[str, str | None]:
-        columns = {column.strip(): column for column in sample.keys()}
-        lower_columns = {column.lower(): column for column in columns}
+    def _build_mapping(self, sample: dict[str, Any]) -> dict[str, str | None]:
+        columns = {str(column).strip(): column for column in sample.keys()}
+        lower_columns = {str(column).lower(): column for column in columns}
         explicit = {
             "symbol": self.config["data"].get("symbol_col"),
             "trade_date": self.config["data"].get("date_col"),
         }
-
         mapping: dict[str, str | None] = {}
         for target, aliases in COLUMN_ALIASES.items():
             if explicit.get(target) in columns:
@@ -134,7 +125,7 @@ class DailyPriceAdapter:
             mapping[target] = found
         return mapping
 
-    def _normalize_row(self, row: dict[str, str], mapping: dict[str, str | None]) -> dict[str, Any]:
+    def _normalize_row(self, row: dict[str, Any], mapping: dict[str, str | None]) -> dict[str, Any]:
         def text(name: str) -> str | None:
             column = mapping.get(name)
             value = row.get(column, "") if column else ""
@@ -164,4 +155,6 @@ class DailyPriceAdapter:
             "volume": volume,
             "amount": amount,
             "market": text("market"),
+            "market_cap": safe_float(text("market_cap")),
+            "share_capital": safe_float(text("share_capital")),
         }

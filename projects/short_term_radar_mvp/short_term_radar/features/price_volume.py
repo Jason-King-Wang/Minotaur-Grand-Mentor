@@ -28,14 +28,27 @@ def previous_range_high(rows: list[dict[str, Any]], window: int) -> float | None
     return max(highs) if highs else None
 
 
+def universe_filters(config: dict[str, Any]) -> dict[str, Any]:
+    filters = dict(config.get("universe") or {})
+    filters.update(config.get("filters") or {})
+    if config.get("universe", {}).get("mode"):
+        filters["mode"] = config["universe"]["mode"]
+    filters.setdefault("mode", "elastic")
+    filters.setdefault("min_trading_days", 120)
+    filters.setdefault("min_avg_amount_20d", 10_000_000)
+    filters.setdefault("excluded_symbols", [])
+    filters.setdefault("included_symbols", [])
+    return filters
+
+
 def symbol_is_excluded(row: dict[str, Any], filters: dict[str, Any]) -> bool:
     name = (row.get("name") or "").upper()
     symbol = str(row.get("symbol") or "").upper()
     if filters.get("exclude_etf") and ("ETF" in name or symbol.startswith("00")):
         return True
-    if filters.get("exclude_warrant") and ("購" in name or "售" in name or "WARRANT" in name):
+    if filters.get("exclude_warrant") and "WARRANT" in name:
         return True
-    if filters.get("exclude_full_delivery") and ("全額交割" in name or "FULL DELIVERY" in name):
+    if filters.get("exclude_full_delivery") and "FULL DELIVERY" in name:
         return True
     return False
 
@@ -51,13 +64,16 @@ def compute_price_volume_features(
     by_symbol: dict[str, list[dict[str, Any]]], as_of_date: str, config: dict[str, Any]
 ) -> dict[str, dict[str, Any]]:
     pv_cfg = config["price_volume"]
-    filters = config["filters"]
+    filters = universe_filters(config)
+    universe_mode = str(filters.get("mode", "elastic"))
     ma_windows = [int(w) for w in pv_cfg["ma_windows"]]
     rs_windows = [int(w) for w in pv_cfg["rs_windows"]]
     breakout_windows = [int(w) for w in pv_cfg["breakout_windows"]]
     market_returns = compute_market_returns(
         by_symbol, as_of_date, config["data"].get("market_index_symbol", "TAIEX"), rs_windows
     )
+    included = {str(item) for item in filters.get("included_symbols") or []}
+    excluded = {str(item) for item in filters.get("excluded_symbols") or []}
 
     result: dict[str, dict[str, Any]] = {}
     for symbol, all_rows in by_symbol.items():
@@ -67,10 +83,17 @@ def compute_price_volume_features(
         latest = rows[-1]
         if symbol_is_excluded(latest, filters):
             continue
+        if included and symbol not in included:
+            continue
 
         amounts_20 = [row["amount"] for row in rows[-20:] if row.get("amount") is not None]
         avg_amount_20 = mean(amounts_20) or 0.0
         if avg_amount_20 < float(filters["min_avg_amount_20d"]):
+            continue
+        max_avg_amount = filters.get("max_avg_amount_20d")
+        if max_avg_amount is not None and avg_amount_20 > float(max_avg_amount):
+            continue
+        if universe_mode != "all_market" and filters.get("exclude_market_index_heavyweights", True) and symbol in excluded:
             continue
 
         close = latest["close"]
@@ -109,8 +132,12 @@ def compute_price_volume_features(
             "name": latest.get("name"),
             "industry": latest.get("industry"),
             "trade_date": latest["trade_date"],
+            "universe_mode": universe_mode,
+            "excluded_by_universe_flag": False,
             "last_close": close,
             "avg_amount_20": avg_amount_20,
+            "market_cap": latest.get("market_cap"),
+            "share_capital": latest.get("share_capital"),
             "ret_1d": returns[1],
             "ret_5d": returns[5],
             "ret_20d": returns[20],
@@ -142,6 +169,10 @@ def compute_price_volume_features(
             ),
             "upper_shadow_ratio": upper_shadow_ratio,
             "limit_up_like_flag": bool(returns[1] is not None and returns[1] >= 0.09),
+            "price_data_source": config.get("data", {}).get("price_data_source", "local_daily_price"),
+            "survivorship_bias_warning": "delisted coverage unknown unless the source includes historical delistings",
+            "has_delisted_data_flag": None,
+            "data_quality_flags": ["market_cap_missing"] if latest.get("market_cap") is None else [],
         }
     return result
 

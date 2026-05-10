@@ -1,0 +1,10 @@
+data:
+  daily_price_path: "C:\\Users\\User\\Documents\\New project 6\\tw-golden-cross-star\\data\\tw_equities"
+  monthly_revenue_path: ""
+  chip_data_path: ""
+  catalyst_path: ""
+  symbol_col: "stock_id"
+  date_col: "date"
+
+universe:
+  mode: "elastic"

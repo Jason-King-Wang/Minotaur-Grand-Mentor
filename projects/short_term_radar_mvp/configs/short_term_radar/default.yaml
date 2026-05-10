@@ -1,5 +1,8 @@
 data:
-  daily_price_path: "C:\\Users\\User\\Documents\\New project 6\\tw-golden-cross-star\\data\\tw_equities"
+  daily_price_path: "${TW_EQUITIES_DATA_PATH}"
+  monthly_revenue_path: "${TW_MONTHLY_REVENUE_PATH:-}"
+  chip_data_path: "${TW_CHIP_DATA_PATH:-}"
+  catalyst_path: "${TW_CATALYST_PATH:-}"
   daily_price_format: "auto"
   symbol_col: "stock_id"
   date_col: "date"
@@ -7,13 +10,24 @@ data:
   market_index_contract_candidates: ["TSE.TSE001", "TSE001", "TAIEX"]
   use_broker_api: false
   broker_api_profile: "default"
+  price_data_source: "local_daily_price"
+  revenue_data_source: "optional_local_file"
+  chip_data_source: "optional_local_file"
 
-filters:
+universe:
+  mode: "elastic"
   min_trading_days: 120
   min_avg_amount_20d: 10000000
-  exclude_full_delivery: true
+  max_avg_amount_20d: null
   exclude_etf: true
   exclude_warrant: true
+  exclude_full_delivery: true
+  exclude_large_cap: true
+  max_market_cap: null
+  max_share_capital: null
+  exclude_market_index_heavyweights: true
+  excluded_symbols: ["2330", "2317", "2454", "2308", "2412", "6505", "2881", "2882", "1301", "1303"]
+  included_symbols: []
 
 scoring:
   weights:
@@ -40,13 +54,21 @@ expectation_gap:
   overheated_ret_60d: 1.50
   overheated_volume_z: 4.0
 
+catalyst:
+  catalyst_path: "${TW_CATALYST_PATH:-}"
+  lookahead_days: 126
+  near_term_days: 45
+
 backtest:
   start: "2020-01-01"
   end: "2025-01-01"
   rebalance: "monthly"
   top_n: 20
   horizon_days: 126
-  target_multiples: [3, 5]
+  target_multiples: [3]
+  include_baselines: true
+  random_trials: 30
+  seed: 42
 
 theme_mapping: {}
 manual_catalysts: {}
