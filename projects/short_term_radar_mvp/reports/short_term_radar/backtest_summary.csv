@@ -1,0 +1,2 @@
+﻿period_start,period_end,top_n,horizon_days,target_multiple,hit_rate_3x,hit_rate_5x,precision_at_n,avg_forward_return,median_forward_return,max_forward_return,avg_max_drawdown,median_max_drawdown,profit_factor_like,num_candidates,num_hits
+2020-01-01,2025-01-01,20,126,3.0,0.0,0.0,0.0,,,,,,0.0,0,0

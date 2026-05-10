@@ -1,0 +1,2 @@
+﻿period_start,period_end,top_n,horizon_days,target_multiple,hit_rate_3x,hit_rate_5x,precision_at_n,avg_forward_return,median_forward_return,max_forward_return,avg_max_drawdown,median_max_drawdown,profit_factor_like,num_candidates,num_hits
+2021-05-01,2026-04-30,20,126,3.0,0.02123730378578024,0.0009233610341643582,0.02123730378578024,0.36043551593727985,0.1821306211316791,4.228813559322034,-0.16602953793673766,-0.14357684265488702,2.421349532619668,1083,23
