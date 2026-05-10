@@ -1,0 +1,9 @@
+data:
+  daily_price_path: "data/tw_stock_daily"
+  symbol_col: "symbol"
+  date_col: "trade_date"
+  market_index_symbol: "TAIEX"
+
+filters:
+  min_trading_days: 120
+  min_avg_amount_20d: 10000000

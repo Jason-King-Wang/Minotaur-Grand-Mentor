@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+pytest-cache-files-*/
+.env
+.env.*
+*.log
+discord-downloads/
+discord-private-ai-bot/
+pytest_tmp_manual_check/
+*.sqlite
+*.sqlite3
+雷-設定圖.png
