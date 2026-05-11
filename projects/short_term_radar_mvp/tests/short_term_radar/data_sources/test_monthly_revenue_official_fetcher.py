@@ -24,6 +24,7 @@ def test_mops_monthly_revenue_fixture_parser_normalizes_rows():
     assert normalized[0]["symbol"] == "2330"
     assert normalized[0]["announce_date"] == "2026-05-10"
     assert normalized[0]["announce_date_inferred"] is True
+    assert normalized[0]["announce_date_source"] == "inferred_next_month_day_10"
     assert normalized[0]["company_type"] == "local"
     assert normalized[0]["revenue_yoy_pct"] == 31.12
 

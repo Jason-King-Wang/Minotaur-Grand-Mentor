@@ -72,7 +72,10 @@ def test_scan_output_contains_score_breakdown_fields(tmp_path):
     assert "score_raw_available_norm" in output[0]
     assert "score_coverage_adjusted" in output[0]
     assert "score_cap" in output[0]
+    assert output[0]["mode"] == "simple_price_volume_mode"
     assert "score_data_coverage_ratio" in output[0]
     assert "robot_slot_coverage_ratio" in output[0]
+    assert "robot_slot_statuses" in output[0]
     assert "degraded_radars" in output[0]
+    assert output[0]["core_data_ready_flag"] is False
     assert "data_coverage_ratio" not in output[0]

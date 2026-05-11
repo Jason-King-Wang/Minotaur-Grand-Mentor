@@ -1,4 +1,4 @@
-data_root: ${TW_RADAR_DATA_ROOT:-data}
+﻿data_root: ${TW_RADAR_DATA_ROOT:-data}
 existing_daily_price_path: ${TW_EQUITIES_DATA_PATH:-}
 
 fetch:
@@ -18,30 +18,37 @@ sources:
         dataset_id: 11549
         landing_url: "https://data.gov.tw/dataset/11549"
         download_url: ""
+        api_url: null
       symbol_master:
         dataset_id: 18419
         landing_url: "https://data.gov.tw/dataset/18419"
         download_url: ""
+        api_url: null
       monthly_revenue:
         dataset_id: 18420
         landing_url: "https://data.gov.tw/dataset/18420"
         download_url: ""
+        api_url: null
       material_events:
         dataset_id: 18415
         landing_url: "https://data.gov.tw/en/datasets/18415"
         download_url: ""
+        api_url: null
       corporate_actions:
         dataset_id: 89748
         landing_url: "https://data.gov.tw/dataset/89748"
         download_url: ""
+        api_url: null
       insider_holding:
         dataset_id: 22811
         landing_url: "https://data.gov.tw/dataset/22811"
         download_url: ""
+        api_url: null
       valuation_daily_by_date:
         dataset_id: 11764
         landing_url: "https://data.gov.tw/dataset/11764"
         download_url: ""
+        api_url: null
 
   tpex:
     enabled: true
@@ -52,38 +59,47 @@ sources:
         dataset_id: 11371
         landing_url: "https://data.gov.tw/dataset/11371"
         download_url: ""
+        api_url: null
       symbol_master:
         dataset_id: 25036
         landing_url: "https://data.gov.tw/dataset/25036"
         download_url: ""
+        api_url: null
       monthly_revenue:
         dataset_id: 56510
         landing_url: "https://data.gov.tw/dataset/56510"
         download_url: ""
+        api_url: null
       material_events:
         dataset_id: 18418
         landing_url: "https://data.gov.tw/dataset/18418"
         download_url: ""
+        api_url: null
       attention:
         dataset_id: 11395
         landing_url: "https://data.gov.tw/dataset/11395"
         download_url: ""
+        api_url: null
       disposition:
         dataset_id: 11396
         landing_url: "https://data.gov.tw/dataset/11396"
         download_url: ""
+        api_url: null
       corporate_actions:
         dataset_id: 11633
         landing_url: "https://data.gov.tw/dataset/11633"
         download_url: ""
+        api_url: null
       insider_holding:
         dataset_id: 22812
         landing_url: "https://data.gov.tw/dataset/22812"
         download_url: ""
+        api_url: null
       valuation_daily:
         dataset_id: 11373
         landing_url: "https://data.gov.tw/dataset/11373"
         download_url: ""
+        api_url: null
 
   twse_eshop:
     enabled: false
@@ -92,9 +108,11 @@ sources:
       surveillance:
         landing_url: "https://eshop.twse.com.tw/zh/product/detail/ac35dc52883d42c1a2eeacfa332f7e7f"
         download_url: ""
+        api_url: null
       margin_short:
         landing_url: "https://eshop.twse.com.tw/zh/product/detail/388dd3a09824427d8c01a9d2b21e820b"
         download_url: ""
+        api_url: null
 
   broker_api:
     enabled: false

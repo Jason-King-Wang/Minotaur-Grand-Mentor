@@ -38,6 +38,7 @@ class CollectorPlan:
     note: str | None = None
     landing_url: str | None = None
     download_url: str | None = None
+    api_url: str | None = None
 
 
 class DataSourceError(RuntimeError):

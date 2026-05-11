@@ -5,6 +5,7 @@ from short_term_radar.schemas import ScoreBreakdown
 
 
 def normalized_score(scores: dict[str, float | None], weights: dict[str, float], risk_penalty: float) -> float:
+    """Legacy convenience wrapper; new scan code uses calculate_score_breakdown."""
     return clip(_weighted_available_score(scores, weights) - risk_penalty)
 
 
@@ -13,6 +14,7 @@ def calculate_score_breakdown(
     weights: dict[str, float],
     risk_penalty: float,
     degraded_radars: list[str] | None = None,
+    robot_slot_statuses: dict[str, str] | None = None,
 ) -> ScoreBreakdown:
     available_radars = [key for key, value in scores.items() if value is not None and key in weights]
     score_degraded = [key for key, value in scores.items() if value is None and key in weights]
@@ -21,7 +23,8 @@ def calculate_score_breakdown(
     total_weight = sum(float(value) for key, value in weights.items() if key in scores)
     available_weight = sum(float(weights[key]) for key in available_radars)
     score_data_coverage_ratio = available_weight / total_weight if total_weight > 0 else 0.0
-    robot_slot_coverage_ratio = _robot_slot_coverage_ratio(degraded)
+    slot_statuses = robot_slot_statuses or _legacy_robot_slot_statuses(degraded)
+    robot_slot_coverage_ratio = _robot_slot_coverage_ratio(slot_statuses)
     coverage_adjusted = clip(raw * score_data_coverage_ratio - risk_penalty)
     score_cap = _score_cap(degraded)
     total = min(coverage_adjusted, score_cap)
@@ -33,6 +36,7 @@ def calculate_score_breakdown(
         score_total=round(total, 4),
         score_data_coverage_ratio=round(score_data_coverage_ratio, 4),
         robot_slot_coverage_ratio=round(robot_slot_coverage_ratio, 4),
+        robot_slot_statuses=slot_statuses,
         available_radars=available_radars,
         degraded_radars=degraded,
         core_data_ready_flag=core_data_ready,
@@ -60,10 +64,18 @@ def _score_cap(degraded_radars: list[str]) -> float:
     return cap
 
 
-def _robot_slot_coverage_ratio(degraded_radars: list[str]) -> float:
-    slots = ["revenue", "chip", "catalyst", "surveillance"]
-    available = [slot for slot in slots if slot not in degraded_radars]
-    return len(available) / len(slots)
+def _legacy_robot_slot_statuses(degraded_radars: list[str]) -> dict[str, str]:
+    slots = ["REVENUE_SLOT", "CHIP_SLOT", "CATALYST_SLOT", "SURVEILLANCE_SLOT"]
+    degraded = {item.upper() + "_SLOT" for item in degraded_radars}
+    return {slot: "missing" if slot in degraded else "installed" for slot in slots}
+
+
+def _robot_slot_coverage_ratio(slot_statuses: dict[str, str]) -> float:
+    if not slot_statuses:
+        return 0.0
+    weights = {"installed": 1.0, "partial": 0.5, "missing": 0.0}
+    covered = sum(weights.get(status, 0.0) for status in slot_statuses.values())
+    return covered / len(slot_statuses)
 
 
 def _unique(items: list[str]) -> list[str]:

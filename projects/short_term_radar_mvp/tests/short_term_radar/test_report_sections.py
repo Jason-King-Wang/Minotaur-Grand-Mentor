@@ -22,8 +22,10 @@ def test_report_contains_cl6_sections(tmp_path):
                 "score_cap": 100,
                 "stage": "S3",
                 "entry_zone": "candidate_entry",
+                "mode": "full_short_term_radar",
                 "score_data_coverage_ratio": 1,
                 "robot_slot_coverage_ratio": 1,
+                "robot_slot_statuses": {"PRICE_SLOT": "installed", "REVENUE_SLOT": "installed"},
                 "core_data_ready_flag": True,
                 "degraded_radars": [],
             }
@@ -38,8 +40,10 @@ def test_report_contains_cl6_sections(tmp_path):
             "score_cap",
             "stage",
             "entry_zone",
+            "mode",
             "score_data_coverage_ratio",
             "robot_slot_coverage_ratio",
+            "robot_slot_statuses",
             "core_data_ready_flag",
             "degraded_radars",
         ],
@@ -51,6 +55,8 @@ def test_report_contains_cl6_sections(tmp_path):
 
     text = output.read_text(encoding="utf-8")
     assert "## Data Coverage Summary" in text
+    assert "## Radar Mode Summary" in text
+    assert "## Robot Slot Status" in text
     assert "## Top S3 Candidate Entry" in text
     assert "## Avoid Chasing / S5" in text
     assert "## Baseline Comparison" in text

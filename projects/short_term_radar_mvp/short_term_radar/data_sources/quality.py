@@ -56,6 +56,7 @@ DATASET_SCHEMAS: dict[str, list[str]] = {
     "monthly_revenue": [
         "revenue_month",
         "announce_date",
+        "announce_date_source",
         "market",
         "symbol",
         "name",

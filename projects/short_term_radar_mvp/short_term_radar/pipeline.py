@@ -54,8 +54,10 @@ SCAN_FIELDS = [
     "breakout_flag",
     "breakout_120d_flag",
     "ma_alignment_bull_flag",
+    "mode",
     "score_data_coverage_ratio",
     "robot_slot_coverage_ratio",
+    "robot_slot_statuses",
     "available_radars",
     "degraded_radars",
     "core_data_ready_flag",
@@ -79,12 +81,13 @@ def scan_candidates(
     surveillance_features = SurveillanceAdapter(config).load_features(as_of_date)
     corporate_action_features = CorporateActionAdapter(config).load_features(as_of_date)
     valuation_features = ValuationAdapter(config).load_features(as_of_date)
+    robot_slot_statuses = _robot_slot_statuses(processed, features_by_symbol, config)
+    mode = _radar_mode(robot_slot_statuses)
     source_available = {
-        "revenue": processed.table_exists("monthly_revenue"),
-        "chip": processed.table_exists("institutional_trading_daily")
-        or processed.table_exists("margin_short_daily"),
-        "catalyst": processed.table_exists("material_events") or bool(config.get("manual_catalysts")),
-        "surveillance": processed.table_exists("surveillance_daily"),
+        "revenue": robot_slot_statuses["REVENUE_SLOT"] == "installed",
+        "chip": robot_slot_statuses["CHIP_SLOT"] == "installed",
+        "catalyst": robot_slot_statuses["CATALYST_SLOT"] in {"installed", "partial"},
+        "surveillance": robot_slot_statuses["SURVEILLANCE_SLOT"] == "installed",
     }
     weights = config["scoring"]["weights"]
     max_penalty = float(config["scoring"].get("risk_penalty_max", 40))
@@ -121,7 +124,7 @@ def scan_candidates(
         if "surveillance" in missing_radars:
             degraded.append("surveillance")
         penalty, risk_flags = risk_penalty(enriched, max_penalty)
-        breakdown = calculate_score_breakdown(scores, weights, penalty, degraded)
+        breakdown = calculate_score_breakdown(scores, weights, penalty, degraded, robot_slot_statuses)
         total = breakdown.score_total
         stage, entry_zone = classify_stage(
             enriched,
@@ -168,8 +171,10 @@ def scan_candidates(
                 breakout_flag=enriched.get("breakout_flag", False),
                 breakout_120d_flag=enriched.get("breakout_120d_flag", False),
                 ma_alignment_bull_flag=enriched.get("ma_alignment_bull_flag", False),
+                mode=mode,
                 score_data_coverage_ratio=breakdown.score_data_coverage_ratio,
                 robot_slot_coverage_ratio=breakdown.robot_slot_coverage_ratio,
+                robot_slot_statuses=breakdown.robot_slot_statuses,
                 available_radars=breakdown.available_radars,
                 degraded_radars=breakdown.degraded_radars,
                 core_data_ready_flag=breakdown.core_data_ready_flag,
@@ -187,6 +192,54 @@ def scan_candidates(
         row["rank"] = rank
         rows.append(row)
     return rows
+
+
+def _robot_slot_statuses(
+    processed: ProcessedDataAdapter,
+    features_by_symbol: dict[str, list[dict[str, Any]]],
+    config: dict[str, Any],
+) -> dict[str, str]:
+    return {
+        "PRICE_SLOT": "installed" if features_by_symbol else "missing",
+        "UNIVERSE_SLOT": "installed" if processed.table_exists("symbol_master") else "partial",
+        "REVENUE_SLOT": "installed" if processed.table_exists("monthly_revenue") else "missing",
+        "CHIP_SLOT": "installed"
+        if processed.table_exists("institutional_trading_daily") or processed.table_exists("margin_short_daily")
+        else "missing",
+        "SURVEILLANCE_SLOT": "installed" if processed.table_exists("surveillance_daily") else "missing",
+        "CATALYST_SLOT": _catalyst_slot_status(processed, config),
+        "CORPORATE_SLOT": "installed" if processed.table_exists("corporate_actions") else "missing",
+        "FINANCIAL_SLOT": "installed" if processed.table_exists("financial_statement_quarterly") else "missing",
+        "VALUATION_SLOT": "installed" if processed.table_exists("valuation_daily") else "missing",
+        "CALENDAR_SLOT": "partial" if features_by_symbol else "missing",
+    }
+
+
+def _catalyst_slot_status(processed: ProcessedDataAdapter, config: dict[str, Any]) -> str:
+    if processed.table_exists("material_events"):
+        return "installed"
+    if config.get("manual_catalysts"):
+        return "partial"
+    return "missing"
+
+
+def _radar_mode(slot_statuses: dict[str, str]) -> str:
+    full_required = [
+        "PRICE_SLOT",
+        "UNIVERSE_SLOT",
+        "REVENUE_SLOT",
+        "CHIP_SLOT",
+        "SURVEILLANCE_SLOT",
+        "CATALYST_SLOT",
+        "CORPORATE_SLOT",
+        "VALUATION_SLOT",
+        "CALENDAR_SLOT",
+    ]
+    if all(slot_statuses.get(slot) in {"installed", "partial"} for slot in full_required):
+        return "full_short_term_radar"
+    if slot_statuses.get("REVENUE_SLOT") == "installed" and slot_statuses.get("SURVEILLANCE_SLOT") == "installed":
+        return "semi_full_short_term_radar"
+    return "simple_price_volume_mode"
 
 
 def _missing_radars(

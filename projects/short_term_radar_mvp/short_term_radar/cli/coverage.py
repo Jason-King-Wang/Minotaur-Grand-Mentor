@@ -5,7 +5,7 @@ from datetime import date, datetime, timezone
 from typing import Any
 
 from short_term_radar.data_sources.config import load_data_source_config
-from short_term_radar.data_sources.registry import DATASET_REGISTRY
+from short_term_radar.data_sources.registry import DATASET_REGISTRY, build_collect_plan
 from short_term_radar.data_sources.storage import processed_path, quality_path, read_processed_rows
 from short_term_radar.utils.io import write_csv
 
@@ -35,6 +35,8 @@ FRESHNESS_FIELDS = [
     "freshness_status",
     "generated_at",
 ]
+
+EVENT_DRIVEN_DATASETS = {"material_events", "corporate_actions"}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -80,19 +82,23 @@ def generate_coverage_reports(config: dict[str, Any], start: str, end: str) -> d
     for name, spec in DATASET_REGISTRY.items():
         rows = read_processed_rows(config, name)
         date_column = _date_column(spec.processed_table)
-        expected_values = _expected_values(date_column, start, end, trading_dates)
         markets = sorted({str(row.get("market")) for row in rows if row.get("market")} or set(spec.markets))
         for market in markets:
             market_rows = [row for row in rows if str(row.get("market") or market) == market]
+            event_driven = name in EVENT_DRIVEN_DATASETS
+            source_missing = name == "surveillance" and not market_rows and not _has_enabled_download_source(config, name, market)
+            expected_values = [] if event_driven or source_missing else _expected_values(date_column, start, end, trading_dates)
             actual_values = {
                 _date_or_month(row.get(date_column), date_column)
                 for row in market_rows
-                if _date_or_month(row.get(date_column), date_column) in expected_values
+                if _in_coverage_window(_date_or_month(row.get(date_column), date_column), date_column, start, end)
             }
+            if expected_values:
+                actual_values = {value for value in actual_values if value in expected_values}
             missing_values = [value for value in expected_values if value not in actual_values]
             expected_count = len(expected_values)
             actual_count = len(actual_values)
-            coverage_ratio = actual_count / expected_count if expected_count else 0.0
+            coverage_ratio = actual_count / expected_count if expected_count else 1.0
             coverage_rows.append(
                 {
                     "dataset": name,
@@ -104,7 +110,7 @@ def generate_coverage_reports(config: dict[str, Any], start: str, end: str) -> d
                     "actual_count": actual_count,
                     "coverage_ratio": round(coverage_ratio, 4),
                     "missing_count": len(missing_values),
-                    "source": _source_label(market_rows),
+                    "source": "source_missing" if source_missing else _source_label(market_rows),
                     "generated_at": generated_at,
                 }
             )
@@ -119,7 +125,7 @@ def generate_coverage_reports(config: dict[str, Any], start: str, end: str) -> d
                     }
                 )
             latest = max(actual_values) if actual_values else ""
-            expected_latest = expected_values[-1] if expected_values else ""
+            expected_latest = expected_values[-1] if expected_values else end[:10]
             lag_days = _lag_days(latest, expected_latest, date_column)
             freshness_rows.append(
                 {
@@ -128,7 +134,7 @@ def generate_coverage_reports(config: dict[str, Any], start: str, end: str) -> d
                     "latest_available_date_or_month": latest,
                     "expected_latest_date_or_month": expected_latest,
                     "lag_days": lag_days,
-                    "freshness_status": "fresh" if lag_days == 0 else "stale",
+                    "freshness_status": "source_missing" if source_missing else "fresh" if lag_days == 0 else "stale",
                     "generated_at": generated_at,
                 }
             )
@@ -201,6 +207,16 @@ def _date_or_month(value: Any, date_column: str) -> str:
     return text[:10]
 
 
+def _in_coverage_window(value: str, date_column: str, start: str, end: str) -> bool:
+    if not value:
+        return False
+    if date_column in {"revenue_month", "data_month"}:
+        start_month = start[:7].replace("-", "") if "-" in start[:7] else start[:6]
+        end_month = end[:7].replace("-", "") if "-" in end[:7] else end[:6]
+        return start_month <= value <= end_month
+    return start[:10] <= value <= end[:10]
+
+
 def _source_label(rows: list[dict[str, Any]]) -> str:
     sources = sorted({str(row.get("source")) for row in rows if row.get("source")})
     return ",".join(sources)
@@ -226,6 +242,14 @@ def _trading_dates_from_prices(config: dict[str, Any], start: str, end: str) -> 
         if start[:10] <= _date_or_month(row.get("trade_date"), "trade_date") <= end[:10]
     }
     return sorted(value for value in values if value)
+
+
+def _has_enabled_download_source(config: dict[str, Any], dataset: str, market: str) -> bool:
+    try:
+        plans = build_collect_plan(config, dataset, market)
+    except KeyError:
+        return False
+    return any(plan.enabled and bool(plan.download_url or plan.url) for plan in plans)
 
 
 if __name__ == "__main__":

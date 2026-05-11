@@ -51,7 +51,8 @@ def main(argv: list[str] | None = None) -> int:
             status = "enabled" if plan.enabled else "disabled"
             landing = f" landing={plan.landing_url}" if plan.landing_url else ""
             download = f" download={plan.download_url}" if plan.download_url else " download=<not configured>"
-            print(f"[dry-run] {plan.dataset} {plan.market} via {plan.source} ({status}){landing}{download}")
+            api = f" api={plan.api_url}" if plan.api_url else " api=<not configured>"
+            print(f"[dry-run] {plan.dataset} {plan.market} via {plan.source} ({status}){landing}{download}{api}")
         print(f"[dry-run] data_root={config.get('data_root')}")
         return 0
 

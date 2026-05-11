@@ -18,12 +18,15 @@ The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, f
 - Kept radar `.gitignore` inside this project; root `.gitignore` must not contain radar-specific rules.
 - Updated handoff and commands to use `projects/short_term_radar_mvp` as the working directory.
 - Fixed `monthly_revenue` announce-date inference so `fetched_at` is never treated as public availability.
-- Split `data.gov.tw` source metadata into `landing_url` and `download_url`; landing pages are not fetched as CSV files.
+- Split `data.gov.tw` source metadata into `landing_url`, `download_url`, and `api_url`; landing pages are not fetched as CSV files.
 - Made `collect --write-raw` real for official MOPS monthly revenue raw HTML, and explicit-error for unsupported datasets.
 - Fixed `breakout_120d_only` baseline to accept only `breakout_120d_flag = true`.
 - Changed daily coverage expected dates to use processed `prices_daily` trading dates when available, with weekday fallback instead of counting weekends.
+- Marked `material_events` and `corporate_actions` as event-driven in coverage reports so they do not emit daily missing rows.
+- Marked surveillance as `source_missing` when no enabled direct download/API source is configured, avoiding false missing-date floods.
 - Removed duplicate score-cap logic from the old scoring path and centralized score breakdown behavior.
 - Split coverage output into `score_data_coverage_ratio` and `robot_slot_coverage_ratio`.
+- Added scan/report `mode` and `robot_slot_statuses` fields for simple/semi/full operation.
 - Added scope guard tests so radar files do not drift back to repository root.
 
 ## Work From Here
@@ -38,6 +41,34 @@ cd projects\short_term_radar_mvp
 py -3.14 -m pytest -q tests\short_term_radar
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 ```
+
+Latest local result:
+
+- `py -3.14 -m pytest -q tests\short_term_radar` -> `46 passed`
+- `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
+
+The simple-mode scan/backtest/report commands also completed locally. This machine did not have `TW_EQUITIES_DATA_PATH` configured, so the generated scan contained 0 candidates while still validating the CLI path.
+
+## Robot Slot Status
+
+| Slot | Status | Notes |
+|---|---|---|
+| PRICE_SLOT | installed | Simple mode can load daily OHLCV from `TW_EQUITIES_DATA_PATH` / configured `daily_price_path`. |
+| UNIVERSE_SLOT | partial | Symbol metadata can be loaded from processed `symbol_master`; price rows can still run simple mode without a full universe table. |
+| REVENUE_SLOT | partial | MOPS official fetcher/parser exists; live five-year backfill has not been run in source control. |
+| CHIP_SLOT | partial | Normalizers/adapters exist for institutional and margin/short data; full official fetchers remain pending. |
+| SURVEILLANCE_SLOT | partial | TPEx skeleton and config split exist; real direct `download_url` values are still needed. TWSE free endpoint remains pending. |
+| CATALYST_SLOT | partial | Manual catalysts and material-event normalizer/classifier exist; live official fetcher remains pending. |
+| CORPORATE_SLOT | partial | Corporate-action normalizer/adapter exists; live official fetcher remains pending. |
+| FINANCIAL_SLOT | partial | Financial normalizer exists; scoring/fetcher integration remains pending. |
+| VALUATION_SLOT | partial | Valuation normalizer/adapter exists; live official fetcher remains pending. |
+| CALENDAR_SLOT | partial | Coverage/backtest derive trading days from `prices_daily`; a full exchange holiday calendar remains pending. |
+
+## Operation Modes
+
+- `simple_price_volume_mode`: price/universe path only. Scan, backtest, baseline comparison, and report can run; `core_data_ready_flag = false`; missing revenue prevents S3 candidate entry.
+- `semi_full_short_term_radar`: revenue and surveillance slots are installed, allowing higher-confidence candidates if not under disposition.
+- `full_short_term_radar`: price, universe, revenue, chip, surveillance, catalyst, corporate, valuation, and calendar slots are available; S3 candidate entry and full report context are enabled.
 
 ## Official Monthly Revenue
 
@@ -132,4 +163,5 @@ Broker integrations must remain read-only. No account mutation, order placement,
 - Institutional trading and margin/short official fetchers still need full direct endpoint parsers.
 - Material events and corporate actions official fetchers still need full direct endpoint parsers.
 - TPEx surveillance requires real `download_url` values before live CSV collection; dataset landing pages remain reference-only.
+- A full official TWSE/TPEX trading-calendar source is still needed; current coverage uses processed price trading days.
 - Full five-year official backfill should run locally and remain outside source control.

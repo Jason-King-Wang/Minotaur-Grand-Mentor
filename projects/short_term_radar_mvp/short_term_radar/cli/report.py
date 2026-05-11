@@ -28,6 +28,8 @@ def generate_report(scan_file: str, backtest_file: str, output: str, baseline_fi
 
     lines = ["# Short Term Radar Report", ""]
     lines.extend(_coverage_summary(candidates))
+    lines.extend(_mode_summary(candidates))
+    lines.extend(_robot_slot_summary(candidates))
     lines.extend(_candidate_section("Top S3 Candidate Entry", [row for row in candidates if row.get("stage") == "S3"]))
     lines.extend(_candidate_section("Top S2 Early Watch", [row for row in candidates if row.get("stage") == "S2"]))
     lines.extend(_candidate_section("Avoid Chasing / S5", [row for row in candidates if row.get("stage") == "S5"]))
@@ -64,6 +66,37 @@ def _coverage_summary(candidates: list[dict[str, Any]]) -> list[str]:
     ]
 
 
+def _mode_summary(candidates: list[dict[str, Any]]) -> list[str]:
+    counts: dict[str, int] = {}
+    for row in candidates:
+        mode = row.get("mode") or "unknown"
+        counts[mode] = counts.get(mode, 0) + 1
+    mode_text = ", ".join(f"{mode}: {count}" for mode, count in sorted(counts.items())) or "N/A"
+    return [
+        "## Radar Mode Summary",
+        "",
+        f"- Mode distribution: {mode_text}",
+        "- Simple mode can scan, backtest, compare baselines, and report, but cannot enter S3 candidate_entry without revenue gating.",
+        "",
+    ]
+
+
+def _robot_slot_summary(candidates: list[dict[str, Any]]) -> list[str]:
+    statuses = _decode_slot_statuses(candidates[0].get("robot_slot_statuses")) if candidates else {}
+    lines = [
+        "## Robot Slot Status",
+        "",
+        "| Slot | Status |",
+        "|---|---|",
+    ]
+    for slot, status in statuses.items():
+        lines.append(f"| {_cell(slot)} | {_cell(status)} |")
+    if not statuses:
+        lines.append("| N/A | N/A |")
+    lines.append("")
+    return lines
+
+
 def _candidate_section(title: str, rows: list[dict[str, Any]]) -> list[str]:
     lines = [
         f"## {title}",
@@ -90,6 +123,20 @@ def _candidate_section(title: str, rows: list[dict[str, Any]]) -> list[str]:
         lines.append("|  | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A | N/A |")
     lines.append("")
     return lines
+
+
+def _decode_slot_statuses(value: Any) -> dict[str, str]:
+    if isinstance(value, dict):
+        return {str(key): str(item) for key, item in value.items()}
+    if not value:
+        return {}
+    try:
+        parsed = json.loads(str(value))
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(parsed, dict):
+        return {}
+    return {str(key): str(item) for key, item in parsed.items()}
 
 
 def _degraded_summary(candidates: list[dict[str, Any]]) -> list[str]:

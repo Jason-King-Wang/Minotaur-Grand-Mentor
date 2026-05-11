@@ -148,16 +148,18 @@ def build_collect_plan(config: dict, dataset: str, market: str = "all") -> list[
                 dataset_cfg = _dataset_config(source_cfg, name, spec.processed_table, source)
                 landing_url = (dataset_cfg or {}).get("landing_url") or (dataset_cfg or {}).get("url")
                 download_url = (dataset_cfg or {}).get("download_url")
+                api_url = (dataset_cfg or {}).get("api_url")
                 plans.append(
                     CollectorPlan(
                         dataset=name,
                         market=item_market,
                         source=source,
-                        url=download_url,
+                        url=download_url or api_url,
                         enabled=enabled,
                         note=None if enabled else "source disabled or registry-only",
                         landing_url=landing_url,
                         download_url=download_url,
+                        api_url=api_url,
                     )
                 )
     return plans
@@ -173,9 +175,11 @@ def _dataset_config(source_cfg: dict, name: str, processed_table: str, source: s
 def _merged_endpoint_config(datasets: dict, names: tuple[str, ...]) -> dict:
     landing_urls = [str(datasets[name].get("landing_url")) for name in names if datasets.get(name, {}).get("landing_url")]
     download_urls = [str(datasets[name].get("download_url")) for name in names if datasets.get(name, {}).get("download_url")]
+    api_urls = [str(datasets[name].get("api_url")) for name in names if datasets.get(name, {}).get("api_url")]
     return {
         "landing_url": " | ".join(landing_urls),
         "download_url": " | ".join(download_urls),
+        "api_url": " | ".join(api_urls),
     }
 
 

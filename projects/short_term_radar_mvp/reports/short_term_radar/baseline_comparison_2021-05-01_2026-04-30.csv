@@ -1,0 +1,6 @@
+﻿avg_forward_close_return,avg_forward_max_return,avg_forward_path_max_drawdown,hit_rate_3x,hit_rate_5x,horizon_days,max_forward_max_return,median_forward_close_return,median_forward_max_return,median_forward_path_max_drawdown,num_candidates,num_hits,period_end,period_start,precision_at_n,profit_factor_like,strategy_name,target_multiple,top_n
+,,,0.0,0.0,126,,,,,0,0,2026-04-30,2021-05-01,0.0,0.0,radar_model,3.0,20
+,,,0.0,0.0,126,,,,,0,0,2026-04-30,2021-05-01,0.0,0.0,random_top_n,3.0,20
+,,,0.0,0.0,126,,,,,0,0,2026-04-30,2021-05-01,0.0,0.0,breakout_120d_only,3.0,20
+,,,0.0,0.0,126,,,,,0,0,2026-04-30,2021-05-01,0.0,0.0,volume_expansion_only,3.0,20
+,,,0.0,0.0,126,,,,,0,0,2026-04-30,2021-05-01,0.0,0.0,ma_alignment_only,3.0,20

@@ -10,9 +10,15 @@ def test_short_term_radar_package_lives_under_projects_folder():
     assert project_root.name == "short_term_radar_mvp"
     assert project_root.parent.name == "projects"
     assert (project_root / "short_term_radar").is_dir()
+    assert (project_root / "short_term_radar" / "__init__.py").is_file()
+    assert (project_root / "configs" / "short_term_radar" / "default.yaml").is_file()
+    assert (project_root / "tests" / "short_term_radar").is_dir()
     assert not (repo_root / "short_term_radar").exists()
     assert not (repo_root / "configs" / "short_term_radar").exists()
+    assert not (repo_root / "tests" / "short_term_radar").exists()
+    assert not (repo_root / "reports" / "short_term_radar").exists()
     assert not (repo_root / "SHORT_TERM_RADAR_HANDOFF.md").exists()
+    assert not (repo_root / "pytest.ini").exists()
 
 
 def test_repo_root_readme_stays_minotaur_scoped():

@@ -36,6 +36,7 @@ def test_data_gov_sources_split_landing_and_download_urls():
 
     assert monthly_revenue["landing_url"] == "https://data.gov.tw/dataset/18420"
     assert monthly_revenue["download_url"] == ""
+    assert monthly_revenue["api_url"] is None
 
 
 def test_collect_plan_does_not_treat_landing_page_as_download_url():
@@ -46,5 +47,6 @@ def test_collect_plan_does_not_treat_landing_page_as_download_url():
     assert plans
     assert all(plan.download_url in {None, ""} for plan in plans)
     assert all(plan.url in {None, ""} for plan in plans)
+    assert all(plan.api_url in {None, ""} for plan in plans)
     assert "https://data.gov.tw/dataset/11395" in tpex_plan.landing_url
     assert "https://data.gov.tw/dataset/11396" in tpex_plan.landing_url

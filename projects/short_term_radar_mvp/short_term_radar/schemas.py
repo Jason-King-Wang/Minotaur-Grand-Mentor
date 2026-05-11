@@ -12,6 +12,7 @@ class ScoreBreakdown:
     score_total: float
     score_data_coverage_ratio: float
     robot_slot_coverage_ratio: float
+    robot_slot_statuses: dict[str, str] = field(default_factory=dict)
     available_radars: list[str] = field(default_factory=list)
     degraded_radars: list[str] = field(default_factory=list)
     core_data_ready_flag: bool = True
@@ -51,8 +52,10 @@ class RadarCandidate:
     breakout_120d_flag: bool = False
     volume_expansion_ratio: float | None = None
     ma_alignment_bull_flag: bool = False
+    mode: str = "simple_price_volume_mode"
     score_data_coverage_ratio: float | None = None
     robot_slot_coverage_ratio: float | None = None
+    robot_slot_statuses: dict[str, str] = field(default_factory=dict)
     available_radars: list[str] = field(default_factory=list)
     degraded_radars: list[str] = field(default_factory=list)
     core_data_ready_flag: bool = True

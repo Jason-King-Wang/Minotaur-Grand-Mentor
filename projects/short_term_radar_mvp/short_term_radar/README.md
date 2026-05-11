@@ -6,7 +6,7 @@ Standalone Taiwan stock short-term radar MVP for finding candidates with possibl
 
 - Daily candidate scan with price/volume, revenue, chip, catalyst, surveillance, corporate-action, and valuation adapters.
 - Graceful degradation when processed tables are missing.
-- Weighted `ScoreBreakdown` in scan output: raw available normalized score, coverage-adjusted score, score cap, `score_data_coverage_ratio`, `robot_slot_coverage_ratio`, available/degraded radars, and core-data-ready flag.
+- Weighted `ScoreBreakdown` in scan output: raw available normalized score, coverage-adjusted score, score cap, `score_data_coverage_ratio`, `robot_slot_coverage_ratio`, `robot_slot_statuses`, `mode`, available/degraded radars, and core-data-ready flag.
 - Stage gating: missing revenue blocks S3 candidate entry; active disposition forces S5 / `avoid_chasing`.
 - Monthly top-N backtest with 3x/5x forward labels.
 - Baseline comparisons: radar model, deterministic random top-N, 120D breakout, volume expansion, and moving-average alignment.
@@ -65,7 +65,7 @@ Monthly revenue is gated by `announce_date <= as_of_date`. If the MOPS source do
 
 ## Official Source URLs
 
-`data.gov.tw` dataset pages are tracked as `landing_url` only. Collectors must use `download_url` for direct file/API downloads; an empty `download_url` means the source is registry/dry-run only until a real endpoint is configured.
+`data.gov.tw` dataset pages are tracked as `landing_url` only. Collectors must use `download_url` or `api_url` for direct file/API downloads; empty direct endpoints mean the source is registry/dry-run only until a real endpoint is configured.
 
 ## Coverage Reports
 
@@ -105,7 +105,7 @@ py -3.14 -m pytest -q tests\short_term_radar
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 ```
 
-Latest verified result: `36 passed`.
+Latest verified result: `46 passed`.
 
 ## Still Pending
 
