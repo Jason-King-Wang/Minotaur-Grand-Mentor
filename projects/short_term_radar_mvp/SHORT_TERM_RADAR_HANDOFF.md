@@ -47,7 +47,18 @@ Latest local result:
 - `py -3.14 -m pytest -q tests\short_term_radar` -> `46 passed`
 - `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
 
-The simple-mode scan/backtest/report commands also completed locally. This machine did not have `TW_EQUITIES_DATA_PATH` configured, so the generated scan contained 0 candidates while still validating the CLI path.
+The simple-mode scan/backtest/report commands also completed locally with the five-year daily price file:
+
+```powershell
+$env:TW_EQUITIES_DATA_PATH="C:\Users\User\Documents\New project 4\data\processed\prices_daily.parquet"
+$env:TW_RADAR_DATA_ROOT="C:\Users\User\Documents\New project 4\data"
+```
+
+Results:
+
+- Scan `2026-04-30`: 50 candidates.
+- Backtest `2021-05-01..2026-04-30`: 1083 radar-model candidate rows.
+- Baseline comparison generated for radar model, random top-N, 120D breakout, volume expansion, and MA alignment.
 
 ## Robot Slot Status
 

@@ -1,3 +1,5 @@
+data_root: "${TW_RADAR_DATA_ROOT:-data}"
+
 data:
   daily_price_path: "${TW_EQUITIES_DATA_PATH:-data/tw_stock_daily}"
   daily_price_format: "auto"

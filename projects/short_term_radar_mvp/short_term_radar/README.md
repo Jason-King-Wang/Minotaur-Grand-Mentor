@@ -30,6 +30,8 @@ $env:TW_RADAR_DATA_ROOT="C:\path\to\short_term_radar_data"
 $env:TW_EQUITIES_DATA_PATH="C:\path\to\tw_equities"
 ```
 
+`TW_EQUITIES_DATA_PATH` may point directly to a daily-price parquet file, for example `...\data\processed\prices_daily.parquet`.
+
 Do not commit `configs/short_term_radar/local.yaml`, raw/processed data, secrets, logs, or broker runtime files.
 
 ## Official Monthly Revenue
