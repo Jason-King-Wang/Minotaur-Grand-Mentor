@@ -6,25 +6,16 @@ from short_term_radar.schemas import ForwardLabel
 
 
 def _empty_label(symbol: str, trade_date: str) -> ForwardLabel:
-    return ForwardLabel(symbol, trade_date, None, None, None, None, False, False, False)
-
-
-def _time_to_multiple(closes: list[float], start_close: float, multiple: float) -> int | None:
-    target = start_close * multiple
-    for index, close in enumerate(closes, 1):
-        if close >= target:
-            return index
-    return None
-
-
-def _path_max_drawdown(closes: list[float], start_close: float) -> float:
-    peak = start_close
-    max_drawdown = 0.0
-    for close in closes:
-        peak = max(peak, close)
-        drawdown = close / peak - 1.0
-        max_drawdown = min(max_drawdown, drawdown)
-    return max_drawdown
+    return ForwardLabel(
+        symbol=symbol,
+        trade_date=trade_date,
+        forward_max_return=None,
+        forward_close_return=None,
+        forward_min_return_from_entry=None,
+        forward_path_max_drawdown=None,
+        hit_3x=False,
+        hit_5x=False,
+    )
 
 
 def forward_label(
@@ -36,8 +27,8 @@ def forward_label(
             anchor_index = index
             break
 
-    symbol = rows[0]["symbol"] if rows else ""
     if anchor_index is None or rows[anchor_index].get("close") in (None, 0):
+        symbol = rows[0]["symbol"] if rows else ""
         return _empty_label(symbol, trade_date)
 
     anchor = rows[anchor_index]
@@ -52,17 +43,20 @@ def forward_label(
 
     max_close = max(closes)
     end_close = closes[-1]
+    min_return_from_entry = min(close / start_close - 1 for close in closes)
+    running_peak = start_close
+    path_max_drawdown = 0.0
+    for close in closes:
+        running_peak = max(running_peak, close)
+        path_max_drawdown = min(path_max_drawdown, close / running_peak - 1)
+
     return ForwardLabel(
         symbol=anchor["symbol"],
         trade_date=trade_date,
         forward_max_return=max_close / start_close - 1,
         forward_close_return=end_close / start_close - 1,
-        forward_min_return_from_entry=min(close / start_close - 1 for close in closes),
-        forward_path_max_drawdown=_path_max_drawdown(closes, start_close),
-        hit_2x=max_close >= start_close * 2,
+        forward_min_return_from_entry=min_return_from_entry,
+        forward_path_max_drawdown=path_max_drawdown,
         hit_3x=max_close >= start_close * 3,
         hit_5x=max_close >= start_close * 5,
-        time_to_2x_days=_time_to_multiple(closes, start_close, 2),
-        time_to_3x_days=_time_to_multiple(closes, start_close, 3),
-        time_to_5x_days=_time_to_multiple(closes, start_close, 5),
     )

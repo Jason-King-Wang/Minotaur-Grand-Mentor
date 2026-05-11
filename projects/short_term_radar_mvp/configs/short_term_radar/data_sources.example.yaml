@@ -1,0 +1,85 @@
+data_root: ${TW_RADAR_DATA_ROOT:-data}
+existing_daily_price_path: ${TW_EQUITIES_DATA_PATH:-}
+
+fetch:
+  user_agent: "short-term-radar-mvp/0.2"
+  timeout_seconds: 30
+  retry_count: 3
+  sleep_seconds: 1.0
+  respect_source_rate_limits: true
+
+sources:
+  twse:
+    enabled: true
+    open_data_base: "https://data.gov.tw"
+    api_base: "https://openapi.twse.com.tw"
+    datasets:
+      prices_daily:
+        dataset_id: 11549
+        url: "https://data.gov.tw/dataset/11549"
+      symbol_master:
+        dataset_id: 18419
+        url: "https://data.gov.tw/dataset/18419"
+      monthly_revenue:
+        dataset_id: 18420
+        url: "https://data.gov.tw/dataset/18420"
+      material_events:
+        dataset_id: 18415
+        url: "https://data.gov.tw/en/datasets/18415"
+      corporate_actions:
+        dataset_id: 89748
+        url: "https://data.gov.tw/dataset/89748"
+      insider_holding:
+        dataset_id: 22811
+        url: "https://data.gov.tw/dataset/22811"
+      valuation_daily_by_date:
+        dataset_id: 11764
+        url: "https://data.gov.tw/dataset/11764"
+
+  tpex:
+    enabled: true
+    open_data_base: "https://data.gov.tw"
+    api_base: "https://www.tpex.org.tw/openapi"
+    datasets:
+      prices_daily:
+        dataset_id: 11371
+        url: "https://data.gov.tw/dataset/11371"
+      symbol_master:
+        dataset_id: 25036
+        url: "https://data.gov.tw/dataset/25036"
+      monthly_revenue:
+        dataset_id: 56510
+        url: "https://data.gov.tw/dataset/56510"
+      material_events:
+        dataset_id: 18418
+        url: "https://data.gov.tw/dataset/18418"
+      attention:
+        dataset_id: 11395
+        url: "https://data.gov.tw/dataset/11395"
+      disposition:
+        dataset_id: 11396
+        url: "https://data.gov.tw/dataset/11396"
+      corporate_actions:
+        dataset_id: 11633
+        url: "https://data.gov.tw/dataset/11633"
+      insider_holding:
+        dataset_id: 22812
+        url: "https://data.gov.tw/dataset/22812"
+      valuation_daily:
+        dataset_id: 11373
+        url: "https://data.gov.tw/dataset/11373"
+
+  twse_eshop:
+    enabled: false
+    note: "Use only if official free endpoints are insufficient or a paid subscription exists. Do not hardcode credentials."
+    datasets:
+      surveillance:
+        url: "https://eshop.twse.com.tw/zh/product/detail/ac35dc52883d42c1a2eeacfa332f7e7f"
+      margin_short:
+        url: "https://eshop.twse.com.tw/zh/product/detail/388dd3a09824427d8c01a9d2b21e820b"
+
+  broker_api:
+    enabled: false
+    provider: "shioaji"
+    readonly_only: true
+    allow_order_methods: false

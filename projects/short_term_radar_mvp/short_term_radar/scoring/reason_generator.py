@@ -10,42 +10,33 @@ def generate_reasons(
     risks: list[str] = []
 
     if features.get("breakout_120d_flag"):
-        reasons.append("120D breakout")
+        reasons.append("突破 120 日整理區")
     elif features.get("breakout_60d_flag"):
-        reasons.append("60D breakout")
+        reasons.append("突破 60 日整理區")
 
     ratio = features.get("volume_expansion_ratio")
     if ratio is not None and 1.2 <= ratio <= 3.5:
-        reasons.append(f"volume expansion {ratio:.1f}x 20D average")
+        reasons.append(f"成交量為 20 日均量 {ratio:.1f} 倍，屬於有效放量區")
 
     rs_20 = features.get("rs_20d")
     if rs_20 is not None and rs_20 > 0:
-        reasons.append("20D relative strength is positive")
+        reasons.append("近 20 日相對強於大盤")
 
     rs_60 = features.get("rs_60d")
     if rs_60 is not None and rs_60 > 0:
-        reasons.append("60D relative strength is positive")
-
-    if scores.get("revenue") is not None and scores["revenue"] >= 60:
-        reasons.append("revenue radar supports momentum")
+        reasons.append("近 60 日相對強於大盤")
 
     if features.get("ma_alignment_bull_flag"):
-        reasons.append("moving averages are bull aligned")
+        reasons.append("均線結構轉為多頭排列")
     elif features.get("above_ma20_flag") and features.get("above_ma60_flag"):
-        reasons.append("price is above MA20 and MA60")
+        reasons.append("站上 20 日與 60 日均線")
 
     if scores.get("expectation_gap") is not None and scores["expectation_gap"] >= 70:
-        reasons.append("price-only expectation gap proxy is constructive")
-
-    if scores.get("chip") is not None and scores["chip"] >= 60:
-        reasons.append("chip radar shows net accumulation")
-
-    if scores.get("catalyst") is not None and scores["catalyst"] >= 40:
-        reasons.append("near-term catalyst is present")
+        reasons.append("價量轉強但尚未完全過熱，預期差仍可接受")
 
     for item in degraded:
-        risks.append(f"{item} radar degraded")
+        risks.append(f"{item} 缺資料，雷達降級")
 
     if not reasons:
-        reasons.append("limited but improving price-volume evidence")
+        reasons.append("通過基本流動性與資料完整性篩選")
     return reasons, risks
