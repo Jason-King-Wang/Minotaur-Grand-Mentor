@@ -1,13 +1,27 @@
-# AI Minotaur Inner World
+# Short Term Radar MVP
 
-This workspace currently contains the Short Term Radar MVP handoff.
+This is a standalone subproject that currently lives under the Minotaur Grand Mentor repository for execution convenience.
+
+Work from this directory:
+
+```powershell
+cd projects\short_term_radar_mvp
+```
 
 Start here:
 
 - [SHORT_TERM_RADAR_HANDOFF.md](SHORT_TERM_RADAR_HANDOFF.md)
 - [short_term_radar/README.md](short_term_radar/README.md)
 
-Upload scope reminder for GitHub:
+Safe upload scope:
 
-- Include `short_term_radar/`, `configs/short_term_radar/`, `tests/short_term_radar/`, `reports/short_term_radar/`, `pytest.ini`, `.gitignore`, and this handoff.
-- Do not upload local secrets, `.env`, logs, Discord bot runtime files, or unrelated local downloads.
+- Include this folder: `projects/short_term_radar_mvp/`
+- Do not place radar source files at repository root.
+- Do not upload raw data, processed data, cache files, local config, secrets, logs, or broker runtime files.
+
+Important local-only paths:
+
+- `configs/short_term_radar/local.yaml`
+- `data/raw/`
+- `data/processed/`
+- `data/tmp/`

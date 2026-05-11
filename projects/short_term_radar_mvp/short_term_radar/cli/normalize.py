@@ -8,7 +8,7 @@ from short_term_radar.data_sources.fetchers.local_file_fetcher import LocalFileF
 from short_term_radar.data_sources.normalizers.dispatcher import NORMALIZERS, normalize_rows
 from short_term_radar.data_sources.quality import validate_rows
 from short_term_radar.data_sources.registry import DATASET_REGISTRY, resolve_dataset_names
-from short_term_radar.data_sources.storage import processed_path, write_processed_rows
+from short_term_radar.data_sources.storage import merge_processed_rows, processed_path
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -21,6 +21,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--source-url", default="")
     parser.add_argument("--fetched-at")
     parser.add_argument("--as-of")
+    parser.add_argument("--mode", default="upsert", choices=["append", "upsert", "replace"])
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
 
@@ -45,13 +46,18 @@ def main(argv: list[str] | None = None) -> int:
                 args.source_url or args.input,
                 args.fetched_at,
             )
-            output = write_processed_rows(config, name, normalized)
+            merge_result = merge_processed_rows(config, name, normalized, mode=args.mode)
+            output = merge_result["path"]
             report = validate_rows(
                 spec.processed_table,
                 normalized,
                 today=date.fromisoformat(args.as_of) if args.as_of else date.today(),
             )
-            print(f"{name}: wrote {len(normalized)} rows to {output}; quality_ok={report.ok}; issues={len(report.issues)}")
+            print(
+                f"{name}: merged {len(normalized)} rows to {output}; "
+                f"inserted={merge_result['inserted_rows']} updated={merge_result['updated_rows']} "
+                f"quality_ok={report.ok}; issues={len(report.issues)}"
+            )
             for issue in report.issues:
                 print(f"  {issue.severity}: {issue.check}: {issue.message}")
     return 0

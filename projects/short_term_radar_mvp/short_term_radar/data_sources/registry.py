@@ -145,20 +145,38 @@ def build_collect_plan(config: dict, dataset: str, market: str = "all") -> list[
             for item_market in markets:
                 if not _source_supports_market(source, item_market):
                     continue
-                dataset_cfg = (source_cfg.get("datasets") or {}).get(name) or (
-                    source_cfg.get("datasets") or {}
-                ).get(spec.processed_table)
+                dataset_cfg = _dataset_config(source_cfg, name, spec.processed_table, source)
+                landing_url = (dataset_cfg or {}).get("landing_url") or (dataset_cfg or {}).get("url")
+                download_url = (dataset_cfg or {}).get("download_url")
                 plans.append(
                     CollectorPlan(
                         dataset=name,
                         market=item_market,
                         source=source,
-                        url=(dataset_cfg or {}).get("url"),
+                        url=download_url,
                         enabled=enabled,
                         note=None if enabled else "source disabled or registry-only",
+                        landing_url=landing_url,
+                        download_url=download_url,
                     )
                 )
     return plans
+
+
+def _dataset_config(source_cfg: dict, name: str, processed_table: str, source: str) -> dict:
+    datasets = source_cfg.get("datasets") or {}
+    if name == "surveillance" and source == "tpex":
+        return _merged_endpoint_config(datasets, ("attention", "disposition"))
+    return datasets.get(name) or datasets.get(processed_table) or {}
+
+
+def _merged_endpoint_config(datasets: dict, names: tuple[str, ...]) -> dict:
+    landing_urls = [str(datasets[name].get("landing_url")) for name in names if datasets.get(name, {}).get("landing_url")]
+    download_urls = [str(datasets[name].get("download_url")) for name in names if datasets.get(name, {}).get("download_url")]
+    return {
+        "landing_url": " | ".join(landing_urls),
+        "download_url": " | ".join(download_urls),
+    }
 
 
 def _source_supports_market(source: str, market: str) -> bool:

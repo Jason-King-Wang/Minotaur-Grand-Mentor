@@ -20,7 +20,7 @@ from short_term_radar.features.revenue import score_revenue
 from short_term_radar.features.theme_group import score_theme_groups
 from short_term_radar.schemas import RadarCandidate
 from short_term_radar.scoring.reason_generator import generate_reasons
-from short_term_radar.scoring.short_term_score import apply_score_caps, normalized_score
+from short_term_radar.scoring.short_term_score import calculate_score_breakdown
 from short_term_radar.scoring.stage_classifier import apply_data_gating, classify_stage
 
 
@@ -37,6 +37,9 @@ SCAN_FIELDS = [
     "score_chip",
     "score_catalyst",
     "risk_penalty",
+    "score_raw_available_norm",
+    "score_coverage_adjusted",
+    "score_cap",
     "stage",
     "entry_zone",
     "reasons",
@@ -45,10 +48,17 @@ SCAN_FIELDS = [
     "ret_20d",
     "ret_60d",
     "volume_z_20",
+    "volume_expansion_ratio",
     "rs_20d",
     "rs_60d",
     "breakout_flag",
-    "data_coverage_ratio",
+    "breakout_120d_flag",
+    "ma_alignment_bull_flag",
+    "score_data_coverage_ratio",
+    "robot_slot_coverage_ratio",
+    "available_radars",
+    "degraded_radars",
+    "core_data_ready_flag",
     "created_at",
 ]
 
@@ -111,8 +121,14 @@ def scan_candidates(
         if "surveillance" in missing_radars:
             degraded.append("surveillance")
         penalty, risk_flags = risk_penalty(enriched, max_penalty)
-        total = apply_score_caps(normalized_score(scores, weights, penalty), missing_radars)
-        stage, entry_zone = classify_stage(enriched, total, penalty)
+        breakdown = calculate_score_breakdown(scores, weights, penalty, degraded)
+        total = breakdown.score_total
+        stage, entry_zone = classify_stage(
+            enriched,
+            breakdown,
+            penalty,
+            config.get("scoring", {}).get("min_data_coverage_for_s3"),
+        )
         stage, entry_zone, gating_risks = apply_data_gating(stage, entry_zone, enriched, missing_radars)
         reasons, generated_risks = generate_reasons(enriched, scores, [])
         candidates.append(
@@ -137,16 +153,26 @@ def scan_candidates(
                 risk_penalty=round(penalty, 4),
                 stage=stage,
                 entry_zone=entry_zone,
+                score_raw_available_norm=breakdown.score_raw_available_norm,
+                score_coverage_adjusted=breakdown.score_coverage_adjusted,
+                score_cap=breakdown.score_cap,
                 reasons=reasons,
                 risk_flags=_unique(risk_flags + gating_risks + generated_risks),
                 last_close=enriched.get("last_close"),
                 ret_20d=enriched.get("ret_20d"),
                 ret_60d=enriched.get("ret_60d"),
                 volume_z_20=enriched.get("volume_z_20"),
+                volume_expansion_ratio=enriched.get("volume_expansion_ratio"),
                 rs_20d=enriched.get("rs_20d"),
                 rs_60d=enriched.get("rs_60d"),
                 breakout_flag=enriched.get("breakout_flag", False),
-                data_coverage_ratio=round((4 - len(missing_radars)) / 4, 4),
+                breakout_120d_flag=enriched.get("breakout_120d_flag", False),
+                ma_alignment_bull_flag=enriched.get("ma_alignment_bull_flag", False),
+                score_data_coverage_ratio=breakdown.score_data_coverage_ratio,
+                robot_slot_coverage_ratio=breakdown.robot_slot_coverage_ratio,
+                available_radars=breakdown.available_radars,
+                degraded_radars=breakdown.degraded_radars,
+                core_data_ready_flag=breakdown.core_data_ready_flag,
                 created_at=created_at,
             )
         )

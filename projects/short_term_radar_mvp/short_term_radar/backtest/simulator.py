@@ -95,9 +95,9 @@ def write_backtest_outputs(
         return detail_path
 
     suffix = summary_path.suffix
-    year_part = summary_path.stem.split("_")[-1]
-    baseline_path = summary_path.with_name(f"baseline_comparison_{year_part}{suffix}")
-    baseline_details_path = summary_path.with_name(f"baseline_details_{year_part}{suffix}")
+    period_part = summary_path.stem.removeprefix("backtest_")
+    baseline_path = summary_path.with_name(f"baseline_comparison_{period_part}{suffix}")
+    baseline_details_path = summary_path.with_name(f"baseline_details_{period_part}{suffix}")
     baseline_fields = sorted({key for row in (baseline_rows or []) for key in row})
     baseline_detail_fields = sorted({key for row in (baseline_detail_rows or []) for key in row})
     write_csv(baseline_path, baseline_rows or [], baseline_fields)

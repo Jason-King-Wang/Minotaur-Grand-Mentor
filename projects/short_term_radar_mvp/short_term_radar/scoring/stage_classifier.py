@@ -18,7 +18,7 @@ def classify_stage(
         if "revenue" in breakdown.degraded_radars:
             return "S2", "early_watch"
         min_coverage = _normalize_coverage_threshold(min_data_coverage_for_s3)
-        if min_coverage is not None and breakdown.data_coverage_ratio < min_coverage:
+        if min_coverage is not None and breakdown.score_data_coverage_ratio < min_coverage:
             return "S2", "early_watch"
     else:
         score_value = float(score_total)

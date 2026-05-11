@@ -10,7 +10,8 @@ class ScoreBreakdown:
     score_coverage_adjusted: float
     score_cap: float
     score_total: float
-    data_coverage_ratio: float
+    score_data_coverage_ratio: float
+    robot_slot_coverage_ratio: float
     available_radars: list[str] = field(default_factory=list)
     degraded_radars: list[str] = field(default_factory=list)
     core_data_ready_flag: bool = True
@@ -35,6 +36,9 @@ class RadarCandidate:
     risk_penalty: float
     stage: str
     entry_zone: str
+    score_raw_available_norm: float | None = None
+    score_coverage_adjusted: float | None = None
+    score_cap: float | None = None
     reasons: list[str] = field(default_factory=list)
     risk_flags: list[str] = field(default_factory=list)
     last_close: float | None = None
@@ -44,7 +48,14 @@ class RadarCandidate:
     rs_20d: float | None = None
     rs_60d: float | None = None
     breakout_flag: bool = False
-    data_coverage_ratio: float | None = None
+    breakout_120d_flag: bool = False
+    volume_expansion_ratio: float | None = None
+    ma_alignment_bull_flag: bool = False
+    score_data_coverage_ratio: float | None = None
+    robot_slot_coverage_ratio: float | None = None
+    available_radars: list[str] = field(default_factory=list)
+    degraded_radars: list[str] = field(default_factory=list)
+    core_data_ready_flag: bool = True
     created_at: str | None = None
 
     def to_row(self) -> dict[str, Any]:
