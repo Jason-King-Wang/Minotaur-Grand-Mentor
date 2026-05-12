@@ -34,6 +34,7 @@ The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, f
 - Hardened official MOPS monthly revenue smoke coverage for TWSE/TPEx and local/foreign request generation, degraded fetch handling, and no-empty-processed-table writes.
 - Added official institutional-trading parser/collector wiring for TWSE T86 JSON and TPEx 3-institution JSON, including fixture parser tests, CLI dry-run, degraded fetch handling, and processed-table upsert coverage.
 - Integrated the DC-bot full remaining task package into `docs/`, plus its conservative `official_open_data` skeleton for margin/short, material events, corporate actions, valuation, and symbol master official dry-runs.
+- Extended the DC-bot `official_open_data` skeleton so configured `api_url` / `supplemental_api_urls` are preferred over hardcoded defaults, TWSE-style `fields` + `data` payloads keep column names, and margin/short official rows can normalize and merge margin + SBL fixture payloads.
 - Processed storage now has a CSV fallback when parquet writing is unavailable; generated CSV/parquet outputs still remain local-only and ignored.
 
 ## Work From Here
@@ -51,7 +52,7 @@ py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 
 Latest local result:
 
-- `py -3.14 -m pytest -q tests\short_term_radar` -> `66 passed`
+- `py -3.14 -m pytest -q tests\short_term_radar` -> `70 passed`
 - `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
 
 The simple-mode scan/backtest/report commands also completed locally with the five-year daily price file:
@@ -74,7 +75,7 @@ Results:
 | PRICE_SLOT | installed | Simple mode can load daily OHLCV from `TW_EQUITIES_DATA_PATH` / configured `daily_price_path`. |
 | UNIVERSE_SLOT | partial | Symbol metadata can be loaded from processed `symbol_master`; price rows can still run simple mode without a full universe table. |
 | REVENUE_SLOT | partial | MOPS official fetcher/parser exists and small-range smoke is wired; live five-year backfill has not been run in source control. |
-| CHIP_SLOT | partial | TWSE/TPEx institutional-trading official parser/dry-run exists. Generic official margin/short dry-run skeleton and Shioaji read-only availability hooks exist; full official historical backfill remains pending. |
+| CHIP_SLOT | partial | TWSE/TPEx institutional-trading official parser/dry-run exists. Margin/short official config-first dry-run plus initial margin/SBL payload normalization exists. Shioaji read-only availability hooks exist; full official historical backfill remains pending. |
 | SURVEILLANCE_SLOT | partial | Shioaji read-only `notice()`/`punish()` hooks and TPEx skeleton exist; TWSE free endpoint remains pending. |
 | CATALYST_SLOT | partial | Manual catalysts, material-event normalizer/classifier, and official dry-run skeleton exist; live field mapping/backfill remains pending. |
 | CORPORATE_SLOT | partial | Corporate-action normalizer/adapter and official dry-run skeleton exist; live field mapping/backfill remains pending. |
@@ -173,7 +174,7 @@ py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_
 py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset symbol_master --market all --source official --dry-run
 ```
 
-These commands expose candidate endpoints and degrade cleanly; they do not make the related slots `installed` until live payload mapping and local processed rows are verified.
+These commands expose candidate endpoints and degrade cleanly. Margin/short has initial official payload parsing coverage for margin + SBL fixtures, but related slots stay `partial` until live payloads and local processed rows are verified.
 
 ## Coverage Reports
 
@@ -223,7 +224,8 @@ The Shioaji source requires an externally managed API object and intentionally d
 ## Remaining Work
 
 - Institutional trading now has TWSE/TPEx official parser and single-date collect wiring; full historical backfill still needs a local run and endpoint stability review.
-- Margin/short, material events, corporate actions, valuation, and symbol master now have official dry-run skeletons, but still need live payload mapping and small-smoke processed verification.
+- Margin/short now has initial official payload mapping coverage for margin + SBL fixtures, but still needs live endpoint verification and small-smoke processed verification.
+- Material events, corporate actions, valuation, and symbol master now have official dry-run skeletons, but still need live payload mapping and small-smoke processed verification.
 - `data_sources.example.yaml` now records direct OpenAPI candidates where known; parser/backfill work remains pending.
 - TPEx surveillance requires real `download_url` values before live CSV collection; dataset landing pages remain reference-only.
 - A full official TWSE/TPEX trading-calendar source is still needed; current coverage uses processed price trading days.

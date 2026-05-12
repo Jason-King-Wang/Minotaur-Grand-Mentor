@@ -27,14 +27,15 @@ docs/codex_short_term_radar_full_remaining_tasks_2026-05-12.md
 - Empty official fetches degrade cleanly and skip processed writes.
 - `institutional_trading` range collect now errors explicitly: use `--date` for single-day smoke.
 - Added tests for official dry-run routing and common JSON payload extraction.
+- Extended `official_open_data.py` to prefer configured `api_url` / `supplemental_api_urls`, preserve TWSE-style `fields` + `data` column names, and normalize/merge margin + SBL fixture payloads for `margin_short`.
 
 ## Current Source Status
 
 | Dataset | Status |
 |---|---|
 | monthly_revenue | Parser, dry-run, normalize, validate, upsert path exist. Live small-smoke not run in this pass. |
-| institutional_trading | Official dry-run and collector skeleton exist. Full live field mapping still needs real payload verification. |
-| margin_short | Official dry-run and collector skeleton exist. Full live field mapping still needs real payload verification. |
+| institutional_trading | TWSE T86 and TPEx 3-institution parser/collector wiring exists. Full historical live backfill still needs endpoint stability review. |
+| margin_short | Official config-first dry-run exists. Initial margin + SBL field mapping, normalization, and merge behavior are covered by fixtures; live endpoint verification remains pending. |
 | surveillance | TPEx/TWSE degraded dry-run exists. Direct TPEx download URLs and TWSE historical free source remain unresolved. |
 | material_events | Official dry-run and collector skeleton exist. Full live field mapping still needs real payload verification. |
 | corporate_actions | Official dry-run and collector skeleton exist. Full live field mapping still needs real payload verification. |
@@ -43,8 +44,8 @@ docs/codex_short_term_radar_full_remaining_tasks_2026-05-12.md
 
 ## Validation
 
-- `py -3.11 -m pytest -q tests\short_term_radar --tb=short --basetemp pytest_tmp_py311_official`: `50 passed`
-- `compileall` with Python 3.11: passed
+- `py -3.14 -m pytest -q tests\short_term_radar`: `70 passed`
+- `py -3.14 -m compileall -q short_term_radar tests\short_term_radar`: passed
 - N2 dry-runs: passed for monthly revenue, institutional trading TWSE/TPEX, margin/short, surveillance, material events, corporate actions, and coverage.
 - Scan slot verification wrote `reports/short_term_radar/scan_2026-04-30.csv`.
 - Scan first row mode: `simple_price_volume_mode`
@@ -54,7 +55,8 @@ docs/codex_short_term_radar_full_remaining_tasks_2026-05-12.md
 ## Still Missing
 
 - Live official fetch verification for the new skeleton endpoints.
-- Full field mapping for real TWSE/TPEx institutional, margin/short, material event, corporate action, valuation, and symbol master payloads.
+- Live official fetch verification for TWSE/TPEx margin/short after the initial fixture-backed parser coverage.
+- Full field mapping for real material event, corporate action, valuation, and symbol master payloads.
 - Official trading calendar parser/source.
 - TPEx surveillance direct CSV/API URLs.
 - TWSE historical surveillance free endpoint.
