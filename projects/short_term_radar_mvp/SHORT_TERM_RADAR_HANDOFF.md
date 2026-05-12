@@ -30,6 +30,7 @@ The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, f
 - Added scan/report `mode` and `robot_slot_statuses` fields for simple/semi/full operation.
 - Added scope guard tests so radar files do not drift back to repository root.
 - Added full-mode guard coverage so `full_short_term_radar` cannot be triggered by partial core slots.
+- Added an injected-API, read-only Shioaji source for `surveillance_daily` and `margin_short_daily`; it normalizes `notice()`, `punish()`, `credit_enquires()`, `short_stock_sources()`, and contract balance fields without login, credentials, CA activation, or order calls.
 
 ## Work From Here
 
@@ -46,7 +47,7 @@ py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 
 Latest local result:
 
-- `py -3.14 -m pytest -q tests\short_term_radar` -> `50 passed`
+- `py -3.14 -m pytest -q tests\short_term_radar` -> `54 passed`
 - `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
 
 The simple-mode scan/backtest/report commands also completed locally with the five-year daily price file:
@@ -69,8 +70,8 @@ Results:
 | PRICE_SLOT | installed | Simple mode can load daily OHLCV from `TW_EQUITIES_DATA_PATH` / configured `daily_price_path`. |
 | UNIVERSE_SLOT | partial | Symbol metadata can be loaded from processed `symbol_master`; price rows can still run simple mode without a full universe table. |
 | REVENUE_SLOT | partial | MOPS official fetcher/parser exists; live five-year backfill has not been run in source control. |
-| CHIP_SLOT | partial | Normalizers/adapters exist for institutional and margin/short data; full official fetchers remain pending. |
-| SURVEILLANCE_SLOT | partial | TPEx skeleton and config split exist; real direct `download_url` values are still needed. TWSE free endpoint remains pending. |
+| CHIP_SLOT | partial | Normalizers/adapters exist for institutional and margin/short data. Shioaji read-only margin/short availability hooks exist; full official historical fetchers remain pending. |
+| SURVEILLANCE_SLOT | partial | Shioaji read-only `notice()`/`punish()` hooks and TPEx skeleton exist; TWSE free endpoint remains pending. |
 | CATALYST_SLOT | partial | Manual catalysts and material-event normalizer/classifier exist; live official fetcher remains pending. |
 | CORPORATE_SLOT | partial | Corporate-action normalizer/adapter exists; live official fetcher remains pending. |
 | FINANCIAL_SLOT | partial | Financial normalizer exists; scoring/fetcher integration remains pending. |
@@ -170,6 +171,7 @@ Do not commit or upload:
 - cache files or live downloaded datasets
 
 Broker integrations must remain read-only. No account mutation, order placement, order modification, or order cancellation calls belong in this project.
+The Shioaji source requires an externally managed API object and intentionally does not read `.env`, login, activate CA, or construct orders.
 
 ## Remaining Work
 

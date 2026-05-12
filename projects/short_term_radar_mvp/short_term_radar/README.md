@@ -13,6 +13,7 @@ Standalone Taiwan stock short-term radar MVP for finding candidates with possibl
 - Markdown report generation with data coverage, S3/S2/S5 sections, degraded radar summary, baseline comparison, backtest metrics, and source freshness warning.
 - Data-source registry, official-source dry-runs, normalizers, quality checks, and processed-table storage helpers.
 - Atomic processed-table `append`, `upsert`, and `replace` merge modes with primary-key dedupe.
+- Injected-API read-only Shioaji source hooks for surveillance and margin/short helper data. These hooks normalize externally provided `notice()`, `punish()`, `credit_enquires()`, `short_stock_sources()`, and contract balance responses without logging in or placing orders.
 
 Run every command from the subproject root:
 
@@ -109,7 +110,7 @@ py -3.14 -m pytest -q tests\short_term_radar
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 ```
 
-Latest verified result: `50 passed`.
+Latest verified result: `54 passed`.
 
 ## Still Pending
 

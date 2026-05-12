@@ -34,6 +34,34 @@ class BrokerApiAdapter:
                 return contract
         return None
 
+    def resolve_stock_contract(self, api: Any, symbol: str, exchange_hint: str = ""):
+        markets: list[str] = []
+        if exchange_hint:
+            markets.append(exchange_hint.upper())
+        markets.extend(["TSE", "TWSE", "OTC", "TPEX"])
+
+        stocks_root = getattr(getattr(api, "Contracts", None), "Stocks", None)
+        if stocks_root is None:
+            return None
+
+        for market in dict.fromkeys(markets):
+            market_contracts = getattr(stocks_root, market, None)
+            if market_contracts is None and hasattr(stocks_root, "get"):
+                market_contracts = stocks_root.get(market)
+            if market_contracts is None:
+                continue
+            try:
+                contract = market_contracts[symbol]
+            except (KeyError, TypeError):
+                contract = getattr(market_contracts, symbol, None)
+            if contract is not None:
+                return contract
+
+        try:
+            return stocks_root[symbol]
+        except (KeyError, TypeError):
+            return getattr(stocks_root, symbol, None)
+
     def fetch_index_daily_prices(
         self,
         api: Any,
