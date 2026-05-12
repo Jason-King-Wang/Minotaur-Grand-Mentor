@@ -235,7 +235,7 @@ def _radar_mode(slot_statuses: dict[str, str]) -> str:
         "VALUATION_SLOT",
         "CALENDAR_SLOT",
     ]
-    if all(slot_statuses.get(slot) in {"installed", "partial"} for slot in full_required):
+    if all(slot_statuses.get(slot) == "installed" for slot in full_required):
         return "full_short_term_radar"
     if slot_statuses.get("REVENUE_SLOT") == "installed" and slot_statuses.get("SURVEILLANCE_SLOT") == "installed":
         return "semi_full_short_term_radar"

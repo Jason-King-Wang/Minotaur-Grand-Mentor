@@ -1,7 +1,20 @@
 from __future__ import annotations
 
-from short_term_radar.pipeline import scan_candidates
+from short_term_radar.pipeline import _radar_mode, scan_candidates
 from short_term_radar.scoring.short_term_score import calculate_score_breakdown
+
+
+FULL_MODE_CORE_SLOTS = [
+    "PRICE_SLOT",
+    "UNIVERSE_SLOT",
+    "REVENUE_SLOT",
+    "CHIP_SLOT",
+    "SURVEILLANCE_SLOT",
+    "CATALYST_SLOT",
+    "CORPORATE_SLOT",
+    "VALUATION_SLOT",
+    "CALENDAR_SLOT",
+]
 
 
 def test_score_breakdown_splits_score_and_robot_slot_coverage():
@@ -79,3 +92,15 @@ def test_scan_output_contains_score_breakdown_fields(tmp_path):
     assert "degraded_radars" in output[0]
     assert output[0]["core_data_ready_flag"] is False
     assert "data_coverage_ratio" not in output[0]
+
+
+def test_full_radar_mode_requires_installed_core_slots():
+    installed_statuses = {slot: "installed" for slot in FULL_MODE_CORE_SLOTS}
+
+    assert _radar_mode(installed_statuses) == "full_short_term_radar"
+
+    for partial_slot in FULL_MODE_CORE_SLOTS:
+        partial_statuses = dict(installed_statuses)
+        partial_statuses[partial_slot] = "partial"
+
+        assert _radar_mode(partial_statuses) != "full_short_term_radar"
