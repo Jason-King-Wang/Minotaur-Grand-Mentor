@@ -12,6 +12,12 @@ projects/short_term_radar_mvp/
 
 The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, fixtures, reports, and handoff files belong inside this subproject folder.
 
+Formal architecture and move-readiness guide:
+
+```text
+docs/雷達整體架構說明書_v1.md
+```
+
 ## Completed In CL6
 
 - Restored repository-root scope: root README remains Minotaur Grand Mentor, and radar files live under `projects/short_term_radar_mvp/`.

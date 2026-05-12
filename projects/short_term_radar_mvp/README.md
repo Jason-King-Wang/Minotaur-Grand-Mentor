@@ -10,6 +10,7 @@ cd projects\short_term_radar_mvp
 
 Start here:
 
+- [docs/雷達整體架構說明書_v1.md](docs/雷達整體架構說明書_v1.md)
 - [SHORT_TERM_RADAR_HANDOFF.md](SHORT_TERM_RADAR_HANDOFF.md)
 - [short_term_radar/README.md](short_term_radar/README.md)
 

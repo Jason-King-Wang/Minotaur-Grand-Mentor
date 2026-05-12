@@ -154,7 +154,7 @@ py -3.14 -m pytest -q tests\short_term_radar
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 ```
 
-Latest verified result: `66 passed`.
+Latest verified result: `70 passed`.
 
 ## Still Pending
 
