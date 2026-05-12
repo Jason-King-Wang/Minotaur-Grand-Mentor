@@ -69,6 +69,8 @@ Monthly revenue is gated by `announce_date <= as_of_date`. If the MOPS source do
 
 `data.gov.tw` dataset pages are tracked as `landing_url` only. Collectors must use `download_url` or `api_url` for direct file/API downloads; empty direct endpoints mean the source is registry/dry-run only until a real endpoint is configured.
 
+Known direct TWSE/TPEx OpenAPI candidates are recorded in `configs/short_term_radar/data_sources.example.yaml` for revenue, institutional trading, margin/short, material events, corporate actions, trading calendar, and valuation. These entries document source candidates; dataset-specific parsers/backfills are still implemented separately.
+
 ## Coverage Reports
 
 ```powershell
@@ -107,7 +109,7 @@ py -3.14 -m pytest -q tests\short_term_radar
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 ```
 
-Latest verified result: `48 passed`.
+Latest verified result: `50 passed`.
 
 ## Still Pending
 

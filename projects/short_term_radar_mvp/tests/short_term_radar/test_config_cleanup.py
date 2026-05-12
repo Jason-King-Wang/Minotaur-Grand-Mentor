@@ -36,7 +36,7 @@ def test_data_gov_sources_split_landing_and_download_urls():
 
     assert monthly_revenue["landing_url"] == "https://data.gov.tw/dataset/18420"
     assert monthly_revenue["download_url"] == ""
-    assert monthly_revenue["api_url"] is None
+    assert monthly_revenue["api_url"] == "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
 
 
 def test_collect_plan_does_not_treat_landing_page_as_download_url():
@@ -50,3 +50,27 @@ def test_collect_plan_does_not_treat_landing_page_as_download_url():
     assert all(plan.api_url in {None, ""} for plan in plans)
     assert "https://data.gov.tw/dataset/11395" in tpex_plan.landing_url
     assert "https://data.gov.tw/dataset/11396" in tpex_plan.landing_url
+
+
+def test_openapi_source_candidates_are_recorded_for_missing_slots():
+    config = load_data_source_config("configs/short_term_radar/data_sources.example.yaml")
+
+    twse = config["sources"]["twse"]["datasets"]
+    tpex = config["sources"]["tpex"]["datasets"]
+
+    assert twse["institutional_trading"]["api_url"].endswith("/rwd/zh/fund/T86?date={date}&selectType=ALLBUT0999&response=json")
+    assert tpex["institutional_trading"]["api_url"] == "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading"
+    assert twse["margin_short"]["api_url"] == "https://openapi.twse.com.tw/v1/exchangeReport/MI_MARGN"
+    assert "https://openapi.twse.com.tw/v1/SBL/TWT96U" in twse["margin_short"]["supplemental_api_urls"]
+    assert twse["trading_calendar"]["api_url"] == "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    assert tpex["valuation_daily"]["api_url"] == "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+
+
+def test_collect_plan_uses_direct_api_urls_when_configured():
+    config = load_data_source_config("configs/short_term_radar/data_sources.example.yaml")
+    plans = build_collect_plan(config, "valuation", "TWSE")
+    twse_plan = next(plan for plan in plans if plan.source == "twse")
+
+    assert twse_plan.download_url == ""
+    assert twse_plan.api_url == "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_d"
+    assert twse_plan.url == twse_plan.api_url

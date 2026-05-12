@@ -19,6 +19,7 @@ The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, f
 - Updated handoff and commands to use `projects/short_term_radar_mvp` as the working directory.
 - Fixed `monthly_revenue` announce-date inference so `fetched_at` is never treated as public availability.
 - Split `data.gov.tw` source metadata into `landing_url`, `download_url`, and `api_url`; landing pages are not fetched as CSV files.
+- Added TWSE/TPEx OpenAPI source candidates from `radar_system_data_sources.md` for revenue, institutional trading, margin/short, material events, corporate actions, trading calendar, and valuation.
 - Made `collect --write-raw` real for official MOPS monthly revenue raw HTML, and explicit-error for unsupported datasets.
 - Fixed `breakout_120d_only` baseline to accept only `breakout_120d_flag = true`.
 - Changed daily coverage expected dates to use processed `prices_daily` trading dates when available, with weekday fallback instead of counting weekends.
@@ -45,7 +46,7 @@ py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 
 Latest local result:
 
-- `py -3.14 -m pytest -q tests\short_term_radar` -> `48 passed`
+- `py -3.14 -m pytest -q tests\short_term_radar` -> `50 passed`
 - `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
 
 The simple-mode scan/backtest/report commands also completed locally with the five-year daily price file:
@@ -174,6 +175,7 @@ Broker integrations must remain read-only. No account mutation, order placement,
 
 - Institutional trading and margin/short official fetchers still need full direct endpoint parsers.
 - Material events and corporate actions official fetchers still need full direct endpoint parsers.
+- `data_sources.example.yaml` now records direct OpenAPI candidates where known; parser/backfill work remains pending.
 - TPEx surveillance requires real `download_url` values before live CSV collection; dataset landing pages remain reference-only.
 - A full official TWSE/TPEX trading-calendar source is still needed; current coverage uses processed price trading days.
 - Full five-year official backfill should run locally and remain outside source control.
