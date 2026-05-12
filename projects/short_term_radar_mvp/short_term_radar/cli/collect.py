@@ -10,9 +10,11 @@ from short_term_radar.data_sources.local_backfill import (
     backfill_symbol_master_from_existing,
 )
 from short_term_radar.data_sources.quality import validate_rows
+from short_term_radar.data_sources.registry import DATASET_REGISTRY
 from short_term_radar.data_sources.registry import build_collect_plan
 from short_term_radar.data_sources.sources.institutional_trading_official import InstitutionalTradingOfficialSource
 from short_term_radar.data_sources.sources.monthly_revenue_official import MonthlyRevenueOfficialSource
+from short_term_radar.data_sources.sources.official_open_data import OfficialOpenDataSource
 from short_term_radar.data_sources.sources.surveillance_official import SurveillanceOfficialSource
 from short_term_radar.data_sources.storage import data_root, merge_processed_rows
 
@@ -44,6 +46,8 @@ def main(argv: list[str] | None = None) -> int:
         return _collect_institutional_trading_official(config, args)
     if args.dataset == "surveillance" and args.source == "official":
         return _collect_surveillance_official(config, args)
+    if args.source == "official" and args.dataset in OfficialOpenDataSource.supported_datasets():
+        return _collect_official_open_data(config, args)
     if args.write_raw:
         raise ValueError("--write-raw is only implemented for monthly_revenue --source official.")
 
@@ -147,6 +151,8 @@ def _write_monthly_revenue_raw_documents(config: dict, raw_documents: list[dict[
 def _collect_institutional_trading_official(config: dict, args: argparse.Namespace) -> int:
     if args.write_raw:
         raise ValueError("--write-raw is not supported for institutional_trading official JSON sources.")
+    if (args.start or args.end) and not args.date:
+        raise ValueError("institutional_trading range collect not implemented yet; use --date for single-day smoke")
     if not args.date:
         raise ValueError("institutional_trading official collect requires --date")
 
@@ -183,6 +189,45 @@ def _collect_institutional_trading_official(config: dict, args: argparse.Namespa
     if args.validate:
         report = validate_rows("institutional_trading_daily", result.rows, today=date.today(), allow_future_dates=True)
         print(f"institutional_trading quality_ok={report.ok}; issues={len(report.issues)}")
+        for issue in report.issues:
+            print(f"  {issue.severity}: {issue.check}: {issue.message}")
+    return 0
+
+
+def _collect_official_open_data(config: dict, args: argparse.Namespace) -> int:
+    if args.write_raw:
+        raise ValueError(f"--write-raw is not supported for {args.dataset} --source official.")
+
+    source = OfficialOpenDataSource(config)
+    if args.dry_run:
+        for request in source.build_requests(args.dataset, args.market, args.date):
+            date_part = f" date={request.date}" if request.date else ""
+            print(
+                f"[dry-run] {request.dataset} {request.market} {request.endpoint_name} "
+                f"via official{date_part} {request.url}"
+            )
+        print(f"[dry-run] data_root={config.get('data_root')}")
+        return 0
+
+    result = source.collect(args.dataset, args.market, args.date)
+    for message in result.degraded:
+        print(f"source unavailable: {message}")
+    print(f"Fetched {len(result.rows)} {args.dataset} rows from {len(result.requests)} official requests.")
+
+    if args.normalize:
+        if result.rows:
+            merge_result = merge_processed_rows(config, args.dataset, result.rows, mode="upsert")
+            print(
+                f"Merged {args.dataset} rows to {merge_result['path']}; "
+                f"inserted={merge_result['inserted_rows']} updated={merge_result['updated_rows']}"
+            )
+        else:
+            print(f"No {args.dataset} rows normalized; processed table write skipped.")
+
+    if args.validate:
+        table = DATASET_REGISTRY[args.dataset].processed_table
+        report = validate_rows(table, result.rows, today=date.today(), allow_future_dates=True)
+        print(f"{args.dataset} quality_ok={report.ok}; issues={len(report.issues)}")
         for issue in report.issues:
             print(f"  {issue.severity}: {issue.check}: {issue.message}")
     return 0

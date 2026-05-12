@@ -35,19 +35,7 @@ def sample_path(config: dict[str, Any], filename: str) -> Path:
 def write_processed_rows(config: dict[str, Any], dataset: str, rows: list[dict[str, Any]]) -> Path:
     path = processed_path(config, dataset)
     path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        import pandas as pd
-
-        pd.DataFrame(rows).to_parquet(path, index=False)
-    except Exception as exc:  # pragma: no cover - exercised only without parquet engine
-        fallback = path.with_suffix(".csv")
-        if rows:
-            with fallback.open("w", encoding="utf-8-sig", newline="") as handle:
-                writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-                writer.writeheader()
-                writer.writerows(rows)
-        raise RuntimeError(f"Failed to write parquet {path}; CSV fallback: {fallback}") from exc
-    return path
+    return _write_processed_table(path, rows)
 
 
 def merge_processed_rows(
@@ -67,9 +55,9 @@ def merge_processed_rows(
 
     existing_rows = read_processed_rows(config, dataset)
     merged_rows, inserted, updated, duplicates_removed = _merge_rows(existing_rows, new_rows, primary_key, mode)
-    _atomic_write_parquet(path, merged_rows)
+    output_path = _write_processed_table(path, merged_rows)
     return {
-        "path": str(path),
+        "path": str(output_path),
         "existing_rows": len(existing_rows),
         "new_rows": len(new_rows),
         "merged_rows": len(merged_rows),
@@ -81,11 +69,19 @@ def merge_processed_rows(
 
 def read_processed_rows(config: dict[str, Any], dataset: str) -> list[dict[str, Any]]:
     path = processed_path(config, dataset)
-    if not path.exists():
-        return []
-    import pandas as pd
+    csv_path = path.with_suffix(".csv")
+    if path.exists():
+        try:
+            import pandas as pd
 
-    return pd.read_parquet(path).to_dict(orient="records")
+            return pd.read_parquet(path).to_dict(orient="records")
+        except Exception:
+            if not csv_path.exists():
+                raise
+    if not csv_path.exists():
+        return []
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as handle:
+        return [_coerce_csv_row(row) for row in csv.DictReader(handle)]
 
 
 def _merge_rows(
@@ -173,7 +169,7 @@ def _sort_rows(rows: list[dict[str, Any]], primary_key: list[str]) -> list[dict[
     return sorted(rows, key=lambda row: _row_key(row, primary_key))
 
 
-def _atomic_write_parquet(path: Path, rows: list[dict[str, Any]]) -> None:
+def _write_processed_table(path: Path, rows: list[dict[str, Any]]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = path.with_name(f".{path.stem}.tmp{path.suffix}")
     try:
@@ -181,13 +177,78 @@ def _atomic_write_parquet(path: Path, rows: list[dict[str, Any]]) -> None:
 
         pd.DataFrame(rows).to_parquet(tmp_path, index=False)
         os.replace(tmp_path, path)
+        return path
     except Exception as exc:  # pragma: no cover - exercised only without parquet engine
         if tmp_path.exists():
             tmp_path.unlink()
         fallback = path.with_suffix(".csv")
-        if rows:
-            with fallback.open("w", encoding="utf-8-sig", newline="") as handle:
-                writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-                writer.writeheader()
-                writer.writerows(rows)
-        raise RuntimeError(f"Failed to write parquet {path}; CSV fallback: {fallback}") from exc
+        _write_csv_fallback(fallback, rows)
+        return fallback
+
+
+def _write_csv_fallback(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames: list[str] = []
+    for row in rows:
+        for key in row:
+            if key not in fieldnames:
+                fieldnames.append(key)
+    with path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        if fieldnames:
+            writer.writeheader()
+            writer.writerows(rows)
+
+
+STRING_COLUMNS = {
+    "symbol",
+    "name",
+    "short_name",
+    "market",
+    "industry",
+    "industry_type",
+    "source",
+    "source_url",
+    "fetched_at",
+    "revenue_month",
+    "data_month",
+    "financial_year_quarter",
+    "title",
+    "description",
+    "event_type",
+    "rule_clause",
+    "note",
+    "company_type",
+    "raw_market_section",
+    "action_type",
+    "holiday_name",
+    "attention_reason",
+    "disposition_condition",
+    "disposition_reason",
+    "disposition_measure",
+    "margin_limit_code",
+    "short_limit_code",
+    "foreign_registration_country",
+    "announce_time",
+}
+
+
+def _coerce_csv_row(row: dict[str, str]) -> dict[str, Any]:
+    return {key: _coerce_csv_value(key, value) for key, value in row.items()}
+
+
+def _coerce_csv_value(column: str, value: str) -> Any:
+    if value == "":
+        return None
+    lowered = value.lower()
+    if lowered == "true":
+        return True
+    if lowered == "false":
+        return False
+    if column in STRING_COLUMNS or column.endswith("_date"):
+        return value
+    try:
+        number = float(value)
+    except ValueError:
+        return value
+    return int(number) if number.is_integer() else number

@@ -14,6 +14,7 @@ Standalone Taiwan stock short-term radar MVP for finding candidates with possibl
 - Data-source registry, official-source dry-runs, normalizers, quality checks, and processed-table storage helpers.
 - Official MOPS monthly revenue parser/collector smoke path with no-future-leakage announce-date inference and degraded fetch handling.
 - Official institutional trading parser/collector smoke path for TWSE T86 JSON and TPEx 3-institution JSON fixtures plus single-date dry-run wiring.
+- DC-bot official OpenAPI skeleton for margin/short, material events, corporate actions, valuation, and symbol master dry-runs with conservative degraded collection.
 - Atomic processed-table `append`, `upsert`, and `replace` merge modes with primary-key dedupe.
 - Injected-API read-only Shioaji source hooks for surveillance and margin/short helper data. These hooks normalize externally provided `notice()`, `punish()`, `credit_enquires()`, `short_stock_sources()`, and contract balance responses without logging in or placing orders.
 
@@ -97,6 +98,18 @@ py -3.14 -m short_term_radar.cli.collect `
 
 The collector degrades cleanly if a live endpoint is unavailable and skips processed-table writes when no rows are fetched.
 
+## Generic Official OpenAPI Dry-Runs
+
+These datasets have endpoint visibility and degraded collection skeletons, but still need live payload mapping before they can be treated as installed slots:
+
+```powershell
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset margin_short --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset material_events --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset corporate_actions --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset valuation --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset symbol_master --market all --source official --dry-run
+```
+
 ## Official Source URLs
 
 `data.gov.tw` dataset pages are tracked as `landing_url` only. Collectors must use `download_url` or `api_url` for direct file/API downloads; empty direct endpoints mean the source is registry/dry-run only until a real endpoint is configured.
@@ -141,11 +154,11 @@ py -3.14 -m pytest -q tests\short_term_radar
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 ```
 
-Latest verified result: `62 passed`.
+Latest verified result: `66 passed`.
 
 ## Still Pending
 
 - Full historical live backfill for institutional trading, plus endpoint stability review.
-- Full live endpoint parsers for margin/short, material events, and corporate actions.
+- Full live payload mapping and small-smoke processed verification for margin/short, material events, corporate actions, valuation, and symbol master.
 - Full five-year official backfill. Keep generated raw/processed data outside commits.
 - TWSE surveillance free endpoint remains registry-only; TPEx dry-run/live skeleton exists, and TWSE e-shop is disabled by default.

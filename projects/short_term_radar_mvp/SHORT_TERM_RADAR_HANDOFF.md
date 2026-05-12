@@ -33,6 +33,8 @@ The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, f
 - Added an injected-API, read-only Shioaji source for `surveillance_daily` and `margin_short_daily`; it normalizes `notice()`, `punish()`, `credit_enquires()`, `short_stock_sources()`, and contract balance fields without login, credentials, CA activation, or order calls.
 - Hardened official MOPS monthly revenue smoke coverage for TWSE/TPEx and local/foreign request generation, degraded fetch handling, and no-empty-processed-table writes.
 - Added official institutional-trading parser/collector wiring for TWSE T86 JSON and TPEx 3-institution JSON, including fixture parser tests, CLI dry-run, degraded fetch handling, and processed-table upsert coverage.
+- Integrated the DC-bot full remaining task package into `docs/`, plus its conservative `official_open_data` skeleton for margin/short, material events, corporate actions, valuation, and symbol master official dry-runs.
+- Processed storage now has a CSV fallback when parquet writing is unavailable; generated CSV/parquet outputs still remain local-only and ignored.
 
 ## Work From Here
 
@@ -49,7 +51,7 @@ py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 
 Latest local result:
 
-- `py -3.14 -m pytest -q tests\short_term_radar` -> `62 passed`
+- `py -3.14 -m pytest -q tests\short_term_radar` -> `66 passed`
 - `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
 
 The simple-mode scan/backtest/report commands also completed locally with the five-year daily price file:
@@ -72,12 +74,12 @@ Results:
 | PRICE_SLOT | installed | Simple mode can load daily OHLCV from `TW_EQUITIES_DATA_PATH` / configured `daily_price_path`. |
 | UNIVERSE_SLOT | partial | Symbol metadata can be loaded from processed `symbol_master`; price rows can still run simple mode without a full universe table. |
 | REVENUE_SLOT | partial | MOPS official fetcher/parser exists and small-range smoke is wired; live five-year backfill has not been run in source control. |
-| CHIP_SLOT | partial | TWSE/TPEx institutional-trading official parser/dry-run exists. Shioaji read-only margin/short availability hooks exist; full official historical backfill remains pending. |
+| CHIP_SLOT | partial | TWSE/TPEx institutional-trading official parser/dry-run exists. Generic official margin/short dry-run skeleton and Shioaji read-only availability hooks exist; full official historical backfill remains pending. |
 | SURVEILLANCE_SLOT | partial | Shioaji read-only `notice()`/`punish()` hooks and TPEx skeleton exist; TWSE free endpoint remains pending. |
-| CATALYST_SLOT | partial | Manual catalysts and material-event normalizer/classifier exist; live official fetcher remains pending. |
-| CORPORATE_SLOT | partial | Corporate-action normalizer/adapter exists; live official fetcher remains pending. |
+| CATALYST_SLOT | partial | Manual catalysts, material-event normalizer/classifier, and official dry-run skeleton exist; live field mapping/backfill remains pending. |
+| CORPORATE_SLOT | partial | Corporate-action normalizer/adapter and official dry-run skeleton exist; live field mapping/backfill remains pending. |
 | FINANCIAL_SLOT | partial | Financial normalizer exists; scoring/fetcher integration remains pending. |
-| VALUATION_SLOT | partial | Valuation normalizer/adapter exists; live official fetcher remains pending. |
+| VALUATION_SLOT | partial | Valuation normalizer/adapter and official dry-run skeleton exist; live field mapping/backfill remains pending. |
 | CALENDAR_SLOT | partial | Coverage/backtest derive trading days from `prices_daily`; a full exchange holiday calendar remains pending. |
 
 ## Operation Modes
@@ -159,6 +161,20 @@ py -3.14 -m short_term_radar.cli.collect `
 
 If a live endpoint is unavailable or returns no rows, collect prints a degraded message and skips processed-table writes instead of creating an empty slot artifact.
 
+## Generic Official OpenAPI Dry-Runs
+
+The DC-bot skeleton adds endpoint dry-runs and conservative collection for datasets that still need full field mapping:
+
+```powershell
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset margin_short --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset material_events --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset corporate_actions --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset valuation --market all --date 2026-04-30 --source official --dry-run
+py -3.14 -m short_term_radar.cli.collect --config configs/short_term_radar/data_sources.example.yaml --dataset symbol_master --market all --source official --dry-run
+```
+
+These commands expose candidate endpoints and degrade cleanly; they do not make the related slots `installed` until live payload mapping and local processed rows are verified.
+
 ## Coverage Reports
 
 ```powershell
@@ -207,8 +223,7 @@ The Shioaji source requires an externally managed API object and intentionally d
 ## Remaining Work
 
 - Institutional trading now has TWSE/TPEx official parser and single-date collect wiring; full historical backfill still needs a local run and endpoint stability review.
-- Margin/short official fetchers still need full direct endpoint parsers.
-- Material events and corporate actions official fetchers still need full direct endpoint parsers.
+- Margin/short, material events, corporate actions, valuation, and symbol master now have official dry-run skeletons, but still need live payload mapping and small-smoke processed verification.
 - `data_sources.example.yaml` now records direct OpenAPI candidates where known; parser/backfill work remains pending.
 - TPEx surveillance requires real `download_url` values before live CSV collection; dataset landing pages remain reference-only.
 - A full official TWSE/TPEX trading-calendar source is still needed; current coverage uses processed price trading days.

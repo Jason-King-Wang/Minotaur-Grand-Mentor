@@ -31,7 +31,9 @@ Official source smoke status:
 
 - `monthly_revenue`: MOPS official request builder/parser/normalizer is wired for dry-run and small-range smoke; failed fetches degrade without writing empty processed tables.
 - `institutional_trading`: TWSE T86 and TPEx 3-institution JSON parser fixtures, official dry-run, and single-date collector wiring are in place. Full historical backfill remains local-only follow-up work.
-- `margin_short`: source candidates and broker read-only helper hooks exist; full official historical parser/backfill remains pending.
+- `margin_short`, `material_events`, `corporate_actions`, `valuation`, and `symbol_master`: DC-bot official OpenAPI dry-run skeletons are integrated for endpoint visibility and conservative degraded collection. Full live field mapping/backfill remains pending.
+
+DC-bot full remaining task notes are archived under `docs/codex_short_term_radar_full_remaining_tasks_2026-05-12.md` and `docs/codex_short_term_radar_full_remaining_tasks_status_2026-05-12.md`.
 
 Important local-only paths:
 

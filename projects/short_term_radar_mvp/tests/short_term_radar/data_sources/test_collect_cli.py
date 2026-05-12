@@ -56,3 +56,48 @@ def test_collect_institutional_trading_official_requires_date():
                 "official",
             ]
         )
+
+
+def test_collect_institutional_trading_official_range_errors_explicitly():
+    with pytest.raises(ValueError, match="range collect not implemented"):
+        main(
+            [
+                "--config",
+                "configs/short_term_radar/data_sources.example.yaml",
+                "--dataset",
+                "institutional_trading",
+                "--market",
+                "all",
+                "--start",
+                "2021-01-01",
+                "--end",
+                "2026-05-11",
+                "--source",
+                "official",
+                "--normalize",
+            ]
+        )
+
+
+def test_collect_margin_short_official_dry_run_uses_generic_open_data_source(capsys):
+    exit_code = main(
+        [
+            "--config",
+            "configs/short_term_radar/data_sources.example.yaml",
+            "--dataset",
+            "margin_short",
+            "--market",
+            "all",
+            "--date",
+            "2026-04-30",
+            "--source",
+            "official",
+            "--dry-run",
+        ]
+    )
+
+    output = capsys.readouterr().out
+
+    assert exit_code == 0
+    assert "margin_short TWSE twse_margin via official date=2026-04-30" in output
+    assert "margin_short TPEX tpex_sbl via official date=2026-04-30" in output
