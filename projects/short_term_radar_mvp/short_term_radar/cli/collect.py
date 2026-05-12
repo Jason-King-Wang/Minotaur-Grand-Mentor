@@ -11,6 +11,7 @@ from short_term_radar.data_sources.local_backfill import (
 )
 from short_term_radar.data_sources.quality import validate_rows
 from short_term_radar.data_sources.registry import build_collect_plan
+from short_term_radar.data_sources.sources.institutional_trading_official import InstitutionalTradingOfficialSource
 from short_term_radar.data_sources.sources.monthly_revenue_official import MonthlyRevenueOfficialSource
 from short_term_radar.data_sources.sources.surveillance_official import SurveillanceOfficialSource
 from short_term_radar.data_sources.storage import data_root, merge_processed_rows
@@ -39,6 +40,8 @@ def main(argv: list[str] | None = None) -> int:
     config = load_data_source_config(args.config)
     if args.dataset == "monthly_revenue" and args.source == "official":
         return _collect_monthly_revenue_official(config, args)
+    if args.dataset == "institutional_trading" and args.source == "official":
+        return _collect_institutional_trading_official(config, args)
     if args.dataset == "surveillance" and args.source == "official":
         return _collect_surveillance_official(config, args)
     if args.write_raw:
@@ -105,11 +108,14 @@ def _collect_monthly_revenue_official(config: dict, args: argparse.Namespace) ->
         print(f"Wrote {len(written)} raw monthly_revenue documents.")
 
     if args.normalize:
-        merge_result = merge_processed_rows(config, "monthly_revenue", result.rows, mode="upsert")
-        print(
-            f"Merged monthly_revenue rows to {merge_result['path']}; "
-            f"inserted={merge_result['inserted_rows']} updated={merge_result['updated_rows']}"
-        )
+        if result.rows:
+            merge_result = merge_processed_rows(config, "monthly_revenue", result.rows, mode="upsert")
+            print(
+                f"Merged monthly_revenue rows to {merge_result['path']}; "
+                f"inserted={merge_result['inserted_rows']} updated={merge_result['updated_rows']}"
+            )
+        else:
+            print("No monthly_revenue rows fetched; skipped processed merge.")
 
     if args.validate:
         report = validate_rows("monthly_revenue", result.rows, today=date.today(), allow_future_dates=True)
@@ -138,6 +144,50 @@ def _write_monthly_revenue_raw_documents(config: dict, raw_documents: list[dict[
     return outputs
 
 
+def _collect_institutional_trading_official(config: dict, args: argparse.Namespace) -> int:
+    if args.write_raw:
+        raise ValueError("--write-raw is not supported for institutional_trading official JSON sources.")
+    if not args.date:
+        raise ValueError("institutional_trading official collect requires --date")
+
+    source = InstitutionalTradingOfficialSource(config)
+    requests = source.build_requests(args.market, args.date)
+    if args.dry_run:
+        for request in requests:
+            status = "enabled" if request.enabled else "disabled"
+            api = request.api_url or "<not configured>"
+            print(f"[dry-run] institutional_trading {request.market} {request.trade_date} via official ({status}) api={api}")
+            if request.note:
+                print(f"[dry-run] note: {request.note}")
+        print(f"[dry-run] data_root={config.get('data_root')}")
+        return 0
+
+    result = source.collect(args.market, args.date)
+    for message in result.degraded:
+        print(f"source unavailable: {message}")
+    print(
+        f"Fetched {len(result.rows)} institutional_trading rows "
+        f"from {len(result.requests)} official JSON requests."
+    )
+
+    if args.normalize:
+        if result.rows:
+            merge_result = merge_processed_rows(config, "institutional_trading", result.rows, mode="upsert")
+            print(
+                f"Merged institutional_trading rows to {merge_result['path']}; "
+                f"inserted={merge_result['inserted_rows']} updated={merge_result['updated_rows']}"
+            )
+        else:
+            print("No institutional_trading rows fetched; skipped processed merge.")
+
+    if args.validate:
+        report = validate_rows("institutional_trading_daily", result.rows, today=date.today(), allow_future_dates=True)
+        print(f"institutional_trading quality_ok={report.ok}; issues={len(report.issues)}")
+        for issue in report.issues:
+            print(f"  {issue.severity}: {issue.check}: {issue.message}")
+    return 0
+
+
 def _collect_surveillance_official(config: dict, args: argparse.Namespace) -> int:
     if args.write_raw:
         raise ValueError("--write-raw is not supported for surveillance until a direct download_url is configured.")
@@ -160,11 +210,14 @@ def _collect_surveillance_official(config: dict, args: argparse.Namespace) -> in
         print(f"source unavailable: {message}")
     print(f"Fetched {len(rows)} surveillance rows from official sources.")
     if args.normalize:
-        merge_result = merge_processed_rows(config, "surveillance", rows, mode="upsert")
-        print(
-            f"Merged surveillance rows to {merge_result['path']}; "
-            f"inserted={merge_result['inserted_rows']} updated={merge_result['updated_rows']}"
-        )
+        if rows:
+            merge_result = merge_processed_rows(config, "surveillance", rows, mode="upsert")
+            print(
+                f"Merged surveillance rows to {merge_result['path']}; "
+                f"inserted={merge_result['inserted_rows']} updated={merge_result['updated_rows']}"
+            )
+        else:
+            print("No surveillance rows fetched; skipped processed merge.")
     if args.validate:
         report = validate_rows("surveillance_daily", rows, today=date.today(), allow_future_dates=True)
         print(f"surveillance quality_ok={report.ok}; issues={len(report.issues)}")

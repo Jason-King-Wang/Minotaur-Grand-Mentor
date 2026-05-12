@@ -6,7 +6,9 @@ from short_term_radar.data_sources.fetchers.mops_monthly_revenue_fetcher import 
     MopsMonthlyRevenueFetcher,
     parse_mops_monthly_revenue_html,
 )
+from short_term_radar.data_sources.base import FetchResult
 from short_term_radar.data_sources.normalizers.monthly_revenue import normalize_monthly_revenue_rows
+from short_term_radar.data_sources.sources.monthly_revenue_official import MonthlyRevenueOfficialSource
 
 
 def test_mops_monthly_revenue_url_uses_roc_year_and_company_type():
@@ -14,6 +16,19 @@ def test_mops_monthly_revenue_url_uses_roc_year_and_company_type():
 
     assert request.revenue_month == "202604"
     assert request.url.endswith("/sii/t21sc03_115_4_1.html")
+
+
+def test_monthly_revenue_official_requests_cover_market_and_company_types():
+    source = MonthlyRevenueOfficialSource({})
+
+    requests = source.build_requests("all", "2026-04", "2026-04")
+    urls = {request.url for request in requests}
+
+    assert len(requests) == 4
+    assert any("/sii/t21sc03_115_4_0.html" in url for url in urls)
+    assert any("/sii/t21sc03_115_4_1.html" in url for url in urls)
+    assert any("/otc/t21sc03_115_4_0.html" in url for url in urls)
+    assert any("/otc/t21sc03_115_4_1.html" in url for url in urls)
 
 
 def test_mops_monthly_revenue_fixture_parser_normalizes_rows():
@@ -39,3 +54,20 @@ def test_monthly_revenue_without_month_does_not_fall_back_to_fetched_at():
     )
 
     assert normalized == []
+
+
+def test_monthly_revenue_official_degraded_fetch_does_not_crash():
+    source = MonthlyRevenueOfficialSource({})
+    source.fetcher.fetch_month = lambda market, revenue_month, company_type: FetchResult(
+        "mops",
+        "monthly_revenue",
+        "https://example.test",
+        degraded=True,
+        message=f"{market}-{revenue_month}-{company_type} blocked",
+    )
+
+    result = source.collect("TWSE", "2026-04", "2026-04")
+
+    assert result.rows == []
+    assert len(result.degraded) == 2
+    assert "blocked" in result.degraded[0]

@@ -12,6 +12,8 @@ Standalone Taiwan stock short-term radar MVP for finding candidates with possibl
 - Baseline comparisons: radar model, deterministic random top-N, 120D breakout, volume expansion, and moving-average alignment.
 - Markdown report generation with data coverage, S3/S2/S5 sections, degraded radar summary, baseline comparison, backtest metrics, and source freshness warning.
 - Data-source registry, official-source dry-runs, normalizers, quality checks, and processed-table storage helpers.
+- Official MOPS monthly revenue parser/collector smoke path with no-future-leakage announce-date inference and degraded fetch handling.
+- Official institutional trading parser/collector smoke path for TWSE T86 JSON and TPEx 3-institution JSON fixtures plus single-date dry-run wiring.
 - Atomic processed-table `append`, `upsert`, and `replace` merge modes with primary-key dedupe.
 - Injected-API read-only Shioaji source hooks for surveillance and margin/short helper data. These hooks normalize externally provided `notice()`, `punish()`, `credit_enquires()`, `short_stock_sources()`, and contract balance responses without logging in or placing orders.
 
@@ -66,6 +68,35 @@ py -3.14 -m short_term_radar.cli.collect `
 
 Monthly revenue is gated by `announce_date <= as_of_date`. If the MOPS source does not provide an announce date, the normalizer infers `next month day 10` from `revenue_month` and marks `announce_date_inferred = true`. It never uses `fetched_at` as the public announce date.
 
+## Official Institutional Trading
+
+Dry-run single-date URL generation:
+
+```powershell
+py -3.14 -m short_term_radar.cli.collect `
+  --config configs/short_term_radar/data_sources.example.yaml `
+  --dataset institutional_trading `
+  --market TWSE `
+  --date 2026-04-30 `
+  --source official `
+  --dry-run
+```
+
+Small normalize/validate smoke test, when a local config and live endpoint are available:
+
+```powershell
+py -3.14 -m short_term_radar.cli.collect `
+  --config configs/short_term_radar/local.yaml `
+  --dataset institutional_trading `
+  --market TWSE `
+  --date 2026-04-30 `
+  --source official `
+  --normalize `
+  --validate
+```
+
+The collector degrades cleanly if a live endpoint is unavailable and skips processed-table writes when no rows are fetched.
+
 ## Official Source URLs
 
 `data.gov.tw` dataset pages are tracked as `landing_url` only. Collectors must use `download_url` or `api_url` for direct file/API downloads; empty direct endpoints mean the source is registry/dry-run only until a real endpoint is configured.
@@ -110,10 +141,11 @@ py -3.14 -m pytest -q tests\short_term_radar
 py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 ```
 
-Latest verified result: `54 passed`.
+Latest verified result: `62 passed`.
 
 ## Still Pending
 
-- Full live endpoint parsers for institutional trading, margin/short, material events, and corporate actions.
+- Full historical live backfill for institutional trading, plus endpoint stability review.
+- Full live endpoint parsers for margin/short, material events, and corporate actions.
 - Full five-year official backfill. Keep generated raw/processed data outside commits.
 - TWSE surveillance free endpoint remains registry-only; TPEx dry-run/live skeleton exists, and TWSE e-shop is disabled by default.

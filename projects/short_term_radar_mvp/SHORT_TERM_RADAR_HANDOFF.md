@@ -31,6 +31,8 @@ The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, f
 - Added scope guard tests so radar files do not drift back to repository root.
 - Added full-mode guard coverage so `full_short_term_radar` cannot be triggered by partial core slots.
 - Added an injected-API, read-only Shioaji source for `surveillance_daily` and `margin_short_daily`; it normalizes `notice()`, `punish()`, `credit_enquires()`, `short_stock_sources()`, and contract balance fields without login, credentials, CA activation, or order calls.
+- Hardened official MOPS monthly revenue smoke coverage for TWSE/TPEx and local/foreign request generation, degraded fetch handling, and no-empty-processed-table writes.
+- Added official institutional-trading parser/collector wiring for TWSE T86 JSON and TPEx 3-institution JSON, including fixture parser tests, CLI dry-run, degraded fetch handling, and processed-table upsert coverage.
 
 ## Work From Here
 
@@ -47,7 +49,7 @@ py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 
 Latest local result:
 
-- `py -3.14 -m pytest -q tests\short_term_radar` -> `54 passed`
+- `py -3.14 -m pytest -q tests\short_term_radar` -> `62 passed`
 - `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
 
 The simple-mode scan/backtest/report commands also completed locally with the five-year daily price file:
@@ -69,8 +71,8 @@ Results:
 |---|---|---|
 | PRICE_SLOT | installed | Simple mode can load daily OHLCV from `TW_EQUITIES_DATA_PATH` / configured `daily_price_path`. |
 | UNIVERSE_SLOT | partial | Symbol metadata can be loaded from processed `symbol_master`; price rows can still run simple mode without a full universe table. |
-| REVENUE_SLOT | partial | MOPS official fetcher/parser exists; live five-year backfill has not been run in source control. |
-| CHIP_SLOT | partial | Normalizers/adapters exist for institutional and margin/short data. Shioaji read-only margin/short availability hooks exist; full official historical fetchers remain pending. |
+| REVENUE_SLOT | partial | MOPS official fetcher/parser exists and small-range smoke is wired; live five-year backfill has not been run in source control. |
+| CHIP_SLOT | partial | TWSE/TPEx institutional-trading official parser/dry-run exists. Shioaji read-only margin/short availability hooks exist; full official historical backfill remains pending. |
 | SURVEILLANCE_SLOT | partial | Shioaji read-only `notice()`/`punish()` hooks and TPEx skeleton exist; TWSE free endpoint remains pending. |
 | CATALYST_SLOT | partial | Manual catalysts and material-event normalizer/classifier exist; live official fetcher remains pending. |
 | CORPORATE_SLOT | partial | Corporate-action normalizer/adapter exists; live official fetcher remains pending. |
@@ -128,6 +130,35 @@ py -3.14 -m short_term_radar.cli.collect `
 
 Raw output stays local under `data/raw/` and must not be committed.
 
+## Official Institutional Trading
+
+Dry-run single-date URL generation:
+
+```powershell
+py -3.14 -m short_term_radar.cli.collect `
+  --config configs/short_term_radar/data_sources.example.yaml `
+  --dataset institutional_trading `
+  --market TWSE `
+  --date 2026-04-30 `
+  --source official `
+  --dry-run
+```
+
+Small normalize/validate smoke test, when local config and network are available:
+
+```powershell
+py -3.14 -m short_term_radar.cli.collect `
+  --config configs/short_term_radar/local.yaml `
+  --dataset institutional_trading `
+  --market TWSE `
+  --date 2026-04-30 `
+  --source official `
+  --normalize `
+  --validate
+```
+
+If a live endpoint is unavailable or returns no rows, collect prints a degraded message and skips processed-table writes instead of creating an empty slot artifact.
+
 ## Coverage Reports
 
 ```powershell
@@ -175,7 +206,8 @@ The Shioaji source requires an externally managed API object and intentionally d
 
 ## Remaining Work
 
-- Institutional trading and margin/short official fetchers still need full direct endpoint parsers.
+- Institutional trading now has TWSE/TPEx official parser and single-date collect wiring; full historical backfill still needs a local run and endpoint stability review.
+- Margin/short official fetchers still need full direct endpoint parsers.
 - Material events and corporate actions official fetchers still need full direct endpoint parsers.
 - `data_sources.example.yaml` now records direct OpenAPI candidates where known; parser/backfill work remains pending.
 - TPEx surveillance requires real `download_url` values before live CSV collection; dataset landing pages remain reference-only.

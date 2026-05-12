@@ -27,6 +27,12 @@ CL6 mode behavior:
 
 Scan outputs include `mode`, `score_data_coverage_ratio`, `robot_slot_coverage_ratio`, and `robot_slot_statuses`.
 
+Official source smoke status:
+
+- `monthly_revenue`: MOPS official request builder/parser/normalizer is wired for dry-run and small-range smoke; failed fetches degrade without writing empty processed tables.
+- `institutional_trading`: TWSE T86 and TPEx 3-institution JSON parser fixtures, official dry-run, and single-date collector wiring are in place. Full historical backfill remains local-only follow-up work.
+- `margin_short`: source candidates and broker read-only helper hooks exist; full official historical parser/backfill remains pending.
+
 Important local-only paths:
 
 - `configs/short_term_radar/local.yaml`
