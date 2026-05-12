@@ -28,6 +28,7 @@ The repository root remains Minotaur Grand Mentor. Radar code, configs, tests, f
 - Split coverage output into `score_data_coverage_ratio` and `robot_slot_coverage_ratio`.
 - Added scan/report `mode` and `robot_slot_statuses` fields for simple/semi/full operation.
 - Added scope guard tests so radar files do not drift back to repository root.
+- Added full-mode guard coverage so `full_short_term_radar` cannot be triggered by partial core slots.
 
 ## Work From Here
 
@@ -44,7 +45,7 @@ py -3.14 -m compileall -q short_term_radar tests\short_term_radar
 
 Latest local result:
 
-- `py -3.14 -m pytest -q tests\short_term_radar` -> `46 passed`
+- `py -3.14 -m pytest -q tests\short_term_radar` -> `48 passed`
 - `py -3.14 -m compileall -q short_term_radar tests\short_term_radar` -> passed
 
 The simple-mode scan/backtest/report commands also completed locally with the five-year daily price file:
@@ -79,7 +80,7 @@ Results:
 
 - `simple_price_volume_mode`: price/universe path only. Scan, backtest, baseline comparison, and report can run; `core_data_ready_flag = false`; missing revenue prevents S3 candidate entry.
 - `semi_full_short_term_radar`: revenue and surveillance slots are installed, allowing higher-confidence candidates if not under disposition.
-- `full_short_term_radar`: price, universe, revenue, chip, surveillance, catalyst, corporate, valuation, and calendar slots are available; S3 candidate entry and full report context are enabled.
+- `full_short_term_radar`: price, universe, revenue, chip, surveillance, catalyst, corporate, valuation, and calendar slots are all `installed`; partial slots cannot trigger full mode.
 
 ## Official Monthly Revenue
 

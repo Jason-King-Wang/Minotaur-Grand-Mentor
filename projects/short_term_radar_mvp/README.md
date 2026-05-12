@@ -23,7 +23,7 @@ CL6 mode behavior:
 
 - `simple_price_volume_mode` can scan, backtest, compare baselines, and report with price/universe data only.
 - `semi_full_short_term_radar` starts when revenue and surveillance slots are installed.
-- `full_short_term_radar` requires the price, universe, revenue, chip, surveillance, catalyst, corporate, valuation, and calendar slots.
+- `full_short_term_radar` requires the price, universe, revenue, chip, surveillance, catalyst, corporate, valuation, and calendar slots to be `installed`; partial slots cannot trigger full mode.
 
 Scan outputs include `mode`, `score_data_coverage_ratio`, `robot_slot_coverage_ratio`, and `robot_slot_statuses`.
 

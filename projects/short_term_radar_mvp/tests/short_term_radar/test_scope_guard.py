@@ -41,3 +41,28 @@ def test_repo_root_gitignore_has_no_radar_project_rules():
     assert "short_term_radar" not in text
     assert "configs/short_term_radar" not in text
     assert "/data/processed" not in text
+
+
+def test_repo_root_data_has_no_short_term_radar_artifacts():
+    project_root = Path(__file__).resolve().parents[2]
+    repo_root = project_root.parents[1]
+    root_data = repo_root / "data"
+    if not root_data.exists():
+        return
+
+    radar_data_files = {
+        "prices_daily.parquet",
+        "symbol_master.parquet",
+        "monthly_revenue.parquet",
+        "institutional_trading_daily.parquet",
+        "margin_short_daily.parquet",
+        "surveillance_daily.parquet",
+        "material_events.parquet",
+        "corporate_actions.parquet",
+        "financial_statement_quarterly.parquet",
+        "valuation_daily.parquet",
+    }
+    root_data_paths = [path.relative_to(root_data) for path in root_data.rglob("*")]
+
+    assert not any("short_term_radar" in str(path).replace("\\", "/") for path in root_data_paths)
+    assert not any(path.name in radar_data_files for path in root_data_paths)
