@@ -3,16 +3,33 @@ from __future__ import annotations
 from pathlib import Path
 
 
-def test_short_term_radar_package_lives_under_projects_folder():
+def _project_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _embedded_repo_root(project_root: Path) -> Path | None:
+    if project_root.parent.name == "projects":
+        return project_root.parents[1]
+    assert not (project_root.parent / ".minotaur-project-root").exists(), (
+        "short_term_radar_mvp must live under projects/ inside the Minotaur repo, "
+        "or be moved out as a standalone project."
+    )
+    return None
+
+
+def test_short_term_radar_project_layout_is_self_contained():
     project_root = Path(__file__).resolve().parents[2]
-    repo_root = project_root.parents[1]
+    repo_root = _embedded_repo_root(project_root)
 
     assert project_root.name == "short_term_radar_mvp"
-    assert project_root.parent.name == "projects"
     assert (project_root / "short_term_radar").is_dir()
     assert (project_root / "short_term_radar" / "__init__.py").is_file()
     assert (project_root / "configs" / "short_term_radar" / "default.yaml").is_file()
     assert (project_root / "tests" / "short_term_radar").is_dir()
+
+    if repo_root is None:
+        return
+
     assert not (repo_root / "short_term_radar").exists()
     assert not (repo_root / "configs" / "short_term_radar").exists()
     assert not (repo_root / "tests" / "short_term_radar").exists()
@@ -22,8 +39,13 @@ def test_short_term_radar_package_lives_under_projects_folder():
 
 
 def test_repo_root_readme_stays_minotaur_scoped():
-    project_root = Path(__file__).resolve().parents[2]
-    repo_root = project_root.parents[1]
+    project_root = _project_root()
+    repo_root = _embedded_repo_root(project_root)
+    if repo_root is None:
+        readme = (project_root / "README.md").read_text(encoding="utf-8")
+        assert "# Short Term Radar MVP" in readme
+        return
+
     readme = (repo_root / "README.md").read_text(encoding="utf-8")
 
     assert "# Minotaur Grand Mentor" in readme
@@ -31,8 +53,11 @@ def test_repo_root_readme_stays_minotaur_scoped():
 
 
 def test_repo_root_gitignore_has_no_radar_project_rules():
-    project_root = Path(__file__).resolve().parents[2]
-    repo_root = project_root.parents[1]
+    project_root = _project_root()
+    repo_root = _embedded_repo_root(project_root)
+    if repo_root is None:
+        return
+
     gitignore = repo_root / ".gitignore"
     if not gitignore.exists():
         return
@@ -44,8 +69,11 @@ def test_repo_root_gitignore_has_no_radar_project_rules():
 
 
 def test_repo_root_data_has_no_short_term_radar_artifacts():
-    project_root = Path(__file__).resolve().parents[2]
-    repo_root = project_root.parents[1]
+    project_root = _project_root()
+    repo_root = _embedded_repo_root(project_root)
+    if repo_root is None:
+        return
+
     root_data = repo_root / "data"
     if not root_data.exists():
         return
