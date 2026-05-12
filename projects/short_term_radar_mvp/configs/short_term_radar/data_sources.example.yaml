@@ -1,4 +1,4 @@
-data_root: ${TW_RADAR_DATA_ROOT:-data}
+﻿data_root: ${TW_RADAR_DATA_ROOT:-data}
 existing_daily_price_path: ${TW_EQUITIES_DATA_PATH:-}
 
 fetch:
@@ -16,25 +16,57 @@ sources:
     datasets:
       prices_daily:
         dataset_id: 11549
-        url: "https://data.gov.tw/dataset/11549"
+        landing_url: "https://data.gov.tw/dataset/11549"
+        download_url: ""
+        api_url: null
       symbol_master:
         dataset_id: 18419
-        url: "https://data.gov.tw/dataset/18419"
+        landing_url: "https://data.gov.tw/dataset/18419"
+        download_url: ""
+        api_url: "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
       monthly_revenue:
         dataset_id: 18420
-        url: "https://data.gov.tw/dataset/18420"
+        landing_url: "https://data.gov.tw/dataset/18420"
+        download_url: ""
+        api_url: "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
+      institutional_trading:
+        landing_url: "https://www.twse.com.tw/zh/trading/foreign/t86.html"
+        download_url: ""
+        api_url: "https://www.twse.com.tw/rwd/zh/fund/T86?date={date}&selectType=ALLBUT0999&response=json"
+      margin_short:
+        landing_url: "https://www.twse.com.tw/zh/trading/margin/mi-margn.html"
+        download_url: ""
+        api_url: "https://openapi.twse.com.tw/v1/exchangeReport/MI_MARGN"
+        supplemental_api_urls:
+          - "https://openapi.twse.com.tw/v1/SBL/TWT96U"
       material_events:
         dataset_id: 18415
-        url: "https://data.gov.tw/en/datasets/18415"
+        landing_url: "https://data.gov.tw/en/datasets/18415"
+        download_url: ""
+        api_url: "https://openapi.twse.com.tw/v1/opendata/t187ap04_L"
       corporate_actions:
         dataset_id: 89748
-        url: "https://data.gov.tw/dataset/89748"
+        landing_url: "https://data.gov.tw/dataset/89748"
+        download_url: ""
+        api_url: "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL"
+        supplemental_api_urls:
+          - "https://openapi.twse.com.tw/v1/opendata/t187ap45_L"
       insider_holding:
         dataset_id: 22811
-        url: "https://data.gov.tw/dataset/22811"
-      valuation_daily_by_date:
+        landing_url: "https://data.gov.tw/dataset/22811"
+        download_url: ""
+        api_url: null
+      trading_calendar:
+        landing_url: "https://openapi.twse.com.tw/"
+        download_url: ""
+        api_url: "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+      valuation:
         dataset_id: 11764
-        url: "https://data.gov.tw/dataset/11764"
+        landing_url: "https://data.gov.tw/dataset/11764"
+        download_url: ""
+        api_url: "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_d"
+        supplemental_api_urls:
+          - "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
 
   tpex:
     enabled: true
@@ -43,43 +75,95 @@ sources:
     datasets:
       prices_daily:
         dataset_id: 11371
-        url: "https://data.gov.tw/dataset/11371"
+        landing_url: "https://data.gov.tw/dataset/11371"
+        download_url: ""
+        api_url: null
       symbol_master:
         dataset_id: 25036
-        url: "https://data.gov.tw/dataset/25036"
+        landing_url: "https://data.gov.tw/dataset/25036"
+        download_url: ""
+        api_url: "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O"
       monthly_revenue:
         dataset_id: 56510
-        url: "https://data.gov.tw/dataset/56510"
+        landing_url: "https://data.gov.tw/dataset/56510"
+        download_url: ""
+        api_url: "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
+        supplemental_api_urls:
+          - "https://www.tpex.org.tw/openapi/v1/t187ap05_R"
+      institutional_trading:
+        landing_url: "https://www.tpex.org.tw/web/stock/3insti/daily_trade/3itrade_hedge.php"
+        download_url: ""
+        api_url: "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading"
+      margin_short:
+        landing_url: "https://www.tpex.org.tw/web/stock/margin_trading/margin_balance/margin_bal.php"
+        download_url: ""
+        api_url: "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_margin_balance"
+        supplemental_api_urls:
+          - "https://www.tpex.org.tw/openapi/v1/tpex_margin_sbl"
       material_events:
         dataset_id: 18418
-        url: "https://data.gov.tw/dataset/18418"
+        landing_url: "https://data.gov.tw/dataset/18418"
+        download_url: ""
+        api_url: "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O"
       attention:
         dataset_id: 11395
-        url: "https://data.gov.tw/dataset/11395"
+        landing_url: "https://data.gov.tw/dataset/11395"
+        download_url: ""
+        api_url: null
       disposition:
         dataset_id: 11396
-        url: "https://data.gov.tw/dataset/11396"
+        landing_url: "https://data.gov.tw/dataset/11396"
+        download_url: ""
+        api_url: null
       corporate_actions:
         dataset_id: 11633
-        url: "https://data.gov.tw/dataset/11633"
+        landing_url: "https://data.gov.tw/dataset/11633"
+        download_url: ""
+        api_url: "https://www.tpex.org.tw/openapi/v1/tpex_exright_prepost"
+        supplemental_api_urls:
+          - "https://www.tpex.org.tw/openapi/v1/tpex_exright_daily"
       insider_holding:
         dataset_id: 22812
-        url: "https://data.gov.tw/dataset/22812"
+        landing_url: "https://data.gov.tw/dataset/22812"
+        download_url: ""
+        api_url: null
       valuation_daily:
         dataset_id: 11373
-        url: "https://data.gov.tw/dataset/11373"
+        landing_url: "https://data.gov.tw/dataset/11373"
+        download_url: ""
+        api_url: "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+        supplemental_api_urls:
+          - "https://www.tpex.org.tw/openapi/v1/tpex_daily_market_value"
+          - "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O"
 
   twse_eshop:
     enabled: false
     note: "Use only if official free endpoints are insufficient or a paid subscription exists. Do not hardcode credentials."
     datasets:
       surveillance:
-        url: "https://eshop.twse.com.tw/zh/product/detail/ac35dc52883d42c1a2eeacfa332f7e7f"
+        landing_url: "https://eshop.twse.com.tw/zh/product/detail/ac35dc52883d42c1a2eeacfa332f7e7f"
+        download_url: ""
+        api_url: null
       margin_short:
-        url: "https://eshop.twse.com.tw/zh/product/detail/388dd3a09824427d8c01a9d2b21e820b"
+        landing_url: "https://eshop.twse.com.tw/zh/product/detail/388dd3a09824427d8c01a9d2b21e820b"
+        download_url: ""
+        api_url: null
 
   broker_api:
     enabled: false
     provider: "shioaji"
     readonly_only: true
     allow_order_methods: false
+    datasets:
+      surveillance:
+        read_only_methods:
+          - "api.notice()"
+          - "api.punish()"
+        note: "Reference only. Use a project-local read-only Shioaji client; never call order/account mutation APIs."
+      margin_short:
+        read_only_methods:
+          - "api.credit_enquires([contract])"
+          - "api.short_stock_sources([contract])"
+          - "contract.margin_trading_balance"
+          - "contract.short_selling_balance"
+        note: "Useful for current availability checks; complete historical margin/short data should use official TWSE/TPEx daily sources."

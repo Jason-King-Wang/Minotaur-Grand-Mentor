@@ -53,7 +53,7 @@ def risk_penalty(features: dict[str, Any], max_penalty: float = 40.0) -> tuple[f
     return min(max_penalty, penalty), flags
 
 
-def degradation_risk_flags(degraded_radars: list[str], data_coverage_ratio: float) -> list[str]:
+def degradation_risk_flags(degraded_radars: list[str], robot_slot_coverage_ratio: float) -> list[str]:
     labels = {
         "revenue": "revenue data missing; fundamental turn is unverified",
         "chip": "chip data missing; institutional flow is unverified",
@@ -61,6 +61,6 @@ def degradation_risk_flags(degraded_radars: list[str], data_coverage_ratio: floa
         "surveillance": "surveillance data missing; attention/disposition risk is unverified",
     }
     flags = [labels.get(item, f"{item} data missing") for item in degraded_radars]
-    if data_coverage_ratio < 0.5:
+    if robot_slot_coverage_ratio < 0.5:
         flags.append("data coverage below 50%; radar is heavily degraded")
     return flags

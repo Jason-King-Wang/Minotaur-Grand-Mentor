@@ -24,16 +24,22 @@ def normalize_monthly_revenue_rows(
 ) -> list[dict[str, Any]]:
     normalized: list[dict[str, Any]] = []
     fetched_text = fetched_at_text(fetched_at)
-    fetched_date = fetched_text[:10] if len(fetched_text) >= 10 else None
     for row in rows:
         revenue_month = parse_tw_month(first_value(row, "資料年月", "營收年月", "revenue_month"))
         announce_date = iso_date(first_value(row, "出表日期", "公告日期", "announce_date"))
+        announce_date_source = first_value(row, "announce_date_source")
+        announce_date_inferred = False
         if not announce_date:
-            announce_date = fetched_date or next_month_day_10(revenue_month)
+            announce_date = next_month_day_10(revenue_month)
+            announce_date_inferred = bool(announce_date)
+            announce_date_source = "inferred_next_month_day_10" if announce_date_inferred else announce_date_source
+        elif not announce_date_source:
+            announce_date_source = "official" if source == "official_mops" else "manual"
         normalized.append(
             {
                 "revenue_month": revenue_month,
                 "announce_date": announce_date,
+                "announce_date_source": announce_date_source,
                 "market": normalize_market(first_value(row, "市場", "market") or market),
                 "symbol": normalize_symbol(first_value(row, "公司代號", "股票代號", "證券代號", "symbol")),
                 "name": first_value(row, "公司名稱", "證券名稱", "name") or "",
@@ -61,6 +67,9 @@ def normalize_monthly_revenue_rows(
                     first_value(row, "累計營業收入-前期比較增減(%)", "前期比較增減(%)", "cumulative_yoy_pct")
                 ),
                 "note": first_value(row, "備註", "note"),
+                "announce_date_inferred": bool(row.get("announce_date_inferred", announce_date_inferred)),
+                "company_type": first_value(row, "company_type"),
+                "raw_market_section": first_value(row, "raw_market_section"),
                 "source": source,
                 "source_url": source_url,
                 "fetched_at": fetched_text,

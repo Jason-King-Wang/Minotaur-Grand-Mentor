@@ -1306,7 +1306,7 @@ scan_candidates(...)
   load_processed_corporate_action_features
   load_processed_valuation_features
   compute scores
-  compute data_coverage_ratio
+  compute score_data_coverage_ratio and robot_slot_coverage_ratio
   generate reasons/risk flags
 ```
 
