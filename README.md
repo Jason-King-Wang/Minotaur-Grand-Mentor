@@ -1,118 +1,46 @@
-# Minotaur Grand Mentor
+# Minotaur Grand Mentor / Inner Universe Showcase
 
-Minotaur Grand Mentor is an original YouTube VTuber project for a powerful, wild, cyber trading mentor character. Version 0.2 is a static PNGTuber MVP plus Live2D-ready planning package: engineering, docs, dashboard, overlay, records, validation, placeholders, and handoff materials are complete, while final art, layered PSD, and Live2D rigging remain external production work.
+This repository is organized into two clearly separated public areas.
 
-> Disclaimer: This content is for research, education, and entertainment only. It does not constitute investment advice.
+## 1. VTuber Archive
 
-## Purpose
+`vtuber-archive/` contains the original Minotaur Grand Mentor VTuber work:
 
-- Build an original Minotaur VTuber identity for YouTube.
-- Ship a first usable PNGTuber overlay for OBS.
-- Keep character design, prompts, assets, logs, and project state in one portable repo.
-- Preserve a clean upgrade path toward Live2D.
+- PNGTuber and Live2D-ready asset planning
+- OBS overlay and dashboard
+- character bible, prompts, task board, validation tools, and handoff notes
 
-## First Version Goal
+Status: archived for now. The project is preserved, but it is not the current development focus.
 
-The first version should make `overlay/index.html` usable as an OBS Browser Source. Missing images must not break the overlay; it should show a Minotaur Mentor placeholder until real PNG assets are added.
+## 2. Inner Universe Showcase
 
-## Folder Map
+`inner-universe-showcase/` is the current public portfolio area. It is a security-scrubbed selection of local work prepared for interview review.
 
-- `.minotaur-project-root` - safety marker for scope guard tooling.
-- `SCOPE_LOCK.md` - root-level Obsidian scope protection rule.
-- `docs/` - project brief, character bible, style guide, asset spec, prompts, blueprint, OBS setup, Live2D notes, and next actions.
-- `assets/reference/` - mood boards, design references, and original inspiration notes.
-- `assets/avatar/placeholders/` - generated SVG placeholders.
-- `assets/avatar/pngtuber/` - final PNGTuber expression files.
-- `assets/avatar/live2d/` - Live2D source kit and future final PSD notes.
-- `overlay/` - OBS-ready static overlay.
-- `dashboard/` - static project dashboard.
-- `data/` - JSON state, avatar manifest, and public JS run-log manifest.
-- `records/` - timestamped Markdown execution records.
-- `obsidian_project/` - portable Obsidian project pages.
-- `tools/` - standard-library Python tools.
-- `tests/` - basic project file checks.
+Included projects:
 
-## How To Use The Overlay
+- `inner-universe-showcase/projects/short_term_radar_mvp/` - Taiwan equity short-term radar with scoring, stage gating, official-source collectors, backtesting, reports, and tests.
+- `z3b-prime-center-third-buy/` - multi-timeframe quantitative trading model prototype with rule definitions, strategy engine code, tests, configs, and sample data.
+- `z3b-core-v2-docs/` - research/spec notes for the Z3B model family.
+- `private-discord-codex-bridge/` - sanitized private Discord-to-local-Codex bridge code showing local automation orchestration patterns.
 
-Local file preview:
+## Security Boundary
 
-```powershell
-Start-Process "C:\Users\User\Documents\Obsidian Vault\Minotaur-Grand-Mentor\overlay\index.html"
-```
+This public version intentionally excludes:
 
-OBS or local browser source:
+- real `.env` files, API keys, bot tokens, cookies, credentials, and certificates
+- Discord transcripts, local session state, logs, and downloaded attachments
+- raw/processed market data, parquet datasets, caches, temp folders, and broker runtime files
+- `node_modules`, Python bytecode, generated test caches, daemon binaries, and local machine-only files
 
-```text
-file:///C:/Users/User/Documents/Obsidian%20Vault/Minotaur-Grand-Mentor/overlay/index.html
-```
+See `SECURITY.md` for the public publishing rules used for this cleanup.
 
-Useful URL parameters:
+## Interview Reading Path
 
-```text
-?debug=1&threshold=0.05&scale=1.0
-```
+Start with:
 
-Microphone access may require OBS Browser Source permission or a local static server. The overlay is still designed to render without microphone access.
+1. `inner-universe-showcase/README.md`
+2. `inner-universe-showcase/projects/short_term_radar_mvp/README.md`
+3. `inner-universe-showcase/z3b-prime-center-third-buy/README.md`
+4. `inner-universe-showcase/private-discord-codex-bridge/README.md`
 
-## How To Add Avatar Assets
-
-Put PNGTuber files here:
-
-```text
-assets/avatar/pngtuber/
-```
-
-Required first-version assets:
-
-- `idle_closed.png`
-- `talk_open.png`
-- `blink_closed.png`
-- `happy.png`
-
-Then run:
-
-```powershell
-python tools\validate_assets.py
-```
-
-To generate temporary SVG placeholders:
-
-```powershell
-python tools\generate_placeholder_assets.py
-```
-
-## How To Update Records
-
-Use the logging tool from the project root:
-
-```powershell
-python tools\log_event.py --phase "Phase 1" --status "done" --summary "Created project scaffold" --details "Initialized docs, data, overlay, dashboard folders." --next "Build overlay MVP."
-```
-
-This creates a Markdown record under `records/YYYY-MM-DD/`, appends to `data/run-log.json`, regenerates `data/run-log.js`, and updates `data/project-state.json`.
-
-## GitHub Pages Deployment
-
-This project is intentionally static. To publish:
-
-1. Push the repo to GitHub.
-2. Enable GitHub Pages from the repository settings.
-3. Select the branch and root folder.
-4. Open:
-   - `dashboard/index.html` for the project dashboard.
-   - `overlay/index.html` for the OBS overlay.
-
-No API keys, tokens, personal data, or backend services are required.
-
-## Current Boundary
-
-Everything Codex can complete without final art is intended to be done in this repo. The remaining work is:
-
-- Create final PNGTuber expression PNG files.
-- Create Live2D final front master artwork.
-- Create the layered Live2D PSD.
-- Complete Live2D Cubism rigging and VTube Studio testing.
-
-## Source Blueprint
-
-The full upstream Codex work blueprint is archived at `docs/CODEX_WORK_BLUEPRINT_FULL.md`.
+This repository is for research, engineering demonstration, education, and entertainment only. It is not investment advice and does not contain production trading credentials.

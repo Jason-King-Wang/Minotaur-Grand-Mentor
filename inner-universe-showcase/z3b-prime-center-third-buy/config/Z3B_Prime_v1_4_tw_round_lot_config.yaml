@@ -1,0 +1,102 @@
+strategy_id: Z3B-Prime
+package_name: z3b_prime_tw_equity
+execution_profile: tw_round_lot
+
+market_scope:
+  country: Taiwan
+  timezone: Asia/Taipei
+  currency: TWD
+  exchanges_allowed: [TWSE, TPEX]
+  product_allowed_default: common_stock
+  allow_etf: false
+  allow_warrant: false
+  allow_futures: false
+  allow_options: false
+  allow_margin: false
+  allow_short: false
+  leverage: 1.0
+
+sessions:
+  regular:
+    open: '09:00:00'
+    close: '13:30:00'
+    timezone: Asia/Taipei
+  order_entry_start: '08:30:00'
+  use_after_hours_fixed_price: false
+  use_after_hours_odd_lot: false
+  entry_after_last_15m_bar: next_trading_day_09_00
+
+bar_construction:
+  entry_tf: 15m
+  trend_tf: 1h
+  trend_tf_session_local: true
+  include_short_final_1h_bar: true
+  short_final_1h_bar: '13:00-13:30'
+  do_not_bridge_overnight: true
+
+quantity:
+  lot_size_shares: 1000
+  min_order_quantity_shares: 1000
+  round_to_lot_size: true
+  allow_odd_lot_remainder: false
+
+execution:
+  entry_order_type: marketable_limit
+  allow_pure_market_order: false
+  entry_order_timeout_bars: 1
+  entry_slippage_bps: 5
+  max_entry_slippage_bps: 20
+  chase_if_not_filled: false
+
+same_day_exit:
+  require_day_trading_permission: true
+  require_symbol_day_trading_eligible: true
+  if_not_available: reject_entry
+
+risk_anchor:
+  stop_loss_source: golden_k_low
+  forbid_bullish_k_low_as_stop: true
+
+exit:
+  stop_order_type: broker_or_engine_simulated_stop_market
+  stop_slippage_bps: 10
+  take_profit_order_type: sell_limit
+  ambiguous_bar_policy: stop_first
+  gap_stop_policy: fill_at_open_minus_slippage
+  price_limit_blocked_exit_policy: keep_position_open_and_flag
+
+position_sizing:
+  method: risk_percent
+  risk_per_trade_pct: 0.005
+  max_cash_per_trade_pct: 0.20
+  min_order_value_twd: 0
+
+liquidity_filter:
+  enabled: true
+  min_avg_volume_20_shares: 100000
+  max_order_participation_pct: 0.01
+  require_nonzero_volume_on_entry_bar: true
+  reduce_qty_if_exceeds_volume_cap: true
+
+fees_and_taxes:
+  profile: tw_common_stock_default
+  commission_bps_before_discount: 14.25
+  commission_discount: 1.0
+  min_commission_twd: 0
+  sell_tax_bps: 30.0
+  sell_tax_bps_day_trade_round_lot: 15.0
+  day_trade_tax_reduction_valid_until: '2027-12-31'
+  apply_day_trade_tax_reduction_if_qualified: true
+
+settlement:
+  cycle: T+2
+  require_cash_available_at_order_time: true
+  track_settled_cash: true
+  track_unsettled_cash: true
+  allow_unsettled_cash_reuse: false
+
+price_limit:
+  enabled: true
+  default_limit_pct: 0.10
+  use_exchange_limit_price_if_available: true
+  reject_no_price_limit_new_listing: true

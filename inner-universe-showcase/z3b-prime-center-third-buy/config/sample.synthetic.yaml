@@ -1,0 +1,45 @@
+strategy_id: Z3B-Prime
+symbols:
+  - TEST
+
+timeframes:
+  trend_tf: 1h
+  entry_tf: 15m
+
+swing:
+  left_bars: 1
+  right_bars: 1
+
+center_detection:
+  min_center_swings: 4
+  min_center_bars: 3
+  min_midline_crosses: 1
+  use_edges: wick_extreme
+  main_center_score: range_times_duration
+
+macd:
+  fast: 12
+  slow: 26
+  signal: 9
+
+center_level_diagnostic:
+  enabled: true
+  zero_axis_source: [DIF, DEA]
+  use_histogram: false
+  hard_filter: false
+  above_current_cross_count: 2
+
+entry_confirmation:
+  bullish_k_body_ratio_of_ba_range: 0.25
+  bullish_k_requires_close_gt_open: true
+
+execution:
+  entry_mode: next_bar_open
+  fee_rate: 0
+  slippage_bps: 0
+  ambiguous_bar_policy: stop_first
+
+position:
+  side: long_only
+  max_positions_per_symbol: 1
+  allow_pyramiding: false

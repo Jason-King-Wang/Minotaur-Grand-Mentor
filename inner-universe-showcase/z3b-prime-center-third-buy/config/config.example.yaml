@@ -1,0 +1,55 @@
+strategy_id: Z3B-Prime
+symbols:
+  - BTCUSDT
+
+timeframes:
+  trend_tf: 1h
+  entry_tf: 15m
+
+swing:
+  left_bars: 2
+  right_bars: 2
+
+center_detection:
+  min_center_swings: 4
+  min_center_bars: 5
+  min_midline_crosses: 2
+  use_edges: wick_extreme
+  main_center_score: range_times_duration
+
+macd:
+  fast: 12
+  slow: 26
+  signal: 9
+
+center_level_diagnostic:
+  enabled: true
+  zero_axis_source: [DIF, DEA]
+  use_histogram: false
+  hard_filter: false
+  above_current_cross_count: 2
+
+third_buy:
+  pullback_low_must_hold_upper: true
+  allow_wick_break_and_reclaim: false
+
+entry_path:
+  primary_video_only: true
+  require_A_b_greater_than_a_before_bA: true
+  allow_A_b_less_than_a_direct_entry: false
+  require_bA_range_smaller_than_A: true
+
+entry_confirmation:
+  bullish_k_body_ratio_of_ba_range: 0.25
+  bullish_k_requires_close_gt_open: true
+
+execution:
+  entry_mode: next_bar_open
+  fee_rate: 0.0005
+  slippage_bps: 0
+  ambiguous_bar_policy: stop_first
+
+position:
+  side: long_only
+  max_positions_per_symbol: 1
+  allow_pyramiding: false

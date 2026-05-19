@@ -1,0 +1,113 @@
+strategy_id: Z3B-Prime
+package_name: z3b_prime_tw_equity
+execution_profile: tw_odd_lot
+
+market_scope:
+  country: Taiwan
+  timezone: Asia/Taipei
+  currency: TWD
+  exchanges_allowed: [TWSE, TPEX]
+  product_allowed_default: common_stock
+  allow_etf: false
+  allow_warrant: false
+  allow_futures: false
+  allow_options: false
+  allow_margin: false
+  allow_short: false
+  leverage: 1.0
+
+sessions:
+  intraday_odd_lot:
+    order_start: '09:00:00'
+    order_end: '13:30:00'
+    first_match: '09:10:00'
+    match_interval_seconds: 5
+    timezone: Asia/Taipei
+  use_after_hours_odd_lot: false
+  after_hours_odd_lot:
+    order_start: '13:40:00'
+    order_end: '14:30:00'
+    match_once_after: '14:30:00'
+  entry_after_last_15m_bar: next_trading_day_09_00
+
+bar_construction:
+  entry_tf: 15m
+  trend_tf: 1h
+  trend_tf_session_local: true
+  include_short_final_1h_bar: true
+  short_final_1h_bar: '13:00-13:30'
+  do_not_bridge_overnight: true
+
+quantity:
+  lot_size_shares: 1
+  min_order_quantity_shares: 1
+  max_order_quantity_shares: 999
+  round_to_lot_size: true
+  cap_qty_at_999: true
+  allow_round_lot_conversion: false
+
+execution:
+  entry_order_type: odd_lot_limit
+  allow_pure_market_order: false
+  entry_order_timeout_bars: 1
+  entry_slippage_bps: 10
+  max_entry_slippage_bps: 30
+  odd_lot_fill_model: conservative_15m_proxy
+  odd_lot_requires_intraday_odd_lot_volume: true
+  proxy_fill_allowed_if_odd_lot_volume_missing: false
+  chase_if_not_filled: false
+
+same_day_exit:
+  default_supported: false
+  live_policy: reject_entry_or_next_day_risk_only
+  backtest_policy: live_valid_conservative
+  research_signal_only_mode_allowed: true
+  research_signal_only_must_be_reported_separately: true
+
+risk_anchor:
+  stop_loss_source: golden_k_low
+  forbid_bullish_k_low_as_stop: true
+
+exit:
+  stop_order_type: broker_or_engine_simulated_stop_market_when_executable
+  stop_slippage_bps: 20
+  take_profit_order_type: odd_lot_sell_limit
+  same_day_sl_tp_fill_allowed: false
+  next_day_gap_rule_if_same_day_triggered: true
+  ambiguous_bar_policy: stop_first
+  price_limit_blocked_exit_policy: keep_position_open_and_flag
+
+position_sizing:
+  method: risk_percent
+  risk_per_trade_pct: 0.003
+  max_cash_per_trade_pct: 0.05
+  min_order_value_twd: 0
+
+liquidity_filter:
+  enabled: true
+  require_nonzero_volume_on_entry_bar: true
+  require_odd_lot_volume_if_available: true
+  max_order_participation_pct: 0.005
+  reduce_qty_if_exceeds_volume_cap: true
+
+fees_and_taxes:
+  profile: tw_common_stock_odd_lot_default
+  commission_bps_before_discount: 14.25
+  commission_discount: 1.0
+  min_commission_twd: 0
+  sell_tax_bps: 30.0
+  apply_day_trade_tax_reduction_if_qualified: false
+  odd_lot_uses_day_trade_tax_reduction: false
+
+settlement:
+  cycle: T+2
+  require_cash_available_at_order_time: true
+  track_settled_cash: true
+  track_unsettled_cash: true
+  allow_unsettled_cash_reuse: false
+
+price_limit:
+  enabled: true
+  default_limit_pct: 0.10
+  use_exchange_limit_price_if_available: true
+  reject_no_price_limit_new_listing: true

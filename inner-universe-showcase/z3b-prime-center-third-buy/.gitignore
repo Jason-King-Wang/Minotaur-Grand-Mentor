@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Local market data and generated outputs stay local by default.
+data/raw/
+data/processed/
+data/cache/
+reports/**/*.csv
+reports/**/*.json
+reports/**/*.png
+reports/**/*.html

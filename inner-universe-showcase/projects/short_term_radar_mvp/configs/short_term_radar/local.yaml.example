@@ -1,0 +1,9 @@
+data_root: ${TW_RADAR_DATA_ROOT:-data}
+existing_daily_price_path: ${TW_EQUITIES_DATA_PATH:-}
+
+sources:
+  broker_api:
+    enabled: false
+    provider: "shioaji"
+    readonly_only: true
+    allow_order_methods: false

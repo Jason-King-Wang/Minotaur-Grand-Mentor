@@ -1,0 +1,212 @@
+version: chanlun_common_core_v0_20260519
+purpose: "Reusable Chanlun core concept registry for future strategy models."
+
+definition_profiles:
+  stroke:
+    old_bi:
+      description: "Original geometric stroke profile."
+      min_independent_chan_bars_between_fractals: 1
+      allow_shared_chan_bar: false
+    new_bi:
+      description: "Stricter engineering profile; must be explicitly selected."
+      min_raw_bars_between_extreme_bars: 5
+      allow_shared_chan_bar: false
+
+levels:
+  default_chain: ["1m", "5m", "15m", "1h", "1d"]
+  confirmation_rule: "Only closed bars and completed lower-level structures may confirm higher-level objects."
+
+common_fields:
+  - id
+  - object_type
+  - level
+  - symbol
+  - start_time
+  - end_time
+  - confirm_time
+  - status
+  - source_ids
+  - invalidated_by
+  - reason_codes
+  - definition_profile
+
+statuses:
+  - PENDING
+  - CONFIRMED
+  - INVALIDATED
+  - SUPERSEDED
+
+objects:
+  RawBar:
+    fields:
+      - timeframe
+      - open_time
+      - close_time
+      - open
+      - high
+      - low
+      - close
+      - volume
+      - amount
+      - is_closed
+      - session_id
+  ChanBar:
+    depends_on: [RawBar]
+    fields:
+      - high
+      - low
+      - raw_bar_ids
+      - merge_direction
+    rules:
+      - "Resolve inclusion before fractal detection."
+  Fractal:
+    depends_on: [ChanBar]
+    kinds: [TOP, BOTTOM]
+    fields:
+      - kind
+      - pivot_chan_bar_id
+      - left_chan_bar_id
+      - right_chan_bar_id
+      - price
+  Stroke:
+    depends_on: [Fractal]
+    directions: [UP, DOWN]
+    fields:
+      - direction
+      - start_fractal_id
+      - end_fractal_id
+      - start_price
+      - end_price
+      - high
+      - low
+      - chan_bar_ids
+  Segment:
+    depends_on: [Stroke]
+    directions: [UP, DOWN]
+    fields:
+      - direction
+      - stroke_ids
+      - seed_stroke_ids
+      - high
+      - low
+      - destroyed_by_segment_id
+  Center:
+    depends_on: [Segment, TrendType]
+    fields:
+      - component_type
+      - component_ids
+      - ZD
+      - ZG
+      - GG
+      - G
+      - D
+      - DD
+      - direction_context
+      - lifecycle
+    lifecycles:
+      - NEW
+      - EXTENDING
+      - LEFT_UP
+      - LEFT_DOWN
+      - UPGRADED
+      - TERMINATED
+  TrendType:
+    depends_on: [Center]
+    kinds:
+      - UP_TREND
+      - DOWN_TREND
+      - CONSOLIDATION
+    fields:
+      - kind
+      - center_ids
+      - component_ids
+      - completed
+  Divergence:
+    depends_on: [TrendType, Center]
+    kinds:
+      - TREND_DIVERGENCE
+      - CONSOLIDATION_DIVERGENCE
+      - SEGMENT_DIVERGENCE
+      - STROKE_DIVERGENCE
+    fields:
+      - kind
+      - direction
+      - compare_a_id
+      - compare_b_id
+      - center_id
+      - force_a
+      - force_b
+      - result
+  ForceVector:
+    fields:
+      - price_distance
+      - price_new_extreme
+      - duration_bars
+      - slope
+      - macd_hist_area
+      - macd_hist_peak
+      - dif_dea_distance_to_zero
+      - volume_sum
+      - volume_efficiency
+  BuySellPoint:
+    depends_on: [Center, TrendType, Divergence]
+    kinds:
+      - FIRST_BUY
+      - SECOND_BUY
+      - THIRD_BUY
+      - FIRST_SELL
+      - SECOND_SELL
+      - THIRD_SELL
+      - CENTER_OSC_BUY
+      - CENTER_OSC_SELL
+    fields:
+      - kind
+      - price
+      - time
+      - source_center_id
+      - source_trend_type_ids
+      - confirmation_level
+      - invalidation_price
+      - invalidation_rule
+  IntervalNest:
+    depends_on: [BuySellPoint, Divergence]
+    fields:
+      - higher_level_candidate_id
+      - lower_level_search_window
+      - lower_level_trigger_id
+  AuditTrace:
+    fields:
+      - candidate_id
+      - accepted
+      - failed_reason_codes
+      - source_center
+      - source_trend_types
+      - source_segments
+      - source_strokes
+      - source_fractals
+      - force_comparison
+      - invalidation_level
+      - invalidation_price
+
+events:
+  - BAR_CLOSED
+  - FRACTAL_CONFIRMED
+  - STROKE_CONFIRMED
+  - SEGMENT_CONFIRMED
+  - CENTER_CONFIRMED
+  - CENTER_LEFT_UP
+  - CENTER_LEFT_DOWN
+  - CENTER_UPGRADED
+  - TREND_TYPE_COMPLETED
+  - DIVERGENCE_CONFIRMED
+  - BUY_SELL_POINT_CONFIRMED
+
+reason_codes:
+  - NO_CONFIRMED_CENTER
+  - CENTER_NOT_LEFT
+  - PULLBACK_RETURNED_TO_CENTER
+  - MISSING_LOWER_LEVEL_CONFIRMATION
+  - FORCE_NOT_WEAKENED
+  - TREND_TYPE_NOT_COMPLETED
+  - CROSS_LEVEL_MIXED
+  - USING_UNCLOSED_BAR

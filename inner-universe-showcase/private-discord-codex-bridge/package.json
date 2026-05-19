@@ -1,0 +1,21 @@
+{
+  "name": "discord-private-ai-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node --check src/index.js && node --check src/codexBridge.js && node --check scripts/service-install.js && node --check scripts/service-uninstall.js",
+    "service:install": "node scripts/service-install.js",
+    "service:uninstall": "node scripts/service-uninstall.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.26.3",
+    "dotenv": "^17.4.2",
+    "node-windows": "^1.0.0-beta.8",
+    "openai": "^6.34.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

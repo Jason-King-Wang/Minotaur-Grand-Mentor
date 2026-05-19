@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "z3b-prime-center-third-buy"
+version = "0.1.0"
+description = "Z3B-Prime Center Third-Buy quantitative model research project"
+requires-python = ">=3.10"
+dependencies = [
+  "PyYAML",
+]
+
+[project.scripts]
+z3b-prime-backtest = "z3b_prime.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

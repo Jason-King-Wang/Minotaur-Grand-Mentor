@@ -1,0 +1,31 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+pytest-cache-files-*/
+pytest_tmp_*/
+python*_mode_test/
+
+# Local data, never commit full raw/processed data
+/data/raw/
+/data/processed/
+/data/cache/
+/data/tmp/
+/data/*.sqlite
+/data/*.sqlite3
+
+# Keep only small samples and quality report examples if explicitly created
+!/data/samples/
+!/data/samples/**
+!/data/quality/.gitkeep
+
+# Local config and secrets
+configs/short_term_radar/local.yaml
+.env
+.env.*
+*.log
+discord-downloads/
+discord-private-ai-bot/
+pytest_tmp_manual_check/
+*.sqlite
+*.sqlite3
+雷-設定圖.png

@@ -1,0 +1,54 @@
+data_root: "${TW_RADAR_DATA_ROOT:-data}"
+
+data:
+  daily_price_path: "${TW_EQUITIES_DATA_PATH:-data/tw_stock_daily}"
+  daily_price_format: "auto"
+  symbol_col: "stock_id"
+  date_col: "date"
+  market_index_symbol: "TAIEX"
+  market_index_contract_candidates: ["TSE.TSE001", "TSE001", "TAIEX"]
+  use_broker_api: false
+  broker_api_profile: "default"
+
+filters:
+  min_trading_days: 120
+  min_avg_amount_20d: 10000000
+  exclude_full_delivery: true
+  exclude_etf: true
+  exclude_warrant: true
+
+scoring:
+  weights:
+    revenue: 0.25
+    expectation_gap: 0.20
+    price_volume: 0.20
+    theme_group: 0.15
+    chip: 0.10
+    catalyst: 0.10
+  risk_penalty_max: 40
+
+price_volume:
+  ma_windows: [5, 20, 60, 120, 240]
+  rs_windows: [20, 60]
+  breakout_windows: [60, 120]
+  volume_z_window: 20
+  breakout_volume_min_ratio: 1.5
+  breakout_volume_max_ratio: 3.5
+
+expectation_gap:
+  early_ret_20d_max: 0.35
+  early_ret_60d_max: 0.80
+  overheated_ret_20d: 0.80
+  overheated_ret_60d: 1.50
+  overheated_volume_z: 4.0
+
+backtest:
+  start: "2020-01-01"
+  end: "2025-01-01"
+  rebalance: "monthly"
+  top_n: 20
+  horizon_days: 126
+  target_multiples: [3, 5]
+
+theme_mapping: {}
+manual_catalysts: {}
